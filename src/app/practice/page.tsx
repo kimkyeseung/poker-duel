@@ -13,7 +13,7 @@ import {
 } from '@/components/game';
 import { usePokerCalculator } from '@/hooks/usePokerCalculator';
 import { createDeck, shuffleDeck } from '@/lib/poker';
-import { evaluateStartingHand, compareStartingHands } from '@/lib/poker/starting-hands';
+import { evaluateStartingHand, compareStartingHands, StartingHandInfo } from '@/lib/poker/starting-hands';
 import { checkAnswer } from '@/lib/poker/calculator';
 import {
   Card as CardType,
@@ -79,22 +79,35 @@ export default function PracticePage() {
     if (!playerHand || !computerHand) return;
 
     if (currentRound === 'preflop') {
-      // 프리플랍: 핸드랭킹 비교
+      // 프리플랍: 핸드랭킹 비교 (승률 계산 없음)
       const comparison = compareStartingHands(playerHand, computerHand);
       const playerFavorite = comparison <= 0;
       const isCorrect = answer === 'player' ? playerFavorite : !playerFavorite;
 
-      calculate(playerHand, computerHand, []).then(result => {
-        setCurrentWinRate(result);
-        setLastAnswer({
-          round: currentRound,
-          playerAnswer: answer,
-          correctAnswer: result.playerWinRate,
-          isCorrect,
-          winRateResult: result,
-        });
-        setShowResult(true);
+      // 핸드 순위 기반 결과 생성
+      const playerInfo = evaluateStartingHand(playerHand);
+      const computerInfo = evaluateStartingHand(computerHand);
+      const correctAnswer = playerInfo.rank < computerInfo.rank ? 'player' : 'computer';
+
+      const preflopResult: WinRateResult = {
+        playerWinRate: playerInfo.rank < computerInfo.rank ? 100 : 0,
+        computerWinRate: computerInfo.rank < playerInfo.rank ? 100 : 0,
+        tieRate: playerInfo.rank === computerInfo.rank ? 100 : 0,
+        totalCombinations: 0,
+        playerWins: playerInfo.rank < computerInfo.rank ? 1 : 0,
+        computerWins: computerInfo.rank < playerInfo.rank ? 1 : 0,
+        ties: playerInfo.rank === computerInfo.rank ? 1 : 0,
+      };
+
+      setCurrentWinRate(preflopResult);
+      setLastAnswer({
+        round: currentRound,
+        playerAnswer: answer,
+        correctAnswer: correctAnswer,
+        isCorrect,
+        winRateResult: preflopResult,
       });
+      setShowResult(true);
     } else {
       if (!currentWinRate) return;
 

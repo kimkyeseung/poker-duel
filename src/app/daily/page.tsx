@@ -138,34 +138,49 @@ export default function DailyChallengePage() {
     setIsTimerRunning(false);
 
     if (currentRound === 'preflop') {
+      // 프리플랍: 핸드랭킹 비교 (승률 계산 없음)
       const comparison = compareStartingHands(playerHand, computerHand);
       const playerFavorite = comparison <= 0;
       const isCorrect = answer === 'player' ? playerFavorite : !playerFavorite;
 
-      calculate(playerHand, computerHand, []).then(result => {
-        const answerResult: AnswerResult = {
-          round: currentRound,
-          playerAnswer: answer,
-          correctAnswer: result.playerWinRate,
-          isCorrect,
-          winRateResult: result,
-        };
-        setCurrentWinRate(result);
-        setLastAnswer(answerResult);
-        setAnswers(prev => [...prev, answerResult]);
-        setShowResult(true);
+      // 핸드 순위 기반 결과 생성
+      const playerInfo = evaluateStartingHand(playerHand);
+      const computerInfo = evaluateStartingHand(computerHand);
+      const correctAnswer = playerInfo.rank < computerInfo.rank ? 'player' : 'computer';
 
-        if (!isCorrect) {
-          setStatus('gameover');
-          saveDailyChallengeRecord({
-            date: todayString,
-            completed: true,
-            difficulty,
-            isVictory: false,
-            answers: [...answers, answerResult],
-          });
-        }
-      });
+      const preflopResult: WinRateResult = {
+        playerWinRate: playerInfo.rank < computerInfo.rank ? 100 : 0,
+        computerWinRate: computerInfo.rank < playerInfo.rank ? 100 : 0,
+        tieRate: playerInfo.rank === computerInfo.rank ? 100 : 0,
+        totalCombinations: 0,
+        playerWins: playerInfo.rank < computerInfo.rank ? 1 : 0,
+        computerWins: computerInfo.rank < playerInfo.rank ? 1 : 0,
+        ties: playerInfo.rank === computerInfo.rank ? 1 : 0,
+      };
+
+      const answerResult: AnswerResult = {
+        round: currentRound,
+        playerAnswer: answer,
+        correctAnswer: correctAnswer,
+        isCorrect,
+        winRateResult: preflopResult,
+      };
+
+      setCurrentWinRate(preflopResult);
+      setLastAnswer(answerResult);
+      setAnswers(prev => [...prev, answerResult]);
+      setShowResult(true);
+
+      if (!isCorrect) {
+        setStatus('gameover');
+        saveDailyChallengeRecord({
+          date: todayString,
+          completed: true,
+          difficulty,
+          isVictory: false,
+          answers: [...answers, answerResult],
+        });
+      }
     } else {
       if (!currentWinRate) return;
 

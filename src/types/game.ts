@@ -10,7 +10,7 @@ export type PlayerType = 'player' | 'computer';
 export interface AnswerResult {
   round: GameRound;
   playerAnswer: string | number;
-  correctAnswer: number;
+  correctAnswer: string | number; // 프리플랍: 'player'|'computer', 그 외: 승률 숫자
   isCorrect: boolean;
   winRateResult: WinRateResult;
 }

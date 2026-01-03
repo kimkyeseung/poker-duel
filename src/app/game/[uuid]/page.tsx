@@ -17,7 +17,7 @@ import {
   DifficultyProgress,
 } from '@/components/game';
 import { checkAnswer } from '@/lib/poker/calculator';
-import { evaluateStartingHand, compareStartingHands } from '@/lib/poker/starting-hands';
+import { evaluateStartingHand, compareStartingHands, StartingHandInfo } from '@/lib/poker/starting-hands';
 import { recordGameResult, updateStreak, addHandToHistory } from '@/lib/storage';
 import { DIFFICULTY_CONFIG, WinRateResult, AnswerResult, GameRound } from '@/types';
 import { cn } from '@/lib/utils';
@@ -112,7 +112,7 @@ export default function GamePage() {
     let actualWinRate = currentWinRate;
 
     if (currentRound === 'preflop') {
-      // 프리플랍: 핸드랭킹 비교
+      // 프리플랍: 핸드랭킹 비교 (승률 계산 없음)
       const comparison = compareStartingHands(playerHand, computerHand);
       const playerFavorite = comparison <= 0;
 
@@ -122,11 +122,23 @@ export default function GamePage() {
         isCorrect = !playerFavorite;
       }
 
-      // 프리플랍 승률 계산 (결과 표시용)
-      calculate(playerHand, computerHand, []).then(result => {
-        setCurrentWinRate(result);
-        processAnswerResult(isCorrect, answer, result);
-      });
+      // 프리플랍: 핸드 순위로만 결과 표시 (승률 계산 X)
+      const playerInfo = evaluateStartingHand(playerHand);
+      const computerInfo = evaluateStartingHand(computerHand);
+
+      // 순위 기반 WinRateResult 생성 (프리플랍은 승률 계산 X)
+      const preflopResult: WinRateResult = {
+        playerWinRate: playerInfo.rank < computerInfo.rank ? 100 : 0,
+        computerWinRate: computerInfo.rank < playerInfo.rank ? 100 : 0,
+        tieRate: playerInfo.rank === computerInfo.rank ? 100 : 0,
+        totalCombinations: 0,
+        playerWins: playerInfo.rank < computerInfo.rank ? 1 : 0,
+        computerWins: computerInfo.rank < playerInfo.rank ? 1 : 0,
+        ties: playerInfo.rank === computerInfo.rank ? 1 : 0,
+      };
+
+      setCurrentWinRate(preflopResult);
+      processPreflopResult(isCorrect, answer, playerInfo, computerInfo);
       return;
     }
 
@@ -144,6 +156,42 @@ export default function GamePage() {
       correctAnswer: winRate.playerWinRate,
       isCorrect,
       winRateResult: winRate,
+    };
+
+    setLastAnswer(result);
+    setShowResult(true);
+
+    if (!isCorrect) {
+      gameOver('오답입니다!');
+      recordGameResult(difficulty, false);
+      updateStreak(false);
+    }
+  };
+
+  // 프리플랍 결과 처리 (핸드 순위 기반)
+  const processPreflopResult = (
+    isCorrect: boolean,
+    answer: string | number,
+    playerInfo: StartingHandInfo,
+    computerInfo: StartingHandInfo
+  ) => {
+    // 프리플랍은 순위로 정답 표시 (낮은 순위가 강함)
+    const correctAnswer = playerInfo.rank < computerInfo.rank ? 'player' : 'computer';
+
+    const result: AnswerResult = {
+      round: 'preflop',
+      playerAnswer: answer,
+      correctAnswer: correctAnswer,
+      isCorrect,
+      winRateResult: {
+        playerWinRate: playerInfo.rank < computerInfo.rank ? 100 : 0,
+        computerWinRate: computerInfo.rank < playerInfo.rank ? 100 : 0,
+        tieRate: playerInfo.rank === computerInfo.rank ? 100 : 0,
+        totalCombinations: 0,
+        playerWins: playerInfo.rank < computerInfo.rank ? 1 : 0,
+        computerWins: computerInfo.rank < playerInfo.rank ? 1 : 0,
+        ties: playerInfo.rank === computerInfo.rank ? 1 : 0,
+      },
     };
 
     setLastAnswer(result);
