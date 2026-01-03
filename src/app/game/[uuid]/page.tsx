@@ -57,12 +57,14 @@ export default function GamePage() {
   const [lastAnswer, setLastAnswer] = useState<AnswerResult | null>(null);
   const [showResult, setShowResult] = useState(false);
 
-  // 게임 초기화
+  // 게임 초기화 (uuid가 변경될 때만 실행)
   useEffect(() => {
+    // uuid가 변경되었거나 gameId가 없을 때만 초기화
     if (!gameId || gameId !== uuid) {
       initGame('easy');
     }
-  }, [uuid, gameId, initGame]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uuid]);
 
   // 라운드 시작 시 승률 계산
   useEffect(() => {
@@ -89,7 +91,8 @@ export default function GamePage() {
         });
       }
     }
-  }, [status, currentRound, playerHand, computerHand, communityCards]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, currentRound, communityCards.length]);
 
   // 타이머 타임아웃 처리
   const handleTimeout = useCallback(() => {
