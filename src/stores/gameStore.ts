@@ -43,6 +43,11 @@ interface GameStore extends GameState {
   revealTurn: () => void;
   revealRiver: () => void;
 
+  // 카드 공개 애니메이션
+  isRevealingCards: boolean;
+  startCardReveal: () => void;
+  endCardReveal: () => void;
+
   // 유틸
   getTimeLimit: () => number;
   shouldSkipPreflop: () => boolean;
@@ -50,6 +55,7 @@ interface GameStore extends GameState {
 
 export const useGameStore = create<GameStore>((set, get) => ({
   ...initialGameState,
+  isRevealingCards: false,
 
   // 게임 초기화
   initGame: (difficulty: Difficulty, isDaily = false) => {
@@ -245,6 +251,16 @@ export const useGameStore = create<GameStore>((set, get) => ({
       communityCards: [...communityCards, deck[1]],
       deck: deck.slice(2),
     });
+  },
+
+  // 카드 공개 애니메이션 시작
+  startCardReveal: () => {
+    set({ isRevealingCards: true });
+  },
+
+  // 카드 공개 애니메이션 종료
+  endCardReveal: () => {
+    set({ isRevealingCards: false });
   },
 
   // 현재 라운드의 제한 시간

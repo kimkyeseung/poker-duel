@@ -12,6 +12,8 @@ interface PlayerAreaProps {
   winRate?: number;
   isActive?: boolean;
   className?: string;
+  isRevealing?: boolean; // 카드 공개 애니메이션 중
+  onRevealComplete?: () => void; // 카드 공개 완료 콜백
 }
 
 export function PlayerArea({
@@ -22,6 +24,8 @@ export function PlayerArea({
   winRate,
   isActive = false,
   className,
+  isRevealing = false,
+  onRevealComplete,
 }: PlayerAreaProps) {
   return (
     <div
@@ -77,10 +81,32 @@ export function PlayerArea({
       {/* 카드 */}
       <div className="flex gap-2">
         {cards ? (
-          <>
-            <Card card={cards[0]} size="lg" isHighlighted={isActive} />
-            <Card card={cards[1]} size="lg" isHighlighted={isActive} animationDelay={100} />
-          </>
+          isRevealing ? (
+            // 카드 공개 애니메이션
+            <>
+              <Card
+                card={cards[0]}
+                size="lg"
+                isHighlighted={isActive}
+                isFlipping={true}
+                flipDelay={0}
+              />
+              <Card
+                card={cards[1]}
+                size="lg"
+                isHighlighted={isActive}
+                isFlipping={true}
+                flipDelay={400}
+                onFlipComplete={onRevealComplete}
+              />
+            </>
+          ) : (
+            // 일반 카드 표시
+            <>
+              <Card card={cards[0]} size="lg" isHighlighted={isActive} />
+              <Card card={cards[1]} size="lg" isHighlighted={isActive} animationDelay={100} />
+            </>
+          )
         ) : (
           <>
             <Card isHidden size="lg" />

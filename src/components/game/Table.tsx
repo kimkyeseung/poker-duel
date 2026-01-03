@@ -7,11 +7,30 @@ import { cn } from '@/lib/utils';
 interface TableProps {
   communityCards: CardType[];
   className?: string;
+  isRevealing?: boolean; // 카드 공개 애니메이션 중
+  newCardsCount?: number; // 새로 공개되는 카드 수 (flop: 3, turn/river: 1)
+  onRevealComplete?: () => void; // 모든 카드 공개 완료 콜백
 }
 
-export function Table({ communityCards, className }: TableProps) {
+export function Table({
+  communityCards,
+  className,
+  isRevealing = false,
+  newCardsCount = 0,
+  onRevealComplete,
+}: TableProps) {
   // 5개의 커뮤니티 카드 슬롯
   const slots = Array(5).fill(null);
+
+  // 이전에 공개된 카드 수
+  const previousCardCount = communityCards.length - newCardsCount;
+
+  // 마지막 카드 공개 완료 시 콜백 호출
+  const handleLastCardFlipComplete = () => {
+    if (onRevealComplete) {
+      onRevealComplete();
+    }
+  };
 
   return (
     <div className={cn('relative', className)}>
@@ -27,19 +46,37 @@ export function Table({ communityCards, className }: TableProps) {
       {/* 커뮤니티 카드 영역 */}
       <div className="relative z-10 flex items-center justify-center py-8 px-4">
         <div className="flex gap-2 md:gap-3">
-          {slots.map((_, index) => (
-            <div key={index} className="transform transition-all duration-500">
-              {communityCards[index] ? (
-                <Card
-                  card={communityCards[index]}
-                  size="lg"
-                  animationDelay={index * 100}
-                />
-              ) : (
-                <CardSlot size="lg" />
-              )}
-            </div>
-          ))}
+          {slots.map((_, index) => {
+            const card = communityCards[index];
+            const isNewCard = isRevealing && index >= previousCardCount && index < communityCards.length;
+            const isLastNewCard = isNewCard && index === communityCards.length - 1;
+            const flipDelayIndex = index - previousCardCount;
+
+            return (
+              <div key={index} className="transform transition-all duration-500">
+                {card ? (
+                  isNewCard ? (
+                    // 새로 공개되는 카드 (뒤집기 애니메이션)
+                    <Card
+                      card={card}
+                      size="lg"
+                      isFlipping={true}
+                      flipDelay={flipDelayIndex * 400} // 0.4초 간격으로 순차 공개
+                      onFlipComplete={isLastNewCard ? handleLastCardFlipComplete : undefined}
+                    />
+                  ) : (
+                    // 이미 공개된 카드
+                    <Card
+                      card={card}
+                      size="lg"
+                    />
+                  )
+                ) : (
+                  <CardSlot size="lg" />
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
 

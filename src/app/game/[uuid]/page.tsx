@@ -22,6 +22,9 @@ import { recordGameResult, updateStreak, addHandToHistory } from '@/lib/storage'
 import { DIFFICULTY_CONFIG, WinRateResult, AnswerResult, GameRound } from '@/types';
 import { cn } from '@/lib/utils';
 
+// 카드 공개 애니메이션 시간 (ms)
+const CARD_REVEAL_DURATION = 2000;
+
 export default function GamePage() {
   const router = useRouter();
   const params = useParams();
@@ -57,6 +60,11 @@ export default function GamePage() {
   const [lastAnswer, setLastAnswer] = useState<AnswerResult | null>(null);
   const [showResult, setShowResult] = useState(false);
 
+  // 카드 공개 애니메이션 상태
+  const [isRevealingCards, setIsRevealingCards] = useState(false);
+  const [isRevealingPlayerCards, setIsRevealingPlayerCards] = useState(false);
+  const [newCardsCount, setNewCardsCount] = useState(0);
+
   // 게임 초기화 (uuid가 변경될 때만 실행)
   useEffect(() => {
     // uuid가 변경되었거나 gameId가 없을 때만 초기화
@@ -66,28 +74,61 @@ export default function GamePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uuid]);
 
-  // 라운드 시작 시 승률 계산
+  // 라운드 시작 시 승률 계산 및 카드 공개 애니메이션
   useEffect(() => {
     if (status === 'playing' && playerHand && computerHand) {
+
       if (currentRound === 'preflop') {
         // 프리플랍: 핸드랭킹 비교
         if (shouldSkipPreflop()) {
           // 같은 핸드면 플랍으로 스킵
           nextRound();
         } else {
-          startRound();
+          // 플레이어 카드 공개 애니메이션
+          setIsRevealingPlayerCards(true);
+          setTimeout(() => {
+            setIsRevealingPlayerCards(false);
+            startRound();
+          }, CARD_REVEAL_DURATION);
         }
       } else if (currentRound === 'river') {
-        // 리버: 결과 확인만
+        // 리버: 카드 공개 후 결과 확인
+        setIsRevealingCards(true);
+        setNewCardsCount(1);
         calculate(playerHand, computerHand, communityCards).then(result => {
           setCurrentWinRate(result);
-          handleRiverResult(result);
+          // 애니메이션 완료 후 결과 표시
+          setTimeout(() => {
+            setIsRevealingCards(false);
+            setNewCardsCount(0);
+            handleRiverResult(result);
+          }, CARD_REVEAL_DURATION);
         });
-      } else {
-        // 플랍/턴: 승률 계산
+      } else if (currentRound === 'flop') {
+        // 플랍: 3장 공개 애니메이션
+        setIsRevealingCards(true);
+        setNewCardsCount(3);
         calculate(playerHand, computerHand, communityCards).then(result => {
           setCurrentWinRate(result);
-          startRound();
+          // 애니메이션 완료 후 라운드 시작
+          setTimeout(() => {
+            setIsRevealingCards(false);
+            setNewCardsCount(0);
+            startRound();
+          }, CARD_REVEAL_DURATION);
+        });
+      } else if (currentRound === 'turn') {
+        // 턴: 1장 공개 애니메이션
+        setIsRevealingCards(true);
+        setNewCardsCount(1);
+        calculate(playerHand, computerHand, communityCards).then(result => {
+          setCurrentWinRate(result);
+          // 애니메이션 완료 후 라운드 시작
+          setTimeout(() => {
+            setIsRevealingCards(false);
+            setNewCardsCount(0);
+            startRound();
+          }, CARD_REVEAL_DURATION);
         });
       }
     }
@@ -288,7 +329,12 @@ export default function GamePage() {
         />
 
         {/* 테이블 */}
-        <Table communityCards={communityCards} className="w-full max-w-2xl" />
+        <Table
+          communityCards={communityCards}
+          className="w-full max-w-2xl"
+          isRevealing={isRevealingCards}
+          newCardsCount={newCardsCount}
+        />
 
         {/* 플레이어 영역 */}
         <PlayerArea
@@ -297,6 +343,7 @@ export default function GamePage() {
           handName={playerHand ? evaluateStartingHand(playerHand).name : undefined}
           winRate={showResult && currentWinRate ? currentWinRate.playerWinRate : undefined}
           isActive={status === 'answering'}
+          isRevealing={isRevealingPlayerCards}
         />
 
         {/* 입력/결과 영역 */}
@@ -314,8 +361,16 @@ export default function GamePage() {
             </div>
           )}
 
+          {/* 카드 공개 애니메이션 중 */}
+          {(isRevealingCards || isRevealingPlayerCards) && (
+            <div className="text-center text-amber-400">
+              <div className="text-4xl mb-2 animate-bounce">🃏</div>
+              <p className="text-lg font-semibold">카드 공개 중...</p>
+            </div>
+          )}
+
           {/* 계산 중 */}
-          {isCalculating && (
+          {isCalculating && !isRevealingCards && !isRevealingPlayerCards && (
             <div className="text-center text-slate-400">
               <div className="animate-spin inline-block w-6 h-6 border-2 border-amber-500 border-t-transparent rounded-full mb-2" />
               <p>승률 계산 중...</p>
