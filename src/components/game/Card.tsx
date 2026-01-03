@@ -14,6 +14,7 @@ interface CardProps {
   isFlipping?: boolean; // 뒤집기 애니메이션 활성화
   flipDelay?: number; // 뒤집기 시작 지연 (ms)
   onFlipComplete?: () => void; // 뒤집기 완료 콜백
+  skipEntryAnimation?: boolean; // 입장 애니메이션 스킵 (이미 공개된 카드용)
 }
 
 // 수트별 색상 및 심볼
@@ -59,6 +60,7 @@ export function Card({
   isFlipping = false,
   flipDelay = 0,
   onFlipComplete,
+  skipEntryAnimation = false,
 }: CardProps) {
   const sizeConfig = SIZE_CONFIG[size];
   const [isFlipped, setIsFlipped] = useState(false);
@@ -205,10 +207,10 @@ export function Card({
         'border-2',
         isHighlighted ? 'border-amber-400 ring-2 ring-amber-400/50' : 'border-slate-200',
         'transform transition-all duration-300 hover:scale-105',
-        'animate-in slide-in-from-bottom-2 fade-in',
+        !skipEntryAnimation && 'animate-in slide-in-from-bottom-2 fade-in',
         className
       )}
-      style={{ animationDelay: `${animationDelay}ms` }}
+      style={{ animationDelay: skipEntryAnimation ? undefined : `${animationDelay}ms` }}
     >
       {/* 좌상단 */}
       <div className="absolute top-1 left-1.5 flex flex-col items-center leading-none">

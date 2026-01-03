@@ -14,6 +14,7 @@ interface PlayerAreaProps {
   className?: string;
   isRevealing?: boolean; // 카드 공개 애니메이션 중
   onRevealComplete?: () => void; // 카드 공개 완료 콜백
+  hasRevealed?: boolean; // 카드가 이미 공개된 상태인지
 }
 
 export function PlayerArea({
@@ -26,6 +27,7 @@ export function PlayerArea({
   className,
   isRevealing = false,
   onRevealComplete,
+  hasRevealed = false,
 }: PlayerAreaProps) {
   return (
     <div
@@ -103,8 +105,8 @@ export function PlayerArea({
           ) : (
             // 일반 카드 표시
             <>
-              <Card card={cards[0]} size="lg" isHighlighted={isActive} />
-              <Card card={cards[1]} size="lg" isHighlighted={isActive} animationDelay={100} />
+              <Card card={cards[0]} size="lg" isHighlighted={isActive} skipEntryAnimation={hasRevealed} />
+              <Card card={cards[1]} size="lg" isHighlighted={isActive} skipEntryAnimation={hasRevealed} />
             </>
           )
         ) : (

@@ -64,6 +64,7 @@ export default function GamePage() {
   const [isRevealingCards, setIsRevealingCards] = useState(false);
   const [isRevealingPlayerCards, setIsRevealingPlayerCards] = useState(false);
   const [newCardsCount, setNewCardsCount] = useState(0);
+  const [hasPlayerCardsRevealed, setHasPlayerCardsRevealed] = useState(false);
 
   // 게임 초기화 (uuid가 변경될 때만 실행)
   useEffect(() => {
@@ -82,12 +83,14 @@ export default function GamePage() {
         // 프리플랍: 핸드랭킹 비교
         if (shouldSkipPreflop()) {
           // 같은 핸드면 플랍으로 스킵
+          setHasPlayerCardsRevealed(true);
           nextRound();
         } else {
           // 플레이어 카드 공개 애니메이션
           setIsRevealingPlayerCards(true);
           setTimeout(() => {
             setIsRevealingPlayerCards(false);
+            setHasPlayerCardsRevealed(true);
             startRound();
           }, CARD_REVEAL_DURATION);
         }
@@ -277,6 +280,7 @@ export default function GamePage() {
       // 난이도 클리어
       recordGameResult(difficulty, true);
       updateStreak(true);
+      setHasPlayerCardsRevealed(false); // 다음 난이도를 위해 리셋
 
       if (difficulty === 'god') {
         victory();
@@ -295,6 +299,7 @@ export default function GamePage() {
     setShowResult(false);
     setLastAnswer(null);
     setCurrentWinRate(null);
+    setHasPlayerCardsRevealed(false);
   };
 
   // 홈으로
@@ -353,6 +358,7 @@ export default function GamePage() {
           winRate={showResult && currentWinRate ? currentWinRate.playerWinRate : undefined}
           isActive={status === 'answering'}
           isRevealing={isRevealingPlayerCards}
+          hasRevealed={hasPlayerCardsRevealed}
         />
 
         {/* 입력/결과 영역 */}
