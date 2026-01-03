@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { Button } from '@/components/ui';
 import { TutorialDialog } from '@/components/TutorialDialog';
 import { getGameStats } from '@/lib/storage';
+import { getCurrentTitle } from '@/lib/game/titles';
 import { GameStats, initialGameStats } from '@/types';
 
 export default function Home() {
@@ -30,6 +31,8 @@ export default function Home() {
     router.push('/daily');
   };
 
+  const currentTitle = stats ? getCurrentTitle(stats) : null;
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex flex-col">
       {/* 헤더 */}
@@ -37,9 +40,13 @@ export default function Home() {
         <div className="max-w-4xl mx-auto flex justify-between items-center">
           <div className="text-amber-500 font-bold text-xl">🎴 Poker Duel</div>
           {stats && stats.totalGames > 0 && (
-            <div className="text-slate-400 text-sm">
-              승률: {((stats.totalWins / stats.totalGames) * 100).toFixed(1)}%
-            </div>
+            <button
+              onClick={() => router.push('/stats')}
+              className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors"
+            >
+              <span>{currentTitle?.icon}</span>
+              <span className="text-sm">{currentTitle?.name}</span>
+            </button>
           )}
         </div>
       </header>
@@ -97,19 +104,32 @@ export default function Home() {
               </Button>
             </div>
 
-            <Button
-              variant="ghost"
-              size="md"
-              onClick={() => setShowTutorial(true)}
-              className="w-full"
-            >
-              📖 게임 방법
-            </Button>
+            <div className="grid grid-cols-2 gap-3">
+              <Button
+                variant="ghost"
+                size="md"
+                onClick={() => setShowTutorial(true)}
+                className="w-full"
+              >
+                📖 게임 방법
+              </Button>
+              <Button
+                variant="ghost"
+                size="md"
+                onClick={() => router.push('/stats')}
+                className="w-full"
+              >
+                📊 통계
+              </Button>
+            </div>
           </div>
 
           {/* 통계 요약 */}
           {stats && stats.totalGames > 0 && (
-            <div className="bg-slate-800/30 rounded-xl p-4 grid grid-cols-3 gap-4">
+            <button
+              onClick={() => router.push('/stats')}
+              className="w-full bg-slate-800/30 rounded-xl p-4 grid grid-cols-3 gap-4 hover:bg-slate-800/50 transition-colors"
+            >
               <div className="text-center">
                 <div className="text-2xl font-bold text-white">{stats.totalGames}</div>
                 <div className="text-xs text-slate-500">총 게임</div>
@@ -122,7 +142,7 @@ export default function Home() {
                 <div className="text-2xl font-bold text-amber-400">{stats.maxStreak}</div>
                 <div className="text-xs text-slate-500">최다 연승</div>
               </div>
-            </div>
+            </button>
           )}
         </div>
       </main>
