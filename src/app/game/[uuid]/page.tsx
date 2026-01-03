@@ -233,6 +233,15 @@ export default function GamePage() {
         computerWins: computerInfo.rank < playerInfo.rank ? 1 : 0,
         ties: playerInfo.rank === computerInfo.rank ? 1 : 0,
       },
+      // 핸드 순위 정보 추가
+      playerHandRank: {
+        name: playerInfo.name,
+        rank: playerInfo.rank,
+      },
+      computerHandRank: {
+        name: computerInfo.name,
+        rank: computerInfo.rank,
+      },
     };
 
     setLastAnswer(result);

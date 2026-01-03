@@ -38,24 +38,68 @@ export function ResultDisplay({
       {isPreflop ? (
         // 프리플랍: 핸드 순위 비교 결과
         <div className="text-center mb-6">
-          <div className="text-lg text-slate-300 mb-2">핸드 순위 비교</div>
-          <div className="flex items-center justify-center gap-4">
+          <div className="text-lg text-slate-300 mb-4">핸드 순위 비교</div>
+          <div className="flex items-center justify-center gap-6">
+            {/* 플레이어 핸드 순위 */}
             <div className={cn(
-              'px-4 py-2 rounded-lg',
-              playerWinRate > 0 ? 'bg-blue-500/20 text-blue-400' : 'bg-slate-700 text-slate-400'
+              'flex flex-col items-center px-5 py-3 rounded-xl min-w-[120px]',
+              playerWinRate > 0 ? 'bg-blue-500/20 border border-blue-500/30' : 'bg-slate-700/50 border border-slate-600'
             )}>
-              👤 나 {playerWinRate > 0 && '👑'}
+              <div className="flex items-center gap-1 mb-1">
+                <span className="text-lg">👤</span>
+                <span className={cn(
+                  'font-bold',
+                  playerWinRate > 0 ? 'text-blue-400' : 'text-slate-400'
+                )}>나</span>
+                {playerWinRate > 0 && <span className="text-yellow-400">👑</span>}
+              </div>
+              {answerResult.playerHandRank && (
+                <>
+                  <div className="text-xl font-bold text-white">
+                    {answerResult.playerHandRank.name}
+                  </div>
+                  <div className={cn(
+                    'text-sm font-mono mt-1',
+                    playerWinRate > 0 ? 'text-blue-300' : 'text-slate-400'
+                  )}>
+                    {answerResult.playerHandRank.rank} / 169
+                  </div>
+                </>
+              )}
             </div>
-            <span className="text-slate-500">vs</span>
+
+            <span className="text-2xl text-slate-500 font-bold">vs</span>
+
+            {/* 컴퓨터 핸드 순위 */}
             <div className={cn(
-              'px-4 py-2 rounded-lg',
-              computerWinRate > 0 ? 'bg-red-500/20 text-red-400' : 'bg-slate-700 text-slate-400'
+              'flex flex-col items-center px-5 py-3 rounded-xl min-w-[120px]',
+              computerWinRate > 0 ? 'bg-red-500/20 border border-red-500/30' : 'bg-slate-700/50 border border-slate-600'
             )}>
-              🤖 컴퓨터 {computerWinRate > 0 && '👑'}
+              <div className="flex items-center gap-1 mb-1">
+                <span className="text-lg">🤖</span>
+                <span className={cn(
+                  'font-bold',
+                  computerWinRate > 0 ? 'text-red-400' : 'text-slate-400'
+                )}>컴퓨터</span>
+                {computerWinRate > 0 && <span className="text-yellow-400">👑</span>}
+              </div>
+              {answerResult.computerHandRank && (
+                <>
+                  <div className="text-xl font-bold text-white">
+                    {answerResult.computerHandRank.name}
+                  </div>
+                  <div className={cn(
+                    'text-sm font-mono mt-1',
+                    computerWinRate > 0 ? 'text-red-300' : 'text-slate-400'
+                  )}>
+                    {answerResult.computerHandRank.rank} / 169
+                  </div>
+                </>
+              )}
             </div>
           </div>
           {tieRate > 0 && (
-            <div className="mt-2 text-slate-400 text-sm">동일한 핸드 순위</div>
+            <div className="mt-3 text-amber-400 text-sm font-medium">동일한 핸드 순위</div>
           )}
         </div>
       ) : (

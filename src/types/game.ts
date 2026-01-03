@@ -6,6 +6,12 @@ export type GameStatus = 'waiting' | 'playing' | 'answering' | 'result' | 'gameo
 // 플레이어 타입
 export type PlayerType = 'player' | 'computer';
 
+// 핸드 순위 정보 (프리플랍용)
+export interface HandRankInfo {
+  name: string;
+  rank: number; // 1~169 순위
+}
+
 // 정답 결과
 export interface AnswerResult {
   round: GameRound;
@@ -13,6 +19,8 @@ export interface AnswerResult {
   correctAnswer: string | number; // 프리플랍: 'player'|'computer', 그 외: 승률 숫자
   isCorrect: boolean;
   winRateResult: WinRateResult;
+  playerHandRank?: HandRankInfo; // 프리플랍 핸드 순위
+  computerHandRank?: HandRankInfo; // 프리플랍 핸드 순위
 }
 
 // 게임 상태
