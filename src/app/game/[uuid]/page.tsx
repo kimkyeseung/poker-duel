@@ -283,14 +283,14 @@ export default function GamePage() {
     setShowResult(true);
   };
 
-  // 다음으로 진행
+  // 다음으로 진행 (다음 라운드 또는 다음 난이도)
   const handleContinue = () => {
     setShowResult(false);
     setLastAnswer(null);
     setCurrentWinRate(null);
 
-    if (currentRound === 'river') {
-      // 난이도 클리어
+    if (currentRound === 'river' || currentRound === 'turn') {
+      // 턴 또는 리버에서 다음 난이도로 진행
       recordGameResult(difficulty, true);
       updateStreak(true);
       setHasPlayerCardsRevealed(false); // 다음 난이도를 위해 리셋
@@ -303,6 +303,14 @@ export default function GamePage() {
     } else {
       nextRound();
     }
+  };
+
+  // 리버 확인 (턴 이후 리버 결과 보기)
+  const handleViewRiver = () => {
+    setShowResult(false);
+    setLastAnswer(null);
+    setCurrentWinRate(null);
+    nextRound(); // 리버로 이동
   };
 
   // 재시작
@@ -421,8 +429,30 @@ export default function GamePage() {
               <ResultDisplay
                 winRateResult={currentWinRate}
                 answerResult={lastAnswer}
+                isRiverConfirmation={currentRound === 'river'}
               />
-              {lastAnswer.isCorrect && (
+              {lastAnswer.isCorrect && currentRound === 'turn' ? (
+                // 턴 정답 후: 리버 확인 or 다음 난이도 선택
+                <div className="space-y-2">
+                  <Button
+                    variant="secondary"
+                    size="lg"
+                    onClick={handleViewRiver}
+                    className="w-full"
+                  >
+                    🃏 리버 확인하기
+                  </Button>
+                  <Button
+                    variant="primary"
+                    size="lg"
+                    onClick={handleContinue}
+                    className="w-full"
+                  >
+                    다음 난이도 →
+                  </Button>
+                </div>
+              ) : lastAnswer.isCorrect || currentRound === 'river' ? (
+                // 리버 결과 확인 후 또는 다른 라운드 정답
                 <Button
                   variant="primary"
                   size="lg"
@@ -431,7 +461,7 @@ export default function GamePage() {
                 >
                   {currentRound === 'river' ? '다음 난이도' : '다음 라운드'} →
                 </Button>
-              )}
+              ) : null}
             </div>
           )}
         </div>

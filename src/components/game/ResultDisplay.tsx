@@ -7,32 +7,60 @@ interface ResultDisplayProps {
   winRateResult: WinRateResult;
   answerResult: AnswerResult;
   className?: string;
+  isRiverConfirmation?: boolean; // 리버 결과 확인 모드 (문제 풀이가 아닌 결과 확인)
 }
 
 export function ResultDisplay({
   winRateResult,
   answerResult,
   className,
+  isRiverConfirmation = false,
 }: ResultDisplayProps) {
   const { playerWinRate, computerWinRate, tieRate, totalCombinations, playerWins, computerWins, ties } = winRateResult;
   const { isCorrect, playerAnswer, correctAnswer, round } = answerResult;
 
   const isPreflop = round === 'preflop';
 
+  // 리버 결과 확인 시 승자 결정
+  const getRiverWinner = () => {
+    if (playerWinRate > computerWinRate) return 'player';
+    if (computerWinRate > playerWinRate) return 'computer';
+    return 'tie';
+  };
+
   return (
     <div className={cn('bg-slate-800/90 rounded-2xl p-6 border border-slate-700', className)}>
-      {/* 정답/오답 표시 */}
+      {/* 정답/오답 표시 또는 리버 결과 */}
       <div className="text-center mb-6">
-        <div
-          className={cn(
-            'inline-flex items-center gap-2 px-6 py-3 rounded-full text-xl font-bold',
-            isCorrect
-              ? 'bg-emerald-500/20 text-emerald-400'
-              : 'bg-red-500/20 text-red-400'
-          )}
-        >
-          {isCorrect ? '✓ 정답!' : '✗ 오답'}
-        </div>
+        {isRiverConfirmation ? (
+          // 리버: 최종 결과 표시
+          <div
+            className={cn(
+              'inline-flex items-center gap-2 px-6 py-3 rounded-full text-xl font-bold',
+              getRiverWinner() === 'player'
+                ? 'bg-blue-500/20 text-blue-400'
+                : getRiverWinner() === 'computer'
+                ? 'bg-red-500/20 text-red-400'
+                : 'bg-slate-500/20 text-slate-400'
+            )}
+          >
+            {getRiverWinner() === 'player' && '🎉 승리!'}
+            {getRiverWinner() === 'computer' && '😢 패배'}
+            {getRiverWinner() === 'tie' && '🤝 무승부'}
+          </div>
+        ) : (
+          // 일반 라운드: 정답/오답 표시
+          <div
+            className={cn(
+              'inline-flex items-center gap-2 px-6 py-3 rounded-full text-xl font-bold',
+              isCorrect
+                ? 'bg-emerald-500/20 text-emerald-400'
+                : 'bg-red-500/20 text-red-400'
+            )}
+          >
+            {isCorrect ? '✓ 정답!' : '✗ 오답'}
+          </div>
+        )}
       </div>
 
       {isPreflop ? (
