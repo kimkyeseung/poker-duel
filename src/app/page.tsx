@@ -148,8 +148,16 @@ export default function Home() {
       </main>
 
       {/* 푸터 */}
-      <footer className="p-4 text-center text-slate-600 text-sm">
-        Texas Hold'em Probability Trainer
+      <footer className="p-4">
+        <div className="max-w-4xl mx-auto flex justify-between items-center">
+          <span className="text-slate-600 text-sm">Texas Hold'em Probability Trainer</span>
+          <button
+            onClick={() => router.push('/settings')}
+            className="text-slate-500 hover:text-white transition-colors"
+          >
+            ⚙️
+          </button>
+        </div>
       </footer>
 
       {/* 튜토리얼 다이얼로그 */}

@@ -6,3 +6,4 @@ export * from './ResultDisplay';
 export * from './GameOverDialog';
 export * from './VictoryDialog';
 export * from './DifficultyBadge';
+export * from './HintButton';
