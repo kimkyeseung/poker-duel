@@ -211,11 +211,11 @@ export const useGameStore = create<GameStore>((set, get) => ({
     set({ isTimerRunning: false });
   },
 
-  // 타이머 감소
+  // 타이머 감소 (0.1초 단위)
   decrementTimer: () => {
     const state = get();
     if (state.timeRemaining > 0) {
-      set({ timeRemaining: state.timeRemaining - 1 });
+      set({ timeRemaining: Math.max(0, state.timeRemaining - 0.1) });
     }
   },
 

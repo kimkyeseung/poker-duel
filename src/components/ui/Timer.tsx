@@ -118,9 +118,10 @@ export function TimerBar({
       return;
     }
 
+    // 0.1초 단위로 업데이트
     const timer = setInterval(() => {
       onTick();
-    }, 1000);
+    }, 100);
 
     return () => clearInterval(timer);
   }, [isRunning, seconds, onTick, onTimeout]);
@@ -128,6 +129,7 @@ export function TimerBar({
   const percentage = (seconds / maxSeconds) * 100;
   const isWarning = seconds <= 3;
   const isCritical = seconds <= 1;
+  const displaySeconds = Math.ceil(seconds);
 
   return (
     <div className={cn('w-full', className)}>
@@ -143,13 +145,13 @@ export function TimerBar({
               : 'text-white'
           )}
         >
-          {seconds}초
+          {displaySeconds}초
         </span>
       </div>
       <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
         <div
           className={cn(
-            'h-full rounded-full transition-all duration-1000',
+            'h-full rounded-full transition-all duration-100',
             isCritical
               ? 'bg-red-500 animate-pulse'
               : isWarning

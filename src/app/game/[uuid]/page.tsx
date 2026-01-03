@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useGameStore } from '@/stores/gameStore';
 import { usePokerCalculator } from '@/hooks/usePokerCalculator';
@@ -66,6 +66,9 @@ export default function GamePage() {
   const [newCardsCount, setNewCardsCount] = useState(0);
   const [hasPlayerCardsRevealed, setHasPlayerCardsRevealed] = useState(false);
 
+  // 답변 제출 여부 추적 (타이머 경쟁 상태 방지)
+  const hasSubmittedRef = useRef(false);
+
   // 게임 초기화 (uuid가 변경될 때만 실행)
   useEffect(() => {
     // uuid가 변경되었거나 gameId가 없을 때만 초기화
@@ -91,6 +94,7 @@ export default function GamePage() {
           setTimeout(() => {
             setIsRevealingPlayerCards(false);
             setHasPlayerCardsRevealed(true);
+            hasSubmittedRef.current = false; // 라운드 시작 시 리셋
             startRound();
           }, CARD_REVEAL_DURATION);
         }
@@ -117,6 +121,7 @@ export default function GamePage() {
           setTimeout(() => {
             setIsRevealingCards(false);
             setNewCardsCount(0);
+            hasSubmittedRef.current = false; // 라운드 시작 시 리셋
             startRound();
           }, CARD_REVEAL_DURATION);
         });
@@ -130,6 +135,7 @@ export default function GamePage() {
           setTimeout(() => {
             setIsRevealingCards(false);
             setNewCardsCount(0);
+            hasSubmittedRef.current = false; // 라운드 시작 시 리셋
             startRound();
           }, CARD_REVEAL_DURATION);
         });
@@ -140,6 +146,9 @@ export default function GamePage() {
 
   // 타이머 타임아웃 처리
   const handleTimeout = useCallback(() => {
+    // 이미 답변을 제출한 경우 타임아웃 무시
+    if (hasSubmittedRef.current) return;
+
     stopTimer();
     gameOver('시간 초과!');
     recordGameResult(difficulty, false);
@@ -149,6 +158,10 @@ export default function GamePage() {
   // 정답 제출
   const handleSubmitAnswer = useCallback((answer: string | number) => {
     if (!playerHand || !computerHand) return;
+
+    // 이미 제출한 경우 무시
+    if (hasSubmittedRef.current) return;
+    hasSubmittedRef.current = true;
 
     stopTimer();
 
