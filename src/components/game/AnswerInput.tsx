@@ -1,12 +1,13 @@
 'use client';
 
 import { useState, useCallback } from 'react';
-import { Difficulty, DIFFICULTY_CONFIG } from '@/types';
+import { Difficulty, GameRound, DIFFICULTY_CONFIG } from '@/types';
 import { Button } from '@/components/ui';
 import { cn } from '@/lib/utils';
 
 interface AnswerInputProps {
   difficulty: Difficulty;
+  currentRound?: GameRound;
   onSubmit: (answer: string | number) => void;
   disabled?: boolean;
   className?: string;
@@ -14,11 +15,19 @@ interface AnswerInputProps {
 
 export function AnswerInput({
   difficulty,
+  currentRound = 'flop',
   onSubmit,
   disabled = false,
   className,
 }: AnswerInputProps) {
   const config = DIFFICULTY_CONFIG[difficulty];
+
+  // 프리플랍은 모든 난이도에서 2지선다 (누가 유리한지)
+  if (currentRound === 'preflop') {
+    return (
+      <ChoiceInput onSubmit={onSubmit} disabled={disabled} className={className} />
+    );
+  }
 
   switch (config.inputType) {
     case 'choice':

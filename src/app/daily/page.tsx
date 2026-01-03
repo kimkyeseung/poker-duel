@@ -432,6 +432,7 @@ export default function DailyChallengePage() {
               {status === 'answering' && !isCalculating && !showResult && (
                 <AnswerInput
                   difficulty={difficulty}
+                  currentRound={currentRound}
                   onSubmit={handleSubmitAnswer}
                   disabled={!isTimerRunning}
                 />

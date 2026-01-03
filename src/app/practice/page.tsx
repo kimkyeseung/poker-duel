@@ -263,6 +263,7 @@ export default function PracticePage() {
               {!showResult && !isCalculating && (
                 <AnswerInput
                   difficulty={difficulty}
+                  currentRound={currentRound}
                   onSubmit={handleSubmitAnswer}
                 />
               )}

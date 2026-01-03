@@ -326,6 +326,7 @@ export default function GamePage() {
           {status === 'answering' && !isCalculating && !showResult && (
             <AnswerInput
               difficulty={difficulty}
+              currentRound={currentRound}
               onSubmit={handleSubmitAnswer}
               disabled={!isTimerRunning}
             />
