@@ -1,0 +1,8 @@
+{
+  "project": {
+    "name": "Poker Duel",
+    "description": "Texas Hold'em 승률 예측 게임 - 컴퓨터와 1:1 대결하여 각 라운드별 승률을 맞추는 웹 게임",
+    "language": "ko",
+    "type": "web-game"
+  }
+}
