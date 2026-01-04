@@ -55,8 +55,8 @@ export default function Home() {
       <main className="flex-1 flex flex-col items-center justify-center px-4">
         <div className="max-w-md w-full space-y-8 text-center">
           {/* 로고/타이틀 */}
-          <div className="space-y-4">
-            <div className="text-8xl">🃏</div>
+          <div className="space-y-4 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 motion-safe:duration-500">
+            <div className="text-8xl" aria-hidden="true">🃏</div>
             <h1 className="text-4xl md:text-5xl font-bold text-white">
               Poker <span className="text-amber-500">Duel</span>
             </h1>
@@ -66,7 +66,7 @@ export default function Home() {
           </div>
 
           {/* 게임 설명 */}
-          <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700">
+          <div className="bg-slate-800/50 rounded-2xl p-6 border border-slate-700 backdrop-blur-sm motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 motion-safe:duration-500 motion-safe:delay-100">
             <p className="text-slate-300 text-sm leading-relaxed">
               컴퓨터와 1:1로 대결하여<br />
               각 라운드마다 정확한 승률을 맞추세요.<br />
@@ -75,12 +75,12 @@ export default function Home() {
           </div>
 
           {/* 버튼들 */}
-          <div className="space-y-3">
+          <div className="space-y-3 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 motion-safe:duration-500 motion-safe:delay-200">
             <Button
               variant="primary"
-              size="lg"
+              size="xl"
               onClick={handleStartGame}
-              className="w-full text-lg py-6"
+              fullWidth
             >
               🎮 게임 시작
             </Button>
@@ -90,7 +90,7 @@ export default function Home() {
                 variant="outline"
                 size="md"
                 onClick={handlePractice}
-                className="w-full"
+                fullWidth
               >
                 🎯 연습 모드
               </Button>
@@ -98,7 +98,7 @@ export default function Home() {
                 variant="outline"
                 size="md"
                 onClick={handleDailyChallenge}
-                className="w-full"
+                fullWidth
               >
                 📅 일일 챌린지
               </Button>
@@ -109,7 +109,7 @@ export default function Home() {
                 variant="ghost"
                 size="md"
                 onClick={() => setShowTutorial(true)}
-                className="w-full"
+                fullWidth
               >
                 📖 게임 방법
               </Button>
@@ -117,7 +117,7 @@ export default function Home() {
                 variant="ghost"
                 size="md"
                 onClick={() => router.push('/stats')}
-                className="w-full"
+                fullWidth
               >
                 📊 통계
               </Button>
@@ -128,18 +128,24 @@ export default function Home() {
           {stats && stats.totalGames > 0 && (
             <button
               onClick={() => router.push('/stats')}
-              className="w-full bg-slate-800/30 rounded-xl p-4 grid grid-cols-3 gap-4 hover:bg-slate-800/50 transition-colors"
+              className="w-full bg-slate-800/30 rounded-xl p-4 grid grid-cols-3 gap-4
+                         hover:bg-slate-800/50 hover:border-slate-700
+                         transition-all duration-200
+                         border border-transparent
+                         focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-slate-900
+                         active:scale-[0.98]"
+              aria-label="통계 페이지로 이동"
             >
               <div className="text-center">
-                <div className="text-2xl font-bold text-white">{stats.totalGames}</div>
+                <div className="text-2xl font-bold text-white tabular-nums">{stats.totalGames}</div>
                 <div className="text-xs text-slate-500">총 게임</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-emerald-400">{stats.totalWins}</div>
+                <div className="text-2xl font-bold text-emerald-400 tabular-nums">{stats.totalWins}</div>
                 <div className="text-xs text-slate-500">승리</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-amber-400">{stats.maxStreak}</div>
+                <div className="text-2xl font-bold text-amber-400 tabular-nums">{stats.maxStreak}</div>
                 <div className="text-xs text-slate-500">최다 연승</div>
               </div>
             </button>
