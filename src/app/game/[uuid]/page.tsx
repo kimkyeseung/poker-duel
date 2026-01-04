@@ -13,8 +13,7 @@ import {
   ResultDisplay,
   GameOverDialog,
   VictoryDialog,
-  DifficultyBadge,
-  DifficultyProgress,
+  GameProgressCompact,
 } from '@/components/game';
 import { checkAnswer } from '@/lib/poker/calculator';
 import { evaluateStartingHand, compareStartingHands, StartingHandInfo } from '@/lib/poker/starting-hands';
@@ -339,16 +338,17 @@ export default function GamePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex flex-col">
       {/* 헤더 */}
-      <header className="p-4 border-b border-slate-800">
+      <header className="p-4 border-b border-slate-800 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-10">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
           <button
             onClick={handleGoHome}
-            className="text-slate-400 hover:text-white transition-colors"
+            className="text-slate-400 hover:text-white transition-colors flex items-center gap-1"
+            aria-label="게임 나가기"
           >
-            ← 나가기
+            <span aria-hidden="true">←</span>
+            <span className="hidden sm:inline">나가기</span>
           </button>
-          <DifficultyBadge difficulty={difficulty} />
-          <DifficultyProgress currentDifficulty={difficulty} />
+          <GameProgressCompact difficulty={difficulty} currentRound={currentRound} />
         </div>
       </header>
 
@@ -360,6 +360,7 @@ export default function GamePage() {
           isComputer
           label="컴퓨터"
           handName={computerHand ? evaluateStartingHand(computerHand).name : undefined}
+          handRank={showResult && currentRound === 'preflop' && computerHand ? evaluateStartingHand(computerHand).rank : undefined}
           isActive={status === 'answering'}
         />
 
@@ -376,7 +377,8 @@ export default function GamePage() {
           cards={playerHand}
           label="나"
           handName={playerHand ? evaluateStartingHand(playerHand).name : undefined}
-          winRate={showResult && currentWinRate ? currentWinRate.playerWinRate : undefined}
+          winRate={showResult && currentRound !== 'preflop' && currentWinRate ? currentWinRate.playerWinRate : undefined}
+          handRank={showResult && currentRound === 'preflop' && playerHand ? evaluateStartingHand(playerHand).rank : undefined}
           isActive={status === 'answering'}
           isRevealing={isRevealingPlayerCards}
           hasRevealed={hasPlayerCardsRevealed}
