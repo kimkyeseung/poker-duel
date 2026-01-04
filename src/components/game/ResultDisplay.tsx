@@ -29,7 +29,7 @@ export function ResultDisplay({
   };
 
   return (
-    <div className={cn('bg-slate-800/90 rounded-2xl p-6 border border-slate-700', className)}>
+    <div className={cn('bg-slate-800/90 rounded-2xl p-6 border border-slate-700 backdrop-blur-sm', className)}>
       {/* 정답/오답 표시 또는 리버 결과 */}
       <div className="text-center mb-6">
         {isRiverConfirmation ? (
@@ -37,12 +37,15 @@ export function ResultDisplay({
           <div
             className={cn(
               'inline-flex items-center gap-2 px-6 py-3 rounded-full text-xl font-bold',
+              'border-2 transition-all duration-300 animate-in zoom-in',
               getRiverWinner() === 'player'
-                ? 'bg-blue-500/20 text-blue-400'
+                ? 'bg-blue-500/20 text-blue-400 border-blue-500/50 shadow-lg shadow-blue-500/20'
                 : getRiverWinner() === 'computer'
-                ? 'bg-red-500/20 text-red-400'
-                : 'bg-slate-500/20 text-slate-400'
+                ? 'bg-red-500/20 text-red-400 border-red-500/50 shadow-lg shadow-red-500/20'
+                : 'bg-slate-500/20 text-slate-400 border-slate-500/50'
             )}
+            role="status"
+            aria-live="polite"
           >
             {getRiverWinner() === 'player' && '🎉 승리!'}
             {getRiverWinner() === 'computer' && '😢 패배'}
@@ -53,10 +56,14 @@ export function ResultDisplay({
           <div
             className={cn(
               'inline-flex items-center gap-2 px-6 py-3 rounded-full text-xl font-bold',
+              'border-2 transition-all duration-300 animate-in zoom-in',
               isCorrect
-                ? 'bg-emerald-500/20 text-emerald-400'
-                : 'bg-red-500/20 text-red-400'
+                ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/50 shadow-lg shadow-emerald-500/20'
+                : 'bg-red-500/20 text-red-400 border-red-500/50 shadow-lg shadow-red-500/20'
             )}
+            role="status"
+            aria-live="polite"
+            aria-label={isCorrect ? '정답입니다' : '오답입니다'}
           >
             {isCorrect ? '✓ 정답!' : '✗ 오답'}
           </div>

@@ -10,6 +10,7 @@ interface PlayerAreaProps {
   label: string;
   handName?: string;
   winRate?: number;
+  handRank?: number; // 프리플랍 핸드 랭킹 (1~169)
   isActive?: boolean;
   className?: string;
   isRevealing?: boolean; // 카드 공개 애니메이션 중
@@ -23,6 +24,7 @@ export function PlayerArea({
   label,
   handName,
   winRate,
+  handRank,
   isActive = false,
   className,
   isRevealing = false,
@@ -41,8 +43,11 @@ export function PlayerArea({
       <div
         className={cn(
           'flex items-center gap-3 px-4 py-2 rounded-full',
-          'bg-slate-800/80 border',
-          isActive ? 'border-amber-500 shadow-lg shadow-amber-500/20' : 'border-slate-700'
+          'bg-slate-800/80 border backdrop-blur-sm',
+          'transition-all duration-300',
+          isActive
+            ? 'border-amber-500 shadow-lg shadow-amber-500/20 ring-2 ring-amber-500/10'
+            : 'border-slate-700'
         )}
       >
         {/* 아바타 */}
@@ -65,8 +70,22 @@ export function PlayerArea({
           )}
         </div>
 
-        {/* 승률 표시 */}
-        {typeof winRate === 'number' && (
+        {/* 핸드 랭킹 표시 (프리플랍) */}
+        {typeof handRank === 'number' && (
+          <div
+            className={cn(
+              'ml-2 px-3 py-1 rounded-full text-sm font-bold font-mono',
+              isComputer
+                ? 'bg-red-500/20 text-red-400'
+                : 'bg-blue-500/20 text-blue-400'
+            )}
+          >
+            {handRank}/169
+          </div>
+        )}
+
+        {/* 승률 표시 (플랍/턴/리버) */}
+        {typeof winRate === 'number' && typeof handRank !== 'number' && (
           <div
             className={cn(
               'ml-2 px-3 py-1 rounded-full text-sm font-bold',
