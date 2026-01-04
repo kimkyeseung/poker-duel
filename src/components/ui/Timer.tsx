@@ -40,10 +40,10 @@ export function Timer({
   const isCritical = seconds <= 1;
 
   return (
-    <div className={cn('relative', className)}>
+    <div className={cn('relative', className)} role="timer" aria-live="polite" aria-atomic="true">
       {/* 원형 타이머 */}
       <div className="relative w-20 h-20">
-        <svg className="w-full h-full transform -rotate-90">
+        <svg className="w-full h-full transform -rotate-90" aria-hidden="true">
           {/* 배경 원 */}
           <circle
             cx="40"
@@ -66,7 +66,7 @@ export function Timer({
             strokeDashoffset={`${2 * Math.PI * 36 * (1 - percentage / 100)}`}
             strokeLinecap="round"
             className={cn(
-              'transition-all duration-1000',
+              'transition-all duration-1000 ease-linear',
               isCritical
                 ? 'text-red-500 animate-pulse'
                 : isWarning
@@ -79,13 +79,14 @@ export function Timer({
         {/* 숫자 */}
         <div
           className={cn(
-            'absolute inset-0 flex items-center justify-center text-2xl font-bold',
+            'absolute inset-0 flex items-center justify-center text-2xl font-bold tabular-nums',
             isCritical
               ? 'text-red-500 animate-pulse'
               : isWarning
               ? 'text-amber-500'
               : 'text-white'
           )}
+          aria-label={`남은 시간 ${seconds}초`}
         >
           {seconds}
         </div>
@@ -93,7 +94,10 @@ export function Timer({
 
       {/* 위험 경고 */}
       {isWarning && isRunning && (
-        <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-amber-500 font-semibold animate-pulse">
+        <div
+          className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 text-xs text-amber-500 font-semibold animate-pulse"
+          role="alert"
+        >
           서두르세요!
         </div>
       )}

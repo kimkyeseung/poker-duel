@@ -103,25 +103,31 @@ function RoundIndicator({ cardCount }: { cardCount: number }) {
   }, rounds[0]);
 
   return (
-    <div className="flex items-center gap-1 bg-slate-900/80 px-3 py-1 rounded-full">
+    <div
+      className="flex items-center gap-1 bg-slate-900/80 backdrop-blur-sm px-3 py-1 rounded-full border border-slate-700"
+      role="status"
+      aria-label={`현재 라운드: ${currentRound.name}`}
+    >
       {rounds.map((round, index) => (
         <div key={round.name} className="flex items-center">
           <div
             className={cn(
-              'w-2 h-2 rounded-full transition-all',
+              'w-2 h-2 rounded-full transition-all duration-300',
               cardCount >= round.count
-                ? 'bg-amber-500'
+                ? 'bg-amber-500 shadow-sm shadow-amber-500/50'
                 : 'bg-slate-600'
             )}
+            aria-hidden="true"
           />
           {index < rounds.length - 1 && (
             <div
               className={cn(
-                'w-4 h-0.5 transition-all',
+                'w-4 h-0.5 transition-all duration-300',
                 cardCount > round.count
                   ? 'bg-amber-500'
                   : 'bg-slate-600'
               )}
+              aria-hidden="true"
             />
           )}
         </div>

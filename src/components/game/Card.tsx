@@ -197,16 +197,24 @@ export function Card({
 
   // 일반 앞면 카드
   const suitConfig = SUIT_CONFIG[card!.suit];
+  const cardLabel = `${card!.rank} of ${card!.suit}`;
 
   return (
     <div
+      role="img"
+      aria-label={cardLabel}
+      tabIndex={0}
       className={cn(
         sizeConfig.card,
         'rounded-lg shadow-lg relative overflow-hidden',
         'bg-white',
         'border-2',
         isHighlighted ? 'border-amber-400 ring-2 ring-amber-400/50' : 'border-slate-200',
-        'transform transition-all duration-300 hover:scale-105',
+        'transition-all duration-300',
+        'hover:shadow-2xl hover:-translate-y-1',
+        'focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-offset-2 focus:ring-offset-slate-900',
+        'active:scale-95',
+        'will-change-transform',
         !skipEntryAnimation && 'animate-in slide-in-from-bottom-2 fade-in',
         className
       )}
