@@ -7,3 +7,4 @@ export * from './GameOverDialog';
 export * from './VictoryDialog';
 export * from './DifficultyBadge';
 export * from './HintButton';
+export * from './GameProgress';
