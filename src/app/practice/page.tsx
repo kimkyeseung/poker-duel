@@ -165,54 +165,59 @@ export default function PracticePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex flex-col">
+    <div className="h-screen bg-[#0a0e1a] flex flex-col overflow-hidden">
       {/* 헤더 */}
-      <header className="p-4 border-b border-slate-800">
+      <header className="p-3 border-b border-white/5 glass shrink-0">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
           <button
             onClick={() => router.push('/')}
-            className="text-slate-400 hover:text-white transition-colors"
+            className="text-[#64748b] hover:text-white transition-colors flex items-center gap-2"
           >
-            ← 나가기
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span>Exit</span>
           </button>
-          <div className="text-amber-500 font-bold text-lg">🎯 연습 모드</div>
-          <div className="w-16" /> {/* 스페이서 */}
+          <div className="text-[#00d4ff] font-bold text-lg">PRACTICE MODE</div>
+          <div className="w-16" />
         </div>
       </header>
 
-      <main className="flex-1 flex flex-col items-center justify-center p-4 gap-4">
+      <main className="flex-1 flex flex-col items-center justify-between p-3 pb-4 min-h-0">
         {!isPlaying ? (
           // 시작 화면
           <div className="max-w-md w-full space-y-6 text-center">
             <div className="space-y-2">
-              <div className="text-6xl">🎯</div>
-              <h1 className="text-2xl font-bold text-white">연습 모드</h1>
-              <p className="text-slate-400">
-                시간 제한 없이 자유롭게 연습하세요
+              <div className="text-6xl">
+                <span className="inline-block bg-gradient-to-br from-[#00d4ff] to-[#0066ff] text-transparent bg-clip-text">P</span>
+              </div>
+              <h1 className="text-2xl font-black text-white">PRACTICE MODE</h1>
+              <p className="text-[#64748b]">
+                Practice without time limit
               </p>
             </div>
 
             {/* 난이도 선택 */}
-            <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-              <div className="text-sm text-slate-400 mb-3">난이도 선택</div>
+            <div className="game-card p-6">
+              <div className="text-sm text-[#64748b] mb-3">Select Difficulty</div>
               <div className="flex gap-2 justify-center">
                 {PRACTICE_DIFFICULTIES.map((d) => (
                   <button
                     key={d}
                     onClick={() => setDifficulty(d)}
                     className={cn(
-                      'px-4 py-2 rounded-lg font-semibold transition-all',
+                      'px-4 py-2 rounded-full font-semibold transition-all',
                       difficulty === d
-                        ? 'bg-amber-500 text-white'
-                        : 'bg-slate-700 text-slate-300 hover:bg-slate-600'
+                        ? 'bg-gradient-to-r from-[#00d4ff] to-[#0066ff] text-white shadow-[0_0_20px_rgba(0,212,255,0.3)]'
+                        : 'bg-[#1a1f35] text-[#64748b] hover:bg-[#1a1f35]/80'
                     )}
                   >
                     {DIFFICULTY_CONFIG[d].nameKo}
                   </button>
                 ))}
               </div>
-              <p className="text-xs text-slate-500 mt-3">
-                * 전문가, 홀덤의 신은 본 게임에서만 도전 가능
+              <p className="text-xs text-[#475569] mt-3">
+                * Expert & God mode only available in main game
               </p>
             </div>
 
@@ -220,9 +225,9 @@ export default function PracticePage() {
               variant="primary"
               size="lg"
               onClick={startNewGame}
-              className="w-full"
+              fullWidth
             >
-              연습 시작
+              START PRACTICE
             </Button>
           </div>
         ) : (
@@ -234,28 +239,31 @@ export default function PracticePage() {
             <PlayerArea
               cards={computerHand}
               isComputer
-              label="컴퓨터"
+              label="DEALER"
               handName={computerHand ? evaluateStartingHand(computerHand).name : undefined}
+              compact
+              showCards
             />
 
             {/* 테이블 */}
-            <Table communityCards={communityCards} className="w-full max-w-2xl" />
+            <Table communityCards={communityCards} className="w-full max-w-xl" compact />
 
             {/* 플레이어 영역 */}
             <PlayerArea
               cards={playerHand}
-              label="나"
+              label="YOU"
               handName={playerHand ? evaluateStartingHand(playerHand).name : undefined}
               winRate={showResult && currentWinRate ? currentWinRate.playerWinRate : undefined}
+              compact
             />
 
             {/* 입력/결과 영역 */}
-            <div className="w-full max-w-md space-y-4">
+            <div className="w-full max-w-md shrink-0">
               {/* 계산 중 */}
               {isCalculating && (
-                <div className="text-center text-slate-400">
-                  <div className="animate-spin inline-block w-6 h-6 border-2 border-amber-500 border-t-transparent rounded-full mb-2" />
-                  <p>승률 계산 중...</p>
+                <div className="text-center text-[#64748b]">
+                  <div className="animate-spin inline-block w-6 h-6 border-2 border-[#00d4ff] border-t-transparent rounded-full mb-2" />
+                  <p className="text-sm">Calculating win rate...</p>
                 </div>
               )}
 
@@ -270,25 +278,26 @@ export default function PracticePage() {
 
               {/* 결과 표시 */}
               {showResult && lastAnswer && currentWinRate && (
-                <div className="space-y-4">
+                <div className="space-y-3">
                   <ResultDisplay
                     winRateResult={currentWinRate}
                     answerResult={lastAnswer}
+                    compact
                   />
                   <div className="flex gap-2">
                     <Button
-                      variant="ghost"
+                      variant="secondary"
                       onClick={startNewGame}
                       className="flex-1"
                     >
-                      새 게임
+                      New Game
                     </Button>
                     <Button
                       variant="primary"
                       onClick={handleNextRound}
                       className="flex-1"
                     >
-                      {currentRound === 'river' ? '새 게임' : '다음 라운드'}
+                      {currentRound === 'river' ? 'New Game' : 'Next Round'}
                     </Button>
                   </div>
                 </div>
