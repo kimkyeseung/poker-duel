@@ -52,27 +52,30 @@ export default function SettingsPage() {
   };
 
   const handleResetData = () => {
-    if (confirm('모든 게임 데이터가 삭제됩니다. 계속하시겠습니까?')) {
+    if (confirm('All game data will be deleted. Continue?')) {
       localStorage.removeItem('poker-duel-stats');
       localStorage.removeItem('poker-duel-comments');
       localStorage.removeItem('poker-duel-tutorial-seen');
-      alert('데이터가 초기화되었습니다.');
+      alert('Data has been reset.');
       router.push('/');
     }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex flex-col">
+    <div className="min-h-screen bg-[#0a0e1a] flex flex-col">
       {/* 헤더 */}
-      <header className="p-4 border-b border-slate-800">
+      <header className="p-4 border-b border-white/5 glass">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
           <button
             onClick={() => router.push('/')}
-            className="text-slate-400 hover:text-white transition-colors"
+            className="text-[#64748b] hover:text-white transition-colors flex items-center gap-2"
           >
-            ← 메인으로
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span>Back</span>
           </button>
-          <div className="text-amber-500 font-bold text-lg">⚙️ 설정</div>
+          <div className="text-[#00d4ff] font-bold text-lg">SETTINGS</div>
           <div className="w-16" />
         </div>
       </header>
@@ -80,18 +83,21 @@ export default function SettingsPage() {
       <main className="flex-1 p-4">
         <div className="max-w-md mx-auto space-y-6">
           {/* 사운드 설정 */}
-          <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-            <h3 className="text-white font-semibold mb-4">🔊 사운드 & 진동</h3>
+          <div className="game-card p-6">
+            <h3 className="text-white font-bold mb-4 flex items-center gap-2">
+              <span className="w-8 h-8 rounded-full bg-[#00d4ff]/20 flex items-center justify-center text-[#00d4ff] text-sm">S</span>
+              Sound & Vibration
+            </h3>
             <div className="space-y-4">
               <ToggleSetting
-                label="효과음"
-                description="게임 내 효과음 재생"
+                label="Sound Effects"
+                description="Play in-game sounds"
                 enabled={settings.soundEnabled}
                 onToggle={handleSoundToggle}
               />
               <ToggleSetting
-                label="진동"
-                description="모바일 진동 피드백"
+                label="Vibration"
+                description="Mobile haptic feedback"
                 enabled={settings.vibrationEnabled}
                 onToggle={handleVibrationToggle}
               />
@@ -99,63 +105,72 @@ export default function SettingsPage() {
           </div>
 
           {/* 테마 설정 */}
-          <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-            <h3 className="text-white font-semibold mb-4">🎨 테마</h3>
+          <div className="game-card p-6">
+            <h3 className="text-white font-bold mb-4 flex items-center gap-2">
+              <span className="w-8 h-8 rounded-full bg-[#ff4d94]/20 flex items-center justify-center text-[#ff4d94] text-sm">T</span>
+              Theme
+            </h3>
             <div className="grid gap-3">
               {(Object.values(THEMES) as typeof THEMES[ThemeId][]).map((theme) => (
                 <button
                   key={theme.id}
                   onClick={() => handleThemeChange(theme.id)}
                   className={cn(
-                    'p-4 rounded-lg border-2 transition-all text-left',
+                    'p-4 rounded-xl border-2 transition-all text-left',
                     settings.theme === theme.id
-                      ? 'border-amber-500 bg-amber-500/10'
-                      : 'border-slate-700 bg-slate-800/50 hover:border-slate-600'
+                      ? 'border-[#00d4ff] bg-[#00d4ff]/10'
+                      : 'border-white/10 bg-[#1a1f35]/50 hover:border-white/20'
                   )}
                 >
                   <div className="flex items-center justify-between">
                     <div>
                       <div className="font-semibold text-white">{theme.name}</div>
-                      <div className="text-sm text-slate-400">{theme.description}</div>
+                      <div className="text-sm text-[#64748b]">{theme.description}</div>
                     </div>
                     {settings.theme === theme.id && (
-                      <div className="text-amber-500 text-xl">✓</div>
+                      <div className="text-[#00d4ff] text-xl font-bold">✓</div>
                     )}
                   </div>
                 </button>
               ))}
             </div>
-            <p className="text-xs text-slate-500 mt-3">
-              * 테마 변경은 다음 페이지 로드 시 적용됩니다.
+            <p className="text-xs text-[#64748b] mt-3">
+              * Theme changes will apply on next page load.
             </p>
           </div>
 
           {/* 데이터 관리 */}
-          <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-            <h3 className="text-white font-semibold mb-4">💾 데이터 관리</h3>
+          <div className="game-card p-6">
+            <h3 className="text-white font-bold mb-4 flex items-center gap-2">
+              <span className="w-8 h-8 rounded-full bg-[#ff4444]/20 flex items-center justify-center text-[#ff4444] text-sm">D</span>
+              Data Management
+            </h3>
             <Button
               variant="danger"
               size="md"
               onClick={handleResetData}
-              className="w-full"
+              fullWidth
             >
-              🗑️ 데이터 초기화
+              Reset All Data
             </Button>
-            <p className="text-xs text-slate-500 mt-3 text-center">
-              모든 게임 기록, 통계, 도전과제가 삭제됩니다.
+            <p className="text-xs text-[#64748b] mt-3 text-center">
+              All game records, stats, and achievements will be deleted.
             </p>
           </div>
 
           {/* 정보 */}
-          <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-            <h3 className="text-white font-semibold mb-4">ℹ️ 정보</h3>
-            <div className="space-y-2 text-sm text-slate-400">
+          <div className="game-card p-6">
+            <h3 className="text-white font-bold mb-4 flex items-center gap-2">
+              <span className="w-8 h-8 rounded-full bg-[#ffd700]/20 flex items-center justify-center text-[#ffd700] text-sm">i</span>
+              Information
+            </h3>
+            <div className="space-y-2 text-sm text-[#64748b]">
               <div className="flex justify-between">
-                <span>버전</span>
+                <span>Version</span>
                 <span className="text-white">1.0.0</span>
               </div>
               <div className="flex justify-between">
-                <span>개발</span>
+                <span>Developer</span>
                 <span className="text-white">Poker Duel Team</span>
               </div>
             </div>
@@ -180,16 +195,16 @@ function ToggleSetting({
   return (
     <button
       onClick={onToggle}
-      className="w-full flex items-center justify-between p-2 rounded-lg hover:bg-slate-700/50 transition-colors"
+      className="w-full flex items-center justify-between p-3 rounded-xl hover:bg-white/5 transition-colors"
     >
       <div className="text-left">
         <div className="text-white font-medium">{label}</div>
-        <div className="text-xs text-slate-500">{description}</div>
+        <div className="text-xs text-[#64748b]">{description}</div>
       </div>
       <div
         className={cn(
           'w-12 h-6 rounded-full transition-colors relative',
-          enabled ? 'bg-amber-500' : 'bg-slate-600'
+          enabled ? 'bg-[#00d4ff]' : 'bg-[#1a1f35]'
         )}
       >
         <div

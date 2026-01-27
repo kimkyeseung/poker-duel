@@ -37,30 +37,33 @@ export default function StatsPage() {
   const achievementProgress = getAchievementProgress(stats);
 
   const tabs: { id: TabType; label: string; icon: string }[] = [
-    { id: 'overview', label: '개요', icon: '📊' },
-    { id: 'titles', label: '칭호', icon: '🏅' },
-    { id: 'achievements', label: '도전과제', icon: '🏆' },
-    { id: 'history', label: '히스토리', icon: '📜' },
+    { id: 'overview', label: 'Overview', icon: '1' },
+    { id: 'titles', label: 'Titles', icon: '2' },
+    { id: 'achievements', label: 'Achievements', icon: '3' },
+    { id: 'history', label: 'History', icon: '4' },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex flex-col">
+    <div className="min-h-screen bg-[#0a0e1a] flex flex-col">
       {/* 헤더 */}
-      <header className="p-4 border-b border-slate-800">
+      <header className="p-4 border-b border-white/5 glass">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
           <button
             onClick={() => router.push('/')}
-            className="text-slate-400 hover:text-white transition-colors"
+            className="text-[#64748b] hover:text-white transition-colors flex items-center gap-2"
           >
-            ← 메인으로
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span>Back</span>
           </button>
-          <div className="text-amber-500 font-bold text-lg">📊 통계</div>
+          <div className="text-[#00d4ff] font-bold text-lg">STATISTICS</div>
           <div className="w-16" />
         </div>
       </header>
 
       {/* 탭 */}
-      <div className="border-b border-slate-800">
+      <div className="border-b border-white/5">
         <div className="max-w-4xl mx-auto px-4">
           <div className="flex gap-1">
             {tabs.map((tab) => (
@@ -70,11 +73,13 @@ export default function StatsPage() {
                 className={cn(
                   'px-4 py-3 text-sm font-medium transition-all',
                   activeTab === tab.id
-                    ? 'text-amber-500 border-b-2 border-amber-500'
-                    : 'text-slate-400 hover:text-white'
+                    ? 'text-[#00d4ff] border-b-2 border-[#00d4ff]'
+                    : 'text-[#64748b] hover:text-white'
                 )}
               >
-                <span className="mr-1">{tab.icon}</span>
+                <span className="mr-2 w-5 h-5 inline-flex items-center justify-center rounded-full bg-white/10 text-xs">
+                  {tab.icon}
+                </span>
                 {tab.label}
               </button>
             ))}
@@ -117,35 +122,35 @@ function OverviewTab({
   return (
     <div className="space-y-6">
       {/* 현재 칭호 */}
-      <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-xl p-6 border border-amber-500/30 text-center">
+      <div className="bg-gradient-to-r from-[#ffd700]/10 to-[#ff4d94]/10 rounded-2xl p-6 border border-[#ffd700]/30 text-center">
         <div className="text-4xl mb-2">{currentTitle.icon}</div>
         <div className="text-xl font-bold text-white">{currentTitle.name}</div>
-        <div className="text-sm text-slate-400 mt-1">{currentTitle.description}</div>
+        <div className="text-sm text-[#64748b] mt-1">{currentTitle.description}</div>
       </div>
 
       {/* 주요 통계 */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="총 게임" value={stats.totalGames} icon="🎮" />
-        <StatCard label="승리" value={stats.totalWins} icon="🏆" color="text-emerald-400" />
-        <StatCard label="패배" value={stats.totalLosses} icon="💔" color="text-red-400" />
-        <StatCard label="승률" value={`${winRate.toFixed(1)}%`} icon="📊" color="text-amber-400" />
+        <StatCard label="Total Games" value={stats.totalGames} icon="G" />
+        <StatCard label="Wins" value={stats.totalWins} icon="W" color="text-[#00ff88]" />
+        <StatCard label="Losses" value={stats.totalLosses} icon="L" color="text-[#ff4444]" />
+        <StatCard label="Win Rate" value={`${winRate.toFixed(1)}%`} icon="%" color="text-[#00d4ff]" />
       </div>
 
       {/* 연승 기록 */}
       <div className="grid grid-cols-2 gap-4">
-        <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-          <div className="text-sm text-slate-400 mb-1">최다 연승</div>
-          <div className="text-3xl font-bold text-amber-400">{stats.maxStreak}</div>
+        <div className="game-card p-4">
+          <div className="text-sm text-[#64748b] mb-1">Best Streak</div>
+          <div className="text-3xl font-bold text-[#ffd700]">{stats.maxStreak}</div>
         </div>
-        <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-          <div className="text-sm text-slate-400 mb-1">현재 연승</div>
+        <div className="game-card p-4">
+          <div className="text-sm text-[#64748b] mb-1">Current Streak</div>
           <div className="text-3xl font-bold text-white">{stats.currentStreak}</div>
         </div>
       </div>
 
       {/* 난이도별 통계 */}
-      <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-        <h3 className="text-sm text-slate-400 mb-4">난이도별 클리어</h3>
+      <div className="game-card p-4">
+        <h3 className="text-sm text-[#64748b] mb-4">Difficulty Clears</h3>
         <div className="space-y-3">
           {(Object.keys(stats.difficultyStats) as Difficulty[]).map((diff) => {
             const { played, cleared } = stats.difficultyStats[diff];
@@ -153,13 +158,13 @@ function OverviewTab({
             return (
               <div key={diff} className="flex items-center gap-3">
                 <DifficultyBadge difficulty={diff} size="sm" />
-                <div className="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
+                <div className="flex-1 h-2 bg-[#1a1f35] rounded-full overflow-hidden">
                   <div
-                    className="h-full bg-amber-500 transition-all"
+                    className="h-full bg-gradient-to-r from-[#00d4ff] to-[#0066ff] transition-all"
                     style={{ width: `${rate}%` }}
                   />
                 </div>
-                <div className="text-sm text-slate-300 w-20 text-right">
+                <div className="text-sm text-white/80 w-20 text-right">
                   {cleared}/{played}
                 </div>
               </div>
@@ -169,21 +174,21 @@ function OverviewTab({
       </div>
 
       {/* 도전과제 진행률 */}
-      <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+      <div className="game-card p-4">
         <div className="flex justify-between items-center mb-2">
-          <h3 className="text-sm text-slate-400">도전과제 진행률</h3>
-          <span className="text-amber-400 font-bold">
+          <h3 className="text-sm text-[#64748b]">Achievement Progress</h3>
+          <span className="text-[#ffd700] font-bold">
             {achievementProgress.unlocked}/{achievementProgress.total}
           </span>
         </div>
-        <div className="h-3 bg-slate-700 rounded-full overflow-hidden">
+        <div className="h-3 bg-[#1a1f35] rounded-full overflow-hidden">
           <div
-            className="h-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all"
+            className="h-full bg-gradient-to-r from-[#ffd700] to-[#ff4d94] transition-all"
             style={{ width: `${achievementProgress.percentage}%` }}
           />
         </div>
-        <div className="text-right text-xs text-slate-500 mt-1">
-          {achievementProgress.percentage}% 완료
+        <div className="text-right text-xs text-[#64748b] mt-1">
+          {achievementProgress.percentage}% Complete
         </div>
       </div>
     </div>
@@ -203,10 +208,12 @@ function StatCard({
   color?: string;
 }) {
   return (
-    <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700 text-center">
-      <div className="text-2xl mb-1">{icon}</div>
+    <div className="game-card p-4 text-center">
+      <div className="w-8 h-8 mx-auto mb-2 rounded-full bg-white/10 flex items-center justify-center text-sm font-bold text-white/60">
+        {icon}
+      </div>
       <div className={cn('text-2xl font-bold', color)}>{value}</div>
-      <div className="text-xs text-slate-500 mt-1">{label}</div>
+      <div className="text-xs text-[#64748b] mt-1">{label}</div>
     </div>
   );
 }
@@ -223,8 +230,8 @@ function TitlesTab({
 
   return (
     <div className="space-y-4">
-      <p className="text-slate-400 text-sm">
-        획득: {unlockedTitles.length}/{TITLES.length}
+      <p className="text-[#64748b] text-sm">
+        Unlocked: {unlockedTitles.length}/{TITLES.length}
       </p>
       <div className="grid gap-3">
         {TITLES.map((title) => {
@@ -238,25 +245,25 @@ function TitlesTab({
                 'rounded-xl p-4 border transition-all',
                 isUnlocked
                   ? isCurrent
-                    ? 'bg-gradient-to-r from-amber-500/10 to-orange-500/10 border-amber-500/50'
-                    : 'bg-slate-800/50 border-slate-700'
-                  : 'bg-slate-800/30 border-slate-800 opacity-50'
+                    ? 'bg-gradient-to-r from-[#ffd700]/10 to-[#ff4d94]/10 border-[#ffd700]/50'
+                    : 'game-card'
+                  : 'bg-[#0f1424]/50 border-white/5 opacity-50'
               )}
             >
               <div className="flex items-center gap-3">
-                <div className="text-3xl">{isUnlocked ? title.icon : '🔒'}</div>
+                <div className="text-3xl">{isUnlocked ? title.icon : '?'}</div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <span className={cn('font-bold', isUnlocked ? 'text-white' : 'text-slate-500')}>
+                    <span className={cn('font-bold', isUnlocked ? 'text-white' : 'text-[#64748b]')}>
                       {title.name}
                     </span>
                     {isCurrent && (
-                      <span className="text-xs bg-amber-500 text-white px-2 py-0.5 rounded-full">
-                        현재
+                      <span className="text-xs bg-[#ffd700] text-[#0a0e1a] px-2 py-0.5 rounded-full font-bold">
+                        CURRENT
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-slate-400">{title.description}</p>
+                  <p className="text-sm text-[#64748b]">{title.description}</p>
                 </div>
               </div>
             </div>
@@ -277,15 +284,15 @@ function AchievementsTab({
 }) {
   const unlockedIds = new Set(unlockedAchievements.map((a) => a.id));
   const categories = [
-    { id: 'gameplay' as const, name: '게임플레이', icon: '🎮' },
-    { id: 'mastery' as const, name: '마스터리', icon: '⭐' },
-    { id: 'special' as const, name: '특별', icon: '💎' },
+    { id: 'gameplay' as const, name: 'Gameplay', icon: 'G' },
+    { id: 'mastery' as const, name: 'Mastery', icon: 'M' },
+    { id: 'special' as const, name: 'Special', icon: 'S' },
   ];
 
   return (
     <div className="space-y-6">
-      <p className="text-slate-400 text-sm">
-        획득: {unlockedAchievements.length}/{ACHIEVEMENTS.length}
+      <p className="text-[#64748b] text-sm">
+        Unlocked: {unlockedAchievements.length}/{ACHIEVEMENTS.length}
       </p>
 
       {categories.map((category) => {
@@ -294,7 +301,9 @@ function AchievementsTab({
         return (
           <div key={category.id}>
             <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
-              <span>{category.icon}</span>
+              <span className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs">
+                {category.icon}
+              </span>
               {category.name}
             </h3>
             <div className="grid gap-2">
@@ -307,19 +316,19 @@ function AchievementsTab({
                     className={cn(
                       'rounded-lg p-3 border transition-all flex items-center gap-3',
                       isUnlocked
-                        ? 'bg-slate-800/50 border-slate-700'
-                        : 'bg-slate-800/20 border-slate-800 opacity-50'
+                        ? 'game-card'
+                        : 'bg-[#0f1424]/50 border-white/5 opacity-50'
                     )}
                   >
-                    <div className="text-2xl">{isUnlocked ? achievement.icon : '🔒'}</div>
+                    <div className="text-2xl">{isUnlocked ? achievement.icon : '?'}</div>
                     <div className="flex-1">
-                      <div className={cn('font-medium', isUnlocked ? 'text-white' : 'text-slate-500')}>
+                      <div className={cn('font-medium', isUnlocked ? 'text-white' : 'text-[#64748b]')}>
                         {achievement.name}
                       </div>
-                      <p className="text-xs text-slate-400">{achievement.description}</p>
+                      <p className="text-xs text-[#64748b]">{achievement.description}</p>
                     </div>
                     {isUnlocked && (
-                      <div className="text-emerald-400 text-sm">✓</div>
+                      <div className="text-[#00ff88] text-sm font-bold">✓</div>
                     )}
                   </div>
                 );
@@ -338,17 +347,19 @@ function HistoryTab({ stats }: { stats: GameStats }) {
 
   if (history.length === 0) {
     return (
-      <div className="text-center text-slate-500 py-12">
-        <div className="text-4xl mb-2">📜</div>
-        <p>아직 플레이 기록이 없습니다.</p>
-        <p className="text-sm mt-1">게임을 플레이하면 여기에 기록됩니다.</p>
+      <div className="text-center text-[#64748b] py-12">
+        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/5 flex items-center justify-center text-2xl font-bold text-white/20">
+          H
+        </div>
+        <p>No play history yet.</p>
+        <p className="text-sm mt-1">Your games will appear here.</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      <p className="text-slate-400 text-sm">최근 {history.length}개의 기록</p>
+      <p className="text-[#64748b] text-sm">Recent {history.length} records</p>
       <div className="space-y-2">
         {history.slice(0, 20).map((record) => {
           const date = new Date(record.date);
@@ -357,29 +368,29 @@ function HistoryTab({ stats }: { stats: GameStats }) {
           return (
             <div
               key={record.id}
-              className="bg-slate-800/50 rounded-lg p-3 border border-slate-700 flex items-center gap-3"
+              className="game-card p-3 flex items-center gap-3"
             >
               <div className={cn(
-                'w-10 h-10 rounded-full flex items-center justify-center text-xl',
-                record.isVictory ? 'bg-emerald-500/20' : 'bg-red-500/20'
+                'w-10 h-10 rounded-full flex items-center justify-center text-lg font-bold',
+                record.isVictory ? 'bg-[#00ff88]/20 text-[#00ff88]' : 'bg-[#ff4444]/20 text-[#ff4444]'
               )}>
-                {record.isVictory ? '🏆' : '💔'}
+                {record.isVictory ? 'W' : 'L'}
               </div>
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <DifficultyBadge difficulty={record.difficulty} size="sm" />
                   <span className={cn(
                     'text-sm font-medium',
-                    record.isVictory ? 'text-emerald-400' : 'text-red-400'
+                    record.isVictory ? 'text-[#00ff88]' : 'text-[#ff4444]'
                   )}>
-                    {record.isVictory ? '승리' : '패배'}
+                    {record.isVictory ? 'WIN' : 'LOSS'}
                   </span>
                 </div>
-                <p className="text-xs text-slate-500 mt-1">
-                  승률: {record.winRateResult.playerWinRate.toFixed(1)}%
+                <p className="text-xs text-[#64748b] mt-1">
+                  Win Rate: {record.winRateResult.playerWinRate.toFixed(1)}%
                 </p>
               </div>
-              <div className="text-xs text-slate-500">{dateString}</div>
+              <div className="text-xs text-[#64748b]">{dateString}</div>
             </div>
           );
         })}

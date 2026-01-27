@@ -27,7 +27,7 @@ export default function CommentsPage() {
 
     const comment: EndingComment = {
       id: uuidv4(),
-      author: authorName.trim() || '익명의 홀덤 신',
+      author: authorName.trim() || 'Anonymous Champion',
       content: newComment.trim(),
       date: new Date().toISOString(),
       difficulty: 'god',
@@ -42,17 +42,20 @@ export default function CommentsPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex flex-col">
+    <div className="min-h-screen bg-[#0a0e1a] flex flex-col">
       {/* 헤더 */}
-      <header className="p-4 border-b border-slate-800">
+      <header className="p-4 border-b border-white/5 glass">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
           <button
             onClick={() => router.push('/')}
-            className="text-slate-400 hover:text-white transition-colors"
+            className="text-[#64748b] hover:text-white transition-colors flex items-center gap-2"
           >
-            ← 메인으로
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span>Back</span>
           </button>
-          <div className="text-amber-500 font-bold text-lg">🏆 명예의 전당</div>
+          <div className="text-[#ffd700] font-bold text-lg">HALL OF FAME</div>
           <div className="w-16" />
         </div>
       </header>
@@ -61,71 +64,75 @@ export default function CommentsPage() {
         <div className="max-w-2xl mx-auto space-y-8">
           {/* 타이틀 */}
           <div className="text-center space-y-2">
-            <div className="text-5xl">👑</div>
-            <h1 className="text-2xl font-bold text-white">홀덤의 신 클리어!</h1>
-            <p className="text-slate-400">
-              클리어 소감을 남겨주세요
+            <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-[#ffd700] to-[#ffb800] flex items-center justify-center text-[#0a0e1a] text-4xl font-black">
+              G
+            </div>
+            <h1 className="text-2xl font-black text-white">GOD MODE CLEARED!</h1>
+            <p className="text-[#64748b]">
+              Leave your victory message
             </p>
           </div>
 
           {/* 코멘트 작성 */}
           {!hasSubmitted ? (
-            <div className="bg-slate-800/50 rounded-xl p-6 border border-slate-700 space-y-4">
+            <div className="game-card p-6 space-y-4">
               <div>
-                <label className="block text-sm text-slate-400 mb-2">닉네임 (선택)</label>
+                <label className="block text-sm text-[#64748b] mb-2">Nickname (optional)</label>
                 <input
                   type="text"
                   value={authorName}
                   onChange={(e) => setAuthorName(e.target.value)}
-                  placeholder="익명의 홀덤 신"
+                  placeholder="Anonymous Champion"
                   maxLength={20}
-                  className="w-full px-4 py-2 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500"
+                  className="w-full px-4 py-3 bg-[#0f1424] border border-white/10 rounded-xl text-white placeholder:text-[#64748b] focus:outline-none focus:border-[#00d4ff] focus:shadow-[0_0_20px_rgba(0,212,255,0.2)] transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-slate-400 mb-2">소감</label>
+                <label className="block text-sm text-[#64748b] mb-2">Victory Message</label>
                 <textarea
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="클리어 소감을 남겨주세요..."
+                  placeholder="Share your thoughts on clearing the game..."
                   maxLength={200}
                   rows={4}
-                  className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:border-amber-500 resize-none"
+                  className="w-full px-4 py-3 bg-[#0f1424] border border-white/10 rounded-xl text-white placeholder:text-[#64748b] focus:outline-none focus:border-[#00d4ff] focus:shadow-[0_0_20px_rgba(0,212,255,0.2)] transition-all resize-none"
                 />
-                <div className="text-right text-xs text-slate-500 mt-1">
+                <div className="text-right text-xs text-[#64748b] mt-1">
                   {newComment.length}/200
                 </div>
               </div>
 
               <Button
-                variant="primary"
+                variant="gold"
                 size="lg"
                 onClick={handleSubmit}
                 disabled={!newComment.trim() || isSubmitting}
-                className="w-full"
+                fullWidth
               >
-                {isSubmitting ? '등록 중...' : '소감 등록'}
+                {isSubmitting ? 'Submitting...' : 'Submit Message'}
               </Button>
             </div>
           ) : (
-            <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-6 text-center">
-              <div className="text-4xl mb-2">✅</div>
-              <p className="text-emerald-400 font-semibold">소감이 등록되었습니다!</p>
+            <div className="bg-[#00ff88]/10 border border-[#00ff88]/30 rounded-2xl p-6 text-center">
+              <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#00ff88]/20 flex items-center justify-center text-[#00ff88] text-xl font-bold">
+                ✓
+              </div>
+              <p className="text-[#00ff88] font-semibold">Your message has been submitted!</p>
             </div>
           )}
 
           {/* 코멘트 목록 */}
           <div className="space-y-4">
-            <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-              <span>💬</span>
-              클리어 소감 ({comments.length})
+            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+              <span className="w-8 h-8 rounded-full bg-[#ff4d94]/20 flex items-center justify-center text-[#ff4d94] text-sm">C</span>
+              Victory Messages ({comments.length})
             </h2>
 
             {comments.length === 0 ? (
-              <div className="text-center text-slate-500 py-8">
-                아직 등록된 소감이 없습니다.<br />
-                첫 번째 클리어 소감을 남겨보세요!
+              <div className="text-center text-[#64748b] py-8">
+                No messages yet.<br />
+                Be the first to leave a victory message!
               </div>
             ) : (
               <div className="space-y-3">
@@ -146,15 +153,17 @@ function CommentCard({ comment }: { comment: EndingComment }) {
   const dateString = `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, '0')}.${String(date.getDate()).padStart(2, '0')}`;
 
   return (
-    <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+    <div className="game-card p-4">
       <div className="flex justify-between items-start mb-2">
         <div className="flex items-center gap-2">
-          <span className="text-lg">👑</span>
+          <span className="w-8 h-8 rounded-full bg-gradient-to-br from-[#ffd700] to-[#ffb800] flex items-center justify-center text-[#0a0e1a] text-sm font-bold">
+            G
+          </span>
           <span className="font-semibold text-white">{comment.author}</span>
         </div>
-        <span className="text-xs text-slate-500">{dateString}</span>
+        <span className="text-xs text-[#64748b]">{dateString}</span>
       </div>
-      <p className="text-slate-300 text-sm leading-relaxed">{comment.content}</p>
+      <p className="text-white/80 text-sm leading-relaxed pl-10">{comment.content}</p>
     </div>
   );
 }

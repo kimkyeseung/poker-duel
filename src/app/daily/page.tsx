@@ -306,18 +306,21 @@ export default function DailyChallengePage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex flex-col">
+    <div className="min-h-screen bg-[#0a0e1a] flex flex-col">
       {/* 헤더 */}
-      <header className="p-4 border-b border-slate-800">
+      <header className="p-4 border-b border-white/5 glass">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
           <button
             onClick={() => router.push('/')}
-            className="text-slate-400 hover:text-white transition-colors"
+            className="text-[#64748b] hover:text-white transition-colors flex items-center gap-2"
           >
-            ← 나가기
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span>Exit</span>
           </button>
-          <div className="text-amber-500 font-bold text-lg">📅 일일 챌린지</div>
-          <div className="text-slate-400 text-sm">{todayString}</div>
+          <div className="text-[#ffd700] font-bold text-lg">DAILY CHALLENGE</div>
+          <div className="text-[#64748b] text-sm">{todayString}</div>
         </div>
       </header>
 
@@ -326,27 +329,29 @@ export default function DailyChallengePage() {
           // 시작 화면
           <div className="max-w-md w-full space-y-6 text-center">
             <div className="space-y-2">
-              <div className="text-6xl">📅</div>
-              <h1 className="text-2xl font-bold text-white">일일 챌린지</h1>
-              <p className="text-slate-400">
-                오늘의 도전! 모든 유저가 같은 문제를 풉니다.
+              <div className="text-6xl">
+                <span className="inline-block bg-gradient-to-br from-[#ffd700] to-[#ffb800] text-transparent bg-clip-text font-black">D</span>
+              </div>
+              <h1 className="text-2xl font-black text-white">DAILY CHALLENGE</h1>
+              <p className="text-[#64748b]">
+                Today's challenge! Same puzzle for all players.
               </p>
             </div>
 
-            <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-              <p className="text-sm text-slate-300">
-                5단계 난이도를 순서대로 클리어하세요.<br />
-                한 번 도전하면 다시 도전할 수 없습니다!
+            <div className="game-card p-6">
+              <p className="text-sm text-white/80">
+                Clear all 5 difficulty levels in order.<br />
+                You only get one attempt per day!
               </p>
             </div>
 
             <Button
-              variant="primary"
+              variant="gold"
               size="lg"
               onClick={startGame}
-              className="w-full"
+              fullWidth
             >
-              오늘의 챌린지 시작
+              START TODAY'S CHALLENGE
             </Button>
           </div>
         )}
@@ -356,29 +361,33 @@ export default function DailyChallengePage() {
           <div className="max-w-md w-full space-y-6 text-center">
             <div className="space-y-2">
               <div className="text-6xl">
-                {existingRecord.isVictory ? '🏆' : '📅'}
+                {existingRecord.isVictory ? (
+                  <span className="inline-block bg-gradient-to-br from-[#ffd700] to-[#ffb800] text-transparent bg-clip-text">W</span>
+                ) : (
+                  <span className="text-[#64748b]">D</span>
+                )}
               </div>
-              <h1 className="text-2xl font-bold text-white">
-                오늘의 챌린지 {existingRecord.isVictory ? '클리어!' : '완료'}
+              <h1 className="text-2xl font-black text-white">
+                {existingRecord.isVictory ? 'CHALLENGE CLEARED!' : 'CHALLENGE COMPLETE'}
               </h1>
-              <p className="text-slate-400">
+              <p className="text-[#64748b]">
                 {existingRecord.isVictory
-                  ? '축하합니다! 오늘의 챌린지를 클리어했습니다.'
-                  : '내일 다시 도전해보세요!'}
+                  ? 'Congratulations! You cleared today\'s challenge.'
+                  : 'Try again tomorrow!'}
               </p>
             </div>
 
-            <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
-              <div className="text-sm text-slate-400 mb-2">도달 난이도</div>
+            <div className="game-card p-6">
+              <div className="text-sm text-[#64748b] mb-2">Reached Difficulty</div>
               <DifficultyBadge difficulty={existingRecord.difficulty} size="lg" />
             </div>
 
             <Button
-              variant="outline"
+              variant="secondary"
               onClick={() => router.push('/')}
-              className="w-full"
+              fullWidth
             >
-              메인으로
+              Back to Main
             </Button>
           </div>
         )}
@@ -394,7 +403,7 @@ export default function DailyChallengePage() {
             <PlayerArea
               cards={computerHand}
               isComputer
-              label="컴퓨터"
+              label="DEALER"
               handName={computerHand ? evaluateStartingHand(computerHand).name : undefined}
               isActive={status === 'answering'}
             />
@@ -403,7 +412,7 @@ export default function DailyChallengePage() {
 
             <PlayerArea
               cards={playerHand}
-              label="나"
+              label="YOU"
               handName={playerHand ? evaluateStartingHand(playerHand).name : undefined}
               winRate={showResult && currentWinRate ? currentWinRate.playerWinRate : undefined}
               isActive={status === 'answering'}
@@ -423,9 +432,9 @@ export default function DailyChallengePage() {
               )}
 
               {isCalculating && (
-                <div className="text-center text-slate-400">
-                  <div className="animate-spin inline-block w-6 h-6 border-2 border-amber-500 border-t-transparent rounded-full mb-2" />
-                  <p>승률 계산 중...</p>
+                <div className="text-center text-[#64748b]">
+                  <div className="animate-spin inline-block w-6 h-6 border-2 border-[#00d4ff] border-t-transparent rounded-full mb-2" />
+                  <p>Calculating win rate...</p>
                 </div>
               )}
 
@@ -446,12 +455,12 @@ export default function DailyChallengePage() {
                   />
                   {lastAnswer.isCorrect && (
                     <Button
-                      variant="primary"
+                      variant="success"
                       size="lg"
                       onClick={handleContinue}
-                      className="w-full"
+                      fullWidth
                     >
-                      {currentRound === 'river' ? '다음 난이도' : '다음 라운드'} →
+                      {currentRound === 'river' ? 'Next Level' : 'Next Round'} →
                     </Button>
                   )}
                 </div>
@@ -468,7 +477,7 @@ export default function DailyChallengePage() {
         onGoHome={() => router.push('/')}
         difficulty={difficulty}
         winRateResult={currentWinRate}
-        message="일일 챌린지 실패! 내일 다시 도전하세요."
+        message="Daily challenge failed! Try again tomorrow."
       />
 
       {/* 승리 */}
