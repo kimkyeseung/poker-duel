@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGameStore } from '@/stores/gameStore';
 import { usePokerCalculator } from '@/hooks/usePokerCalculator';
-import { Button, TimerBar } from '@/components/ui';
+import { Button, Timer, TimerBar } from '@/components/ui';
 import {
   Card,
   Table,
@@ -17,12 +17,18 @@ import {
 } from '@/components/game';
 import { checkAnswer } from '@/lib/poker/calculator';
 import { evaluateStartingHand, compareStartingHands, StartingHandInfo } from '@/lib/poker/starting-hands';
-import { recordGameResult, updateStreak, addHandToHistory } from '@/lib/storage';
+import { recordGameResult, updateStreak } from '@/lib/storage';
 import { DIFFICULTY_CONFIG, WinRateResult, AnswerResult, GameRound } from '@/types';
 import { cn } from '@/lib/utils';
 
-// 카드 공개 애니메이션 시간 (ms)
 const CARD_REVEAL_DURATION = 2000;
+
+const ROUND_NAMES: Record<GameRound, string> = {
+  preflop: 'PRE-FLOP',
+  flop: 'THE FLOP',
+  turn: 'THE TURN',
+  river: 'THE RIVER',
+};
 
 export default function GamePage() {
   const router = useRouter();
@@ -37,8 +43,6 @@ export default function GamePage() {
     communityCards,
     timeRemaining,
     isTimerRunning,
-    winRateResult,
-    answers,
     initGame,
     startRound,
     decrementTimer,
@@ -57,16 +61,13 @@ export default function GamePage() {
   const [lastAnswer, setLastAnswer] = useState<AnswerResult | null>(null);
   const [showResult, setShowResult] = useState(false);
 
-  // 카드 공개 애니메이션 상태
   const [isRevealingCards, setIsRevealingCards] = useState(false);
   const [isRevealingPlayerCards, setIsRevealingPlayerCards] = useState(false);
   const [newCardsCount, setNewCardsCount] = useState(0);
   const [hasPlayerCardsRevealed, setHasPlayerCardsRevealed] = useState(false);
 
-  // 답변 제출 여부 추적 (타이머 경쟁 상태 방지)
   const hasSubmittedRef = useRef(false);
 
-  // 게임 초기화 (gameId가 없을 때만 실행)
   useEffect(() => {
     if (!gameId) {
       initGame('easy');
@@ -74,112 +75,111 @@ export default function GamePage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 라운드 시작 시 승률 계산 및 카드 공개 애니메이션
   useEffect(() => {
     if (status === 'playing' && playerHand && computerHand) {
-
       if (currentRound === 'preflop') {
-        // 프리플랍: 핸드랭킹 비교
         if (shouldSkipPreflop()) {
-          // 같은 핸드면 플랍으로 스킵
           setHasPlayerCardsRevealed(true);
           nextRound();
         } else {
-          // 플레이어 카드 공개 애니메이션
           setIsRevealingPlayerCards(true);
           setTimeout(() => {
             setIsRevealingPlayerCards(false);
             setHasPlayerCardsRevealed(true);
-            hasSubmittedRef.current = false; // 라운드 시작 시 리셋
+            hasSubmittedRef.current = false;
             startRound();
           }, CARD_REVEAL_DURATION);
         }
       } else if (currentRound === 'river') {
-        // 리버: 카드 공개 후 결과 확인
         setIsRevealingCards(true);
         setNewCardsCount(1);
-        calculate(playerHand, computerHand, communityCards).then(result => {
-          setCurrentWinRate(result);
-          // 애니메이션 완료 후 결과 표시
-          setTimeout(() => {
+        calculate(playerHand, computerHand, communityCards)
+          .then(result => {
+            setCurrentWinRate(result);
+            setTimeout(() => {
+              setIsRevealingCards(false);
+              setNewCardsCount(0);
+              handleRiverResult(result);
+            }, CARD_REVEAL_DURATION);
+          })
+          .catch(err => {
+            console.error('River calculation error:', err);
             setIsRevealingCards(false);
             setNewCardsCount(0);
-            handleRiverResult(result);
-          }, CARD_REVEAL_DURATION);
-        });
+          });
       } else if (currentRound === 'flop') {
-        // 플랍: 3장 공개 애니메이션
+        console.log('Flop started, communityCards:', communityCards);
         setIsRevealingCards(true);
         setNewCardsCount(3);
-        calculate(playerHand, computerHand, communityCards).then(result => {
-          setCurrentWinRate(result);
-          // 애니메이션 완료 후 라운드 시작
-          setTimeout(() => {
+        calculate(playerHand, computerHand, communityCards)
+          .then(result => {
+            console.log('Flop calculation result:', result);
+            setCurrentWinRate(result);
+            setTimeout(() => {
+              setIsRevealingCards(false);
+              setNewCardsCount(0);
+              hasSubmittedRef.current = false;
+              console.log('Flop: calling startRound');
+              startRound();
+            }, CARD_REVEAL_DURATION);
+          })
+          .catch(err => {
+            console.error('Flop calculation error:', err);
             setIsRevealingCards(false);
             setNewCardsCount(0);
-            hasSubmittedRef.current = false; // 라운드 시작 시 리셋
+            hasSubmittedRef.current = false;
             startRound();
-          }, CARD_REVEAL_DURATION);
-        });
+          });
       } else if (currentRound === 'turn') {
-        // 턴: 1장 공개 애니메이션
         setIsRevealingCards(true);
         setNewCardsCount(1);
-        calculate(playerHand, computerHand, communityCards).then(result => {
-          setCurrentWinRate(result);
-          // 애니메이션 완료 후 라운드 시작
-          setTimeout(() => {
+        calculate(playerHand, computerHand, communityCards)
+          .then(result => {
+            setCurrentWinRate(result);
+            setTimeout(() => {
+              setIsRevealingCards(false);
+              setNewCardsCount(0);
+              hasSubmittedRef.current = false;
+              startRound();
+            }, CARD_REVEAL_DURATION);
+          })
+          .catch(err => {
+            console.error('Turn calculation error:', err);
             setIsRevealingCards(false);
             setNewCardsCount(0);
-            hasSubmittedRef.current = false; // 라운드 시작 시 리셋
+            hasSubmittedRef.current = false;
             startRound();
-          }, CARD_REVEAL_DURATION);
-        });
+          });
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, currentRound, communityCards.length]);
 
-  // 타이머 타임아웃 처리
   const handleTimeout = useCallback(() => {
-    // 이미 답변을 제출한 경우 타임아웃 무시
     if (hasSubmittedRef.current) return;
-
     stopTimer();
-    gameOver('시간 초과!');
+    gameOver('Time Out!');
     recordGameResult(difficulty, false);
     updateStreak(false);
   }, [stopTimer, gameOver, difficulty]);
 
-  // 정답 제출
   const handleSubmitAnswer = useCallback((answer: string | number) => {
     if (!playerHand || !computerHand) return;
-
-    // 이미 제출한 경우 무시
     if (hasSubmittedRef.current) return;
     hasSubmittedRef.current = true;
-
     stopTimer();
 
     let isCorrect = false;
     let actualWinRate = currentWinRate;
 
     if (currentRound === 'preflop') {
-      // 프리플랍: 핸드랭킹 비교 (승률 계산 없음)
       const comparison = compareStartingHands(playerHand, computerHand);
       const playerFavorite = comparison <= 0;
+      isCorrect = answer === 'player' ? playerFavorite : !playerFavorite;
 
-      if (answer === 'player') {
-        isCorrect = playerFavorite;
-      } else {
-        isCorrect = !playerFavorite;
-      }
-
-      // 프리플랍: 핸드 순위로만 결과 표시 (승률 계산 X)
       const playerInfo = evaluateStartingHand(playerHand);
       const computerInfo = evaluateStartingHand(computerHand);
 
-      // 순위 기반 WinRateResult 생성 (프리플랍은 승률 계산 X)
       const preflopResult: WinRateResult = {
         playerWinRate: playerInfo.rank < computerInfo.rank ? 100 : 0,
         computerWinRate: computerInfo.rank < playerInfo.rank ? 100 : 0,
@@ -196,12 +196,10 @@ export default function GamePage() {
     }
 
     if (!actualWinRate) return;
-
     isCorrect = checkAnswer(difficulty, answer, actualWinRate);
     processAnswerResult(isCorrect, answer, actualWinRate);
-  }, [playerHand, computerHand, currentRound, difficulty, currentWinRate, calculate, stopTimer]);
+  }, [playerHand, computerHand, currentRound, difficulty, currentWinRate, stopTimer]);
 
-  // 정답 결과 처리
   const processAnswerResult = (isCorrect: boolean, answer: string | number, winRate: WinRateResult) => {
     const result: AnswerResult = {
       round: currentRound,
@@ -210,27 +208,23 @@ export default function GamePage() {
       isCorrect,
       winRateResult: winRate,
     };
-
     setLastAnswer(result);
     setShowResult(true);
 
     if (!isCorrect) {
-      gameOver('오답입니다!');
+      gameOver('Wrong Answer!');
       recordGameResult(difficulty, false);
       updateStreak(false);
     }
   };
 
-  // 프리플랍 결과 처리 (핸드 순위 기반)
   const processPreflopResult = (
     isCorrect: boolean,
     answer: string | number,
     playerInfo: StartingHandInfo,
     computerInfo: StartingHandInfo
   ) => {
-    // 프리플랍은 순위로 정답 표시 (낮은 순위가 강함)
     const correctAnswer = playerInfo.rank < computerInfo.rank ? 'player' : 'computer';
-
     const result: AnswerResult = {
       round: 'preflop',
       playerAnswer: answer,
@@ -245,30 +239,20 @@ export default function GamePage() {
         computerWins: computerInfo.rank < playerInfo.rank ? 1 : 0,
         ties: playerInfo.rank === computerInfo.rank ? 1 : 0,
       },
-      // 핸드 순위 정보 추가
-      playerHandRank: {
-        name: playerInfo.name,
-        rank: playerInfo.rank,
-      },
-      computerHandRank: {
-        name: computerInfo.name,
-        rank: computerInfo.rank,
-      },
+      playerHandRank: { name: playerInfo.name, rank: playerInfo.rank },
+      computerHandRank: { name: computerInfo.name, rank: computerInfo.rank },
     };
-
     setLastAnswer(result);
     setShowResult(true);
 
     if (!isCorrect) {
-      gameOver('오답입니다!');
+      gameOver('Wrong Answer!');
       recordGameResult(difficulty, false);
       updateStreak(false);
     }
   };
 
-  // 리버 결과 처리
   const handleRiverResult = (result: WinRateResult) => {
-    // 리버는 확인만 하고 다음 진행
     setLastAnswer({
       round: 'river',
       playerAnswer: '',
@@ -279,17 +263,15 @@ export default function GamePage() {
     setShowResult(true);
   };
 
-  // 다음으로 진행 (다음 라운드 또는 다음 난이도)
   const handleContinue = () => {
     setShowResult(false);
     setLastAnswer(null);
     setCurrentWinRate(null);
 
     if (currentRound === 'river' || currentRound === 'turn') {
-      // 턴 또는 리버에서 다음 난이도로 진행
       recordGameResult(difficulty, true);
       updateStreak(true);
-      setHasPlayerCardsRevealed(false); // 다음 난이도를 위해 리셋
+      setHasPlayerCardsRevealed(false);
 
       if (difficulty === 'god') {
         victory();
@@ -301,15 +283,13 @@ export default function GamePage() {
     }
   };
 
-  // 리버 확인 (턴 이후 리버 결과 보기)
   const handleViewRiver = () => {
     setShowResult(false);
     setLastAnswer(null);
     setCurrentWinRate(null);
-    nextRound(); // 리버로 이동
+    nextRound();
   };
 
-  // 재시작
   const handleRetry = () => {
     resetGame();
     initGame('easy');
@@ -319,13 +299,11 @@ export default function GamePage() {
     setHasPlayerCardsRevealed(false);
   };
 
-  // 홈으로
   const handleGoHome = () => {
     resetGame();
     router.push('/');
   };
 
-  // 코멘트 작성
   const handleWriteComment = () => {
     router.push('/comments');
   };
@@ -333,86 +311,99 @@ export default function GamePage() {
   const config = DIFFICULTY_CONFIG[difficulty];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 flex flex-col">
-      {/* 헤더 */}
-      <header className="p-4 border-b border-slate-800 bg-slate-900/80 backdrop-blur-sm sticky top-0 z-10">
+    <div className="h-screen bg-[#0a0e1a] flex flex-col overflow-hidden">
+      {/* Header */}
+      <header className="p-3 border-b border-white/5 glass shrink-0">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
           <button
             onClick={handleGoHome}
-            className="text-slate-400 hover:text-white transition-colors flex items-center gap-1"
-            aria-label="게임 나가기"
+            className="text-[#64748b] hover:text-white transition-colors flex items-center gap-2"
+            aria-label="Exit game"
           >
-            <span aria-hidden="true">←</span>
-            <span className="hidden sm:inline">나가기</span>
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            <span className="hidden sm:inline">Exit</span>
           </button>
           <GameProgressCompact difficulty={difficulty} currentRound={currentRound} />
         </div>
       </header>
 
-      {/* 게임 영역 */}
-      <main className="flex-1 flex flex-col items-center justify-center p-4 gap-4">
-        {/* 컴퓨터 영역 */}
+      {/* Game Area */}
+      <main className="flex-1 flex flex-col items-center justify-between p-3 pb-4 min-h-0">
+        {/* Round Info with Timer */}
+        <div className="text-center shrink-0 flex items-center justify-center gap-4">
+          <span className="badge badge-outline">{config.name}</span>
+          <h2 className="text-2xl md:text-3xl font-black text-white">
+            {ROUND_NAMES[currentRound]}
+          </h2>
+          {status === 'answering' && (
+            <Timer
+              seconds={Math.ceil(timeRemaining)}
+              maxSeconds={getTimeLimit()}
+              isRunning={isTimerRunning}
+              onTick={decrementTimer}
+              onTimeout={handleTimeout}
+              compact
+            />
+          )}
+        </div>
+
+        {/* Computer Area */}
         <PlayerArea
           cards={computerHand}
           isComputer
-          label="컴퓨터"
+          label="DEALER"
           handName={computerHand ? evaluateStartingHand(computerHand).name : undefined}
           handRank={showResult && currentRound === 'preflop' && computerHand ? evaluateStartingHand(computerHand).rank : undefined}
           isActive={status === 'answering'}
+          compact
+          showCards
         />
 
-        {/* 테이블 */}
+        {/* Table */}
         <Table
           communityCards={communityCards}
-          className="w-full max-w-2xl"
+          className="w-full max-w-xl"
           isRevealing={isRevealingCards}
           newCardsCount={newCardsCount}
+          compact
         />
 
-        {/* 플레이어 영역 */}
+        {/* Player Area */}
         <PlayerArea
           cards={playerHand}
-          label="나"
+          label="YOU"
           handName={playerHand ? evaluateStartingHand(playerHand).name : undefined}
           winRate={showResult && currentRound !== 'preflop' && currentWinRate ? currentWinRate.playerWinRate : undefined}
           handRank={showResult && currentRound === 'preflop' && playerHand ? evaluateStartingHand(playerHand).rank : undefined}
           isActive={status === 'answering'}
           isRevealing={isRevealingPlayerCards}
           hasRevealed={hasPlayerCardsRevealed}
+          compact
         />
 
-        {/* 입력/결과 영역 */}
-        <div className="w-full max-w-md">
-          {/* 타이머 */}
-          {status === 'answering' && (
-            <div className="mb-4">
-              <TimerBar
-                seconds={timeRemaining}
-                maxSeconds={getTimeLimit()}
-                isRunning={isTimerRunning}
-                onTick={decrementTimer}
-                onTimeout={handleTimeout}
-              />
-            </div>
-          )}
-
-          {/* 카드 공개 애니메이션 중 */}
+        {/* Input/Result Area */}
+        <div className="w-full max-w-md shrink-0">
+          {/* Card Reveal Animation */}
           {(isRevealingCards || isRevealingPlayerCards) && (
-            <div className="text-center text-amber-400">
+            <div className="text-center">
               <div className="text-4xl mb-2 animate-bounce">🃏</div>
-              <p className="text-lg font-semibold">카드 공개 중...</p>
+              <p className="text-[#00d4ff] text-sm font-semibold animate-pulse">
+                Revealing cards...
+              </p>
             </div>
           )}
 
-          {/* 계산 중 */}
+          {/* Calculating */}
           {isCalculating && !isRevealingCards && !isRevealingPlayerCards && (
-            <div className="text-center text-slate-400">
-              <div className="animate-spin inline-block w-6 h-6 border-2 border-amber-500 border-t-transparent rounded-full mb-2" />
-              <p>승률 계산 중...</p>
+            <div className="text-center">
+              <div className="animate-spin inline-block w-6 h-6 border-2 border-[#00d4ff] border-t-transparent rounded-full mb-2" />
+              <p className="text-[#64748b] text-sm">Calculating win rate...</p>
             </div>
           )}
 
-          {/* 답변 입력 */}
+          {/* Answer Input */}
           {status === 'answering' && !isCalculating && !showResult && (
             <AnswerInput
               difficulty={difficulty}
@@ -422,43 +413,39 @@ export default function GamePage() {
             />
           )}
 
-          {/* 결과 표시 */}
+          {/* Result Display */}
           {showResult && lastAnswer && currentWinRate && (
-            <div className="space-y-4">
+            <div className="space-y-3">
               <ResultDisplay
                 winRateResult={currentWinRate}
                 answerResult={lastAnswer}
                 isRiverConfirmation={currentRound === 'river'}
+                compact
               />
               {lastAnswer.isCorrect && currentRound === 'turn' ? (
-                // 턴 정답 후: 리버 확인 or 다음 난이도 선택
-                <div className="space-y-2">
+                <div className="flex gap-2">
                   <Button
                     variant="secondary"
-                    size="lg"
                     onClick={handleViewRiver}
-                    className="w-full"
+                    fullWidth
                   >
-                    🃏 리버 확인하기
+                    View River
                   </Button>
                   <Button
-                    variant="primary"
-                    size="lg"
+                    variant="success"
                     onClick={handleContinue}
-                    className="w-full"
+                    fullWidth
                   >
-                    다음 난이도 →
+                    Next Level →
                   </Button>
                 </div>
               ) : lastAnswer.isCorrect || currentRound === 'river' ? (
-                // 리버 결과 확인 후 또는 다른 라운드 정답
                 <Button
-                  variant="primary"
-                  size="lg"
+                  variant="success"
                   onClick={handleContinue}
-                  className="w-full"
+                  fullWidth
                 >
-                  {currentRound === 'river' ? '다음 난이도' : '다음 라운드'} →
+                  {currentRound === 'river' ? 'Next Level' : 'Next Round'} →
                 </Button>
               ) : null}
             </div>
@@ -466,7 +453,7 @@ export default function GamePage() {
         </div>
       </main>
 
-      {/* 게임오버 다이얼로그 */}
+      {/* Game Over Dialog */}
       <GameOverDialog
         isOpen={status === 'gameover'}
         onRetry={handleRetry}
@@ -476,7 +463,7 @@ export default function GamePage() {
         message={useGameStore.getState().finalMessage}
       />
 
-      {/* 승리 다이얼로그 */}
+      {/* Victory Dialog */}
       <VictoryDialog
         isOpen={status === 'victory'}
         onGoHome={handleGoHome}

@@ -98,4 +98,4 @@ export const DIFFICULTY_CONFIG: Record<Difficulty, DifficultyConfig> = {
 };
 
 // 프리플랍 제한시간은 별도
-export const PREFLOP_TIME_LIMIT = 5;
+export const PREFLOP_TIME_LIMIT = 30;
