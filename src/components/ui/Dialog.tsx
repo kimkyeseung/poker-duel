@@ -14,17 +14,21 @@ export function Dialog({ isOpen, onClose, children, className }: DialogProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+        className="absolute inset-0 bg-[#0a0e1a]/90 backdrop-blur-md"
         onClick={onClose}
       />
 
       {/* Content */}
       <div
         className={cn(
-          'relative z-10 w-full max-w-md mx-4 bg-slate-800 rounded-2xl shadow-2xl border border-slate-700 animate-in fade-in zoom-in-95 duration-200',
+          'relative z-10 w-full max-w-md',
+          'bg-[#0f1424] rounded-2xl',
+          'shadow-2xl shadow-black/50',
+          'border border-white/5',
+          'animate-in fade-in zoom-in-95 duration-300',
           className
         )}
       >
@@ -41,7 +45,7 @@ interface DialogHeaderProps {
 
 export function DialogHeader({ children, className }: DialogHeaderProps) {
   return (
-    <div className={cn('px-6 py-4 border-b border-slate-700', className)}>
+    <div className={cn('px-6 pt-6 pb-2', className)}>
       {children}
     </div>
   );
@@ -80,7 +84,7 @@ interface DialogFooterProps {
 
 export function DialogFooter({ children, className }: DialogFooterProps) {
   return (
-    <div className={cn('px-6 py-4 border-t border-slate-700 flex gap-3 justify-end', className)}>
+    <div className={cn('px-6 pb-6 pt-2 flex gap-3 justify-center', className)}>
       {children}
     </div>
   );

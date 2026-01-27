@@ -4,7 +4,7 @@ import { ButtonHTMLAttributes, forwardRef, ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'ghost' | 'outline' | 'player' | 'computer';
+  variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'ghost' | 'outline' | 'player' | 'computer' | 'gold';
   size?: 'sm' | 'md' | 'lg' | 'xl';
   isLoading?: boolean;
   leftIcon?: ReactNode;
@@ -14,22 +14,71 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, variant = 'primary', size = 'md', isLoading, leftIcon, rightIcon, fullWidth, children, disabled, ...props }, ref) => {
-    const baseStyles = 'inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-slate-900 disabled:opacity-50 disabled:cursor-not-allowed active:scale-95';
+    const baseStyles = cn(
+      'inline-flex items-center justify-center font-semibold rounded-full',
+      'transition-all duration-200 ease-out',
+      'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-[#0a0e1a]',
+      'disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none',
+      'active:scale-[0.98]'
+    );
 
     const variants = {
-      primary: 'bg-gradient-to-r from-amber-500 to-orange-600 text-white hover:from-amber-600 hover:to-orange-700 focus:ring-amber-500 shadow-lg hover:shadow-xl hover:shadow-amber-500/20',
-      secondary: 'bg-slate-700 text-white hover:bg-slate-600 focus:ring-slate-500 shadow-md hover:shadow-lg',
-      success: 'bg-gradient-to-r from-emerald-500 to-green-600 text-white hover:from-emerald-600 hover:to-green-700 focus:ring-emerald-500 shadow-lg hover:shadow-xl hover:shadow-emerald-500/20',
-      danger: 'bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 shadow-md hover:shadow-lg hover:shadow-red-500/20',
-      ghost: 'bg-transparent text-slate-300 hover:bg-slate-800 hover:text-white focus:ring-slate-500',
-      outline: 'border-2 border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-white focus:ring-amber-500 hover:shadow-lg hover:shadow-amber-500/20',
-      player: 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 focus:ring-blue-500 shadow-lg hover:shadow-xl hover:shadow-blue-500/20',
-      computer: 'bg-gradient-to-r from-red-500 to-red-600 text-white hover:from-red-600 hover:to-red-700 focus:ring-red-500 shadow-lg hover:shadow-xl hover:shadow-red-500/20',
+      primary: cn(
+        'bg-gradient-to-r from-[#00d4ff] to-[#0066ff] text-white',
+        'shadow-[0_4px_15px_rgba(0,102,255,0.3)]',
+        'hover:shadow-[0_6px_25px_rgba(0,102,255,0.4)] hover:-translate-y-0.5',
+        'focus:ring-[#00d4ff]'
+      ),
+      secondary: cn(
+        'bg-[#1a1f35] text-white border border-white/10',
+        'hover:bg-[#252b45] hover:border-white/20',
+        'focus:ring-white/20'
+      ),
+      success: cn(
+        'bg-gradient-to-r from-[#00ff88] to-[#00cc66] text-[#0a0e1a] font-bold',
+        'shadow-[0_4px_15px_rgba(0,204,102,0.3)]',
+        'hover:shadow-[0_6px_25px_rgba(0,204,102,0.4)] hover:-translate-y-0.5',
+        'focus:ring-[#00ff88]'
+      ),
+      danger: cn(
+        'bg-gradient-to-r from-[#ff4444] to-[#cc0000] text-white',
+        'shadow-[0_4px_15px_rgba(255,68,68,0.3)]',
+        'hover:shadow-[0_6px_25px_rgba(255,68,68,0.4)] hover:-translate-y-0.5',
+        'focus:ring-[#ff4444]'
+      ),
+      ghost: cn(
+        'bg-transparent text-[#a0aec0]',
+        'hover:bg-[#1a1f35] hover:text-white',
+        'focus:ring-white/20'
+      ),
+      outline: cn(
+        'border-2 border-[#00d4ff] text-[#00d4ff] bg-transparent',
+        'hover:bg-[#00d4ff]/10 hover:shadow-[0_0_20px_rgba(0,212,255,0.2)]',
+        'focus:ring-[#00d4ff]'
+      ),
+      player: cn(
+        'bg-gradient-to-r from-[#00d4ff] to-[#0066ff] text-white',
+        'shadow-[0_4px_15px_rgba(0,102,255,0.3)]',
+        'hover:shadow-[0_6px_25px_rgba(0,102,255,0.4)] hover:-translate-y-0.5',
+        'focus:ring-[#00d4ff]'
+      ),
+      computer: cn(
+        'bg-gradient-to-r from-[#ff4d94] to-[#ff0080] text-white',
+        'shadow-[0_4px_15px_rgba(255,77,148,0.3)]',
+        'hover:shadow-[0_6px_25px_rgba(255,77,148,0.4)] hover:-translate-y-0.5',
+        'focus:ring-[#ff4d94]'
+      ),
+      gold: cn(
+        'bg-gradient-to-r from-[#ffd700] to-[#ffb800] text-[#0a0e1a] font-bold',
+        'shadow-[0_4px_15px_rgba(255,215,0,0.3)]',
+        'hover:shadow-[0_6px_25px_rgba(255,215,0,0.4)] hover:-translate-y-0.5',
+        'focus:ring-[#ffd700]'
+      ),
     };
 
     const sizes = {
-      sm: 'px-3 py-1.5 text-sm gap-1.5',
-      md: 'px-5 py-2.5 text-base gap-2',
+      sm: 'px-4 py-2 text-sm gap-1.5',
+      md: 'px-6 py-3 text-base gap-2',
       lg: 'px-8 py-4 text-lg gap-2.5',
       xl: 'px-10 py-5 text-xl gap-3',
     };
@@ -77,7 +126,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               />
             </svg>
-            <span>로딩 중...</span>
+            <span>Loading...</span>
           </>
         ) : (
           <>

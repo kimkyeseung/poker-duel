@@ -118,11 +118,11 @@ export function Highlight({
   color = 'primary',
 }: TypographyProps & { color?: 'primary' | 'success' | 'error' | 'player' | 'computer' }) {
   const colorClasses = {
-    primary: 'text-amber-400',
-    success: 'text-emerald-400',
-    error: 'text-red-400',
-    player: 'text-blue-400',
-    computer: 'text-red-400',
+    primary: 'text-[#00d4ff]',
+    success: 'text-[#00ff88]',
+    error: 'text-[#ff4444]',
+    player: 'text-[#00d4ff]',
+    computer: 'text-[#ff4d94]',
   };
 
   return (
