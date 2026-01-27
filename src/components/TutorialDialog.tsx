@@ -12,117 +12,124 @@ interface TutorialDialogProps {
 
 const TUTORIAL_SLIDES = [
   {
-    title: '게임 소개',
-    icon: '🃏',
+    title: 'Welcome',
+    icon: 'P',
+    iconColor: 'from-[#ff4d94] to-[#ff0080]',
     content: (
-      <div className="space-y-3 text-slate-300">
+      <div className="space-y-3 text-white/80">
         <p>
-          <strong className="text-white">Poker Duel</strong>은 텍사스 홀덤의 승률을
-          예측하는 게임입니다.
+          <strong className="text-white">Poker Duel</strong> is a game where you predict
+          Texas Hold'em win rates.
         </p>
         <p>
-          컴퓨터와 1:1로 대결하며, 각 라운드에서 정확한 승률을 맞추면
-          다음 난이도로 진행합니다.
+          Compete 1v1 against the dealer. Predict the correct win rate each round
+          to advance to the next difficulty level.
         </p>
       </div>
     ),
   },
   {
-    title: '게임 진행',
-    icon: '🎮',
+    title: 'Game Flow',
+    icon: 'G',
+    iconColor: 'from-[#00d4ff] to-[#0066ff]',
     content: (
-      <div className="space-y-3 text-slate-300">
-        <div className="bg-slate-700/50 rounded-lg p-3">
-          <div className="font-semibold text-white mb-2">4라운드 구성</div>
+      <div className="space-y-3 text-white/80">
+        <div className="bg-[#1a1f35] rounded-xl p-4">
+          <div className="font-bold text-white mb-2">4 Rounds</div>
           <ul className="space-y-1 text-sm">
-            <li>• <span className="text-amber-400">프리플랍</span>: 커뮤니티 카드 0장</li>
-            <li>• <span className="text-amber-400">플랍</span>: 커뮤니티 카드 3장</li>
-            <li>• <span className="text-amber-400">턴</span>: 커뮤니티 카드 4장</li>
-            <li>• <span className="text-amber-400">리버</span>: 커뮤니티 카드 5장</li>
+            <li>• <span className="text-[#00ff88]">Preflop</span>: 0 community cards</li>
+            <li>• <span className="text-[#00d4ff]">Flop</span>: 3 community cards</li>
+            <li>• <span className="text-[#ffd700]">Turn</span>: 4 community cards</li>
+            <li>• <span className="text-[#ff4d94]">River</span>: 5 community cards</li>
           </ul>
         </div>
         <p className="text-sm">
-          모든 라운드에서 정답을 맞추면 승리!
+          Answer correctly in all rounds to win!
         </p>
       </div>
     ),
   },
   {
-    title: '난이도 시스템',
-    icon: '⭐',
+    title: 'Difficulty Levels',
+    icon: 'D',
+    iconColor: 'from-[#ffd700] to-[#ffb800]',
     content: (
-      <div className="space-y-3 text-slate-300">
+      <div className="space-y-3 text-white/80">
         <ul className="space-y-2 text-sm">
           <li className="flex items-center gap-2">
-            <span className="bg-emerald-500/20 text-emerald-400 px-2 py-0.5 rounded">쉬움</span>
-            누가 유리한지 선택
+            <span className="bg-[#00ff88]/20 text-[#00ff88] px-2 py-0.5 rounded-full text-xs font-bold">EASY</span>
+            Choose who has the better hand
           </li>
           <li className="flex items-center gap-2">
-            <span className="bg-blue-500/20 text-blue-400 px-2 py-0.5 rounded">보통</span>
-            승률 구간 5지선다
+            <span className="bg-[#00d4ff]/20 text-[#00d4ff] px-2 py-0.5 rounded-full text-xs font-bold">NORMAL</span>
+            Select win rate range (5 options)
           </li>
           <li className="flex items-center gap-2">
-            <span className="bg-amber-500/20 text-amber-400 px-2 py-0.5 rounded">어려움</span>
-            직접 입력 (±5%)
+            <span className="bg-[#ffd700]/20 text-[#ffd700] px-2 py-0.5 rounded-full text-xs font-bold">HARD</span>
+            Enter exact value (±5%)
           </li>
           <li className="flex items-center gap-2">
-            <span className="bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded">전문가</span>
-            직접 입력 (±3%)
+            <span className="bg-[#ff4d94]/20 text-[#ff4d94] px-2 py-0.5 rounded-full text-xs font-bold">EXPERT</span>
+            Enter exact value (±3%)
           </li>
           <li className="flex items-center gap-2">
-            <span className="bg-red-500/20 text-red-400 px-2 py-0.5 rounded">홀덤의 신</span>
-            직접 입력 (±1%)
+            <span className="bg-[#ff4444]/20 text-[#ff4444] px-2 py-0.5 rounded-full text-xs font-bold">GOD</span>
+            Enter exact value (±1%)
           </li>
         </ul>
       </div>
     ),
   },
   {
-    title: '시간 제한',
-    icon: '⏱️',
+    title: 'Time Limits',
+    icon: 'T',
+    iconColor: 'from-[#ff4444] to-[#cc0000]',
     content: (
-      <div className="space-y-3 text-slate-300">
-        <div className="bg-slate-700/50 rounded-lg p-3">
+      <div className="space-y-3 text-white/80">
+        <div className="bg-[#1a1f35] rounded-xl p-4">
           <ul className="space-y-2 text-sm">
             <li className="flex justify-between">
-              <span>프리플랍</span>
-              <span className="text-amber-400 font-bold">5초</span>
+              <span>Preflop</span>
+              <span className="text-[#00d4ff] font-bold">5 seconds</span>
             </li>
             <li className="flex justify-between">
-              <span>플랍 / 턴 / 리버</span>
-              <span className="text-amber-400 font-bold">10초</span>
+              <span>Flop / Turn / River</span>
+              <span className="text-[#00d4ff] font-bold">10 seconds</span>
             </li>
           </ul>
         </div>
-        <p className="text-sm text-red-400">
-          ⚠️ 시간 내에 답변하지 않으면 패배!
+        <p className="text-sm text-[#ff4444]">
+          Warning: Failure to answer in time = Game Over!
         </p>
         <p className="text-sm">
-          연습 모드에서는 시간 제한 없이 연습할 수 있습니다.
+          Practice mode has no time limits.
         </p>
       </div>
     ),
   },
   {
-    title: '시작하기',
-    icon: '🚀',
+    title: 'Ready to Play',
+    icon: 'R',
+    iconColor: 'from-[#00ff88] to-[#00cc66]',
     content: (
-      <div className="space-y-4 text-slate-300">
+      <div className="space-y-4 text-white/80">
         <p>
-          이제 게임을 시작할 준비가 되었습니다!
+          You're ready to start playing!
         </p>
-        <div className="bg-gradient-to-r from-amber-500/10 to-orange-500/10 rounded-lg p-4 border border-amber-500/30">
+        <div className="bg-gradient-to-r from-[#00d4ff]/10 to-[#ff4d94]/10 rounded-xl p-4 border border-[#00d4ff]/30">
           <div className="text-center">
-            <div className="text-2xl mb-2">💡</div>
+            <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-[#00d4ff]/20 flex items-center justify-center text-[#00d4ff] text-lg font-bold">
+              ?
+            </div>
             <p className="text-sm">
-              처음이라면 <span className="text-amber-400">연습 모드</span>에서
-              시간 제한 없이 연습해보세요!
+              If you're new, try <span className="text-[#00d4ff] font-bold">Practice Mode</span> first
+              to play without time limits!
             </p>
           </div>
         </div>
-        <p className="text-sm text-center text-slate-500">
-          5단계 난이도를 모두 클리어하여<br />
-          <span className="text-amber-400">홀덤의 신</span>이 되어보세요!
+        <p className="text-sm text-center text-[#64748b]">
+          Clear all 5 difficulty levels to become the<br />
+          <span className="text-[#ffd700] font-bold">Poker God</span>!
         </p>
       </div>
     ),
@@ -158,8 +165,10 @@ export function TutorialDialog({ isOpen, onClose }: TutorialDialogProps) {
   return (
     <Dialog isOpen={isOpen} onClose={handleClose}>
       <DialogHeader>
-        <DialogTitle className="flex items-center gap-2">
-          <span className="text-2xl">{slide.icon}</span>
+        <DialogTitle className="flex items-center gap-3">
+          <span className={`w-10 h-10 rounded-full bg-gradient-to-br ${slide.iconColor} flex items-center justify-center text-white text-lg font-black`}>
+            {slide.icon}
+          </span>
           <span>{slide.title}</span>
         </DialogTitle>
       </DialogHeader>
@@ -177,8 +186,8 @@ export function TutorialDialog({ isOpen, onClose }: TutorialDialogProps) {
               onClick={() => setCurrentSlide(index)}
               className={`w-2 h-2 rounded-full transition-all ${
                 index === currentSlide
-                  ? 'bg-amber-500 w-4'
-                  : 'bg-slate-600 hover:bg-slate-500'
+                  ? 'bg-[#00d4ff] w-4'
+                  : 'bg-[#1a1f35] hover:bg-[#1a1f35]/80'
               }`}
             />
           ))}
@@ -187,12 +196,12 @@ export function TutorialDialog({ isOpen, onClose }: TutorialDialogProps) {
         {/* 네비게이션 버튼 */}
         <div className="flex gap-2">
           {currentSlide > 0 && (
-            <Button variant="ghost" onClick={handlePrev}>
-              이전
+            <Button variant="secondary" onClick={handlePrev}>
+              Back
             </Button>
           )}
           <Button variant="primary" onClick={handleNext}>
-            {isLastSlide ? '완료' : '다음'}
+            {isLastSlide ? 'Start' : 'Next'}
           </Button>
         </div>
       </DialogFooter>

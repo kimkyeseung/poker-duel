@@ -35,10 +35,12 @@ export function HintButton({
 
   if (hintUsed && hint) {
     return (
-      <div className="bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">
+      <div className="bg-[#ffd700]/10 border border-[#ffd700]/30 rounded-xl p-3">
         <div className="flex items-center gap-2">
-          <span className="text-xl">{hint.icon}</span>
-          <span className="text-amber-400 text-sm">{hint.message}</span>
+          <span className="w-8 h-8 rounded-full bg-[#ffd700]/20 flex items-center justify-center text-[#ffd700] text-sm font-bold">
+            H
+          </span>
+          <span className="text-[#ffd700] text-sm">{hint.message}</span>
         </div>
       </div>
     );
@@ -49,15 +51,17 @@ export function HintButton({
       onClick={handleUseHint}
       disabled={disabled || !winRateResult}
       className={cn(
-        'px-4 py-2 rounded-lg border transition-all text-sm',
+        'px-4 py-2 rounded-full border transition-all text-sm',
         'flex items-center gap-2',
         disabled || !winRateResult
-          ? 'border-slate-700 text-slate-600 cursor-not-allowed'
-          : 'border-amber-500/50 text-amber-400 hover:bg-amber-500/10'
+          ? 'border-white/10 text-[#64748b] cursor-not-allowed'
+          : 'border-[#ffd700]/50 text-[#ffd700] hover:bg-[#ffd700]/10'
       )}
     >
-      <span>💡</span>
-      <span>힌트 사용</span>
+      <span className="w-5 h-5 rounded-full bg-[#ffd700]/20 flex items-center justify-center text-xs font-bold">
+        ?
+      </span>
+      <span>Use Hint</span>
     </button>
   );
 }

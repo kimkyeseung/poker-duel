@@ -10,19 +10,19 @@ interface DifficultyBadgeProps {
 }
 
 const DIFFICULTY_COLORS: Record<Difficulty, string> = {
-  easy: 'from-emerald-500 to-emerald-600',
-  normal: 'from-blue-500 to-blue-600',
-  hard: 'from-amber-500 to-amber-600',
-  expert: 'from-purple-500 to-purple-600',
-  god: 'from-red-500 to-red-600',
+  easy: 'from-[#00ff88] to-[#00cc66]',
+  normal: 'from-[#00d4ff] to-[#0066ff]',
+  hard: 'from-[#ffd700] to-[#ffb800]',
+  expert: 'from-[#ff4d94] to-[#ff0080]',
+  god: 'from-[#ffd700] via-[#ff4d94] to-[#ff0080]',
 };
 
 const DIFFICULTY_ICONS: Record<Difficulty, string> = {
-  easy: '⭐',
-  normal: '⭐⭐',
-  hard: '⭐⭐⭐',
-  expert: '💎',
-  god: '👑',
+  easy: '1',
+  normal: '2',
+  hard: '3',
+  expert: '4',
+  god: '5',
 };
 
 export function DifficultyBadge({
@@ -32,7 +32,6 @@ export function DifficultyBadge({
 }: DifficultyBadgeProps) {
   const config = DIFFICULTY_CONFIG[difficulty];
   const color = DIFFICULTY_COLORS[difficulty];
-  const icon = DIFFICULTY_ICONS[difficulty];
 
   const sizes = {
     sm: 'px-2 py-0.5 text-xs',
@@ -43,14 +42,17 @@ export function DifficultyBadge({
   return (
     <div
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full font-bold text-white',
-        'bg-gradient-to-r shadow-lg',
+        'inline-flex items-center gap-2 rounded-full font-bold text-white',
+        'bg-gradient-to-r',
+        'shadow-lg',
         color,
         sizes[size],
         className
       )}
     >
-      <span>{icon}</span>
+      <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-xs">
+        {DIFFICULTY_ICONS[difficulty]}
+      </span>
       <span>{config.nameKo}</span>
     </div>
   );
@@ -70,7 +72,6 @@ export function DifficultyProgress({
   return (
     <div className={cn('flex items-center gap-2', className)}>
       {difficulties.map((diff, index) => {
-        const config = DIFFICULTY_CONFIG[diff];
         const isCompleted = index < currentIndex;
         const isCurrent = index === currentIndex;
 
@@ -81,10 +82,10 @@ export function DifficultyProgress({
               className={cn(
                 'w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold transition-all',
                 isCompleted
-                  ? 'bg-emerald-500 text-white'
+                  ? 'bg-[#00ff88] text-[#0a0e1a]'
                   : isCurrent
-                  ? `bg-gradient-to-r ${DIFFICULTY_COLORS[diff]} text-white ring-2 ring-white/50`
-                  : 'bg-slate-700 text-slate-500'
+                  ? cn('bg-gradient-to-r text-white ring-2 ring-white/30', DIFFICULTY_COLORS[diff])
+                  : 'bg-[#1a1f35] text-[#64748b]'
               )}
             >
               {isCompleted ? '✓' : index + 1}
@@ -95,7 +96,7 @@ export function DifficultyProgress({
               <div
                 className={cn(
                   'w-6 h-0.5',
-                  isCompleted ? 'bg-emerald-500' : 'bg-slate-700'
+                  isCompleted ? 'bg-[#00ff88]' : 'bg-[#1a1f35]'
                 )}
               />
             )}

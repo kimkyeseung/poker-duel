@@ -10,12 +10,14 @@ interface PlayerAreaProps {
   label: string;
   handName?: string;
   winRate?: number;
-  handRank?: number; // 프리플랍 핸드 랭킹 (1~169)
+  handRank?: number;
   isActive?: boolean;
   className?: string;
-  isRevealing?: boolean; // 카드 공개 애니메이션 중
-  onRevealComplete?: () => void; // 카드 공개 완료 콜백
-  hasRevealed?: boolean; // 카드가 이미 공개된 상태인지
+  isRevealing?: boolean;
+  onRevealComplete?: () => void;
+  hasRevealed?: boolean;
+  compact?: boolean;
+  showCards?: boolean;
 }
 
 export function PlayerArea({
@@ -30,68 +32,86 @@ export function PlayerArea({
   isRevealing = false,
   onRevealComplete,
   hasRevealed = false,
+  compact = false,
+  showCards = false,
 }: PlayerAreaProps) {
+  const cardSize = compact ? 'md' : 'lg';
+  const shouldHideCards = isComputer && !showCards;
+
   return (
     <div
       className={cn(
-        'flex flex-col items-center gap-2',
+        'flex flex-col items-center',
+        compact ? 'gap-2' : 'gap-3',
         isComputer ? 'flex-col' : 'flex-col-reverse',
         className
       )}
     >
-      {/* 플레이어 정보 */}
+      {/* Player Info Badge */}
       <div
         className={cn(
-          'flex items-center gap-3 px-4 py-2 rounded-full',
-          'bg-slate-800/80 border backdrop-blur-sm',
+          'flex items-center rounded-full',
+          'bg-[#1a1f35]/90 border backdrop-blur-sm',
           'transition-all duration-300',
+          compact ? 'gap-2 px-3 py-1.5' : 'gap-3 px-4 py-2',
           isActive
-            ? 'border-amber-500 shadow-lg shadow-amber-500/20 ring-2 ring-amber-500/10'
-            : 'border-slate-700'
+            ? isComputer
+              ? 'border-[#ff4d94]/50 shadow-[0_0_20px_rgba(255,77,148,0.2)]'
+              : 'border-[#00d4ff]/50 shadow-[0_0_20px_rgba(0,212,255,0.2)]'
+            : 'border-white/5'
         )}
       >
-        {/* 아바타 */}
+        {/* Avatar */}
         <div
           className={cn(
-            'w-10 h-10 rounded-full flex items-center justify-center text-xl',
+            'rounded-full flex items-center justify-center font-bold',
+            compact ? 'w-8 h-8 text-sm' : 'w-10 h-10 text-lg',
             isComputer
-              ? 'bg-gradient-to-br from-red-500 to-red-700'
-              : 'bg-gradient-to-br from-blue-500 to-blue-700'
+              ? 'bg-gradient-to-br from-[#ff4d94] to-[#ff0080] text-white'
+              : 'bg-gradient-to-br from-[#00d4ff] to-[#0066ff] text-white'
           )}
         >
-          {isComputer ? '🤖' : '👤'}
+          {isComputer ? 'D' : 'P'}
         </div>
 
-        {/* 이름 및 정보 */}
+        {/* Name and Info */}
         <div className="text-left">
-          <div className="text-white font-semibold">{label}</div>
+          <div className={cn(
+            'font-bold',
+            compact ? 'text-xs' : 'text-sm',
+            isComputer ? 'text-[#ff4d94]' : 'text-[#00d4ff]'
+          )}>
+            {label}
+          </div>
           {handName && (
-            <div className="text-xs text-slate-400">{handName}</div>
+            <div className={cn('text-[#64748b]', compact ? 'text-[10px]' : 'text-xs')}>{handName}</div>
           )}
         </div>
 
-        {/* 핸드 랭킹 표시 (프리플랍) */}
+        {/* Hand Rank (Preflop) */}
         {typeof handRank === 'number' && (
           <div
             className={cn(
-              'ml-2 px-3 py-1 rounded-full text-sm font-bold font-mono',
+              'ml-1 rounded-full font-bold font-mono',
+              compact ? 'px-2 py-0.5 text-xs' : 'px-3 py-1 text-sm',
               isComputer
-                ? 'bg-red-500/20 text-red-400'
-                : 'bg-blue-500/20 text-blue-400'
+                ? 'bg-[#ff4d94]/20 text-[#ff4d94]'
+                : 'bg-[#00d4ff]/20 text-[#00d4ff]'
             )}
           >
-            {handRank}/169
+            #{handRank}
           </div>
         )}
 
-        {/* 승률 표시 (플랍/턴/리버) */}
+        {/* Win Rate (Flop/Turn/River) */}
         {typeof winRate === 'number' && typeof handRank !== 'number' && (
           <div
             className={cn(
-              'ml-2 px-3 py-1 rounded-full text-sm font-bold',
+              'ml-1 rounded-full font-bold',
+              compact ? 'px-2 py-0.5 text-xs' : 'px-3 py-1 text-sm',
               winRate >= 50
-                ? 'bg-emerald-500/20 text-emerald-400'
-                : 'bg-red-500/20 text-red-400'
+                ? 'bg-[#00ff88]/20 text-[#00ff88]'
+                : 'bg-[#ff4444]/20 text-[#ff4444]'
             )}
           >
             {winRate.toFixed(1)}%
@@ -99,22 +119,21 @@ export function PlayerArea({
         )}
       </div>
 
-      {/* 카드 */}
-      <div className="flex gap-2">
+      {/* Cards */}
+      <div className={cn('flex', compact ? 'gap-2' : 'gap-3')}>
         {cards ? (
           isRevealing ? (
-            // 카드 공개 애니메이션
             <>
               <Card
                 card={cards[0]}
-                size="lg"
+                size={cardSize}
                 isHighlighted={isActive}
                 isFlipping={true}
                 flipDelay={0}
               />
               <Card
                 card={cards[1]}
-                size="lg"
+                size={cardSize}
                 isHighlighted={isActive}
                 isFlipping={true}
                 flipDelay={400}
@@ -122,16 +141,27 @@ export function PlayerArea({
               />
             </>
           ) : (
-            // 일반 카드 표시
             <>
-              <Card card={cards[0]} size="lg" isHighlighted={isActive} skipEntryAnimation={hasRevealed} />
-              <Card card={cards[1]} size="lg" isHighlighted={isActive} skipEntryAnimation={hasRevealed} />
+              <Card
+                card={shouldHideCards ? undefined : cards[0]}
+                isHidden={shouldHideCards}
+                size={cardSize}
+                isHighlighted={isActive && !shouldHideCards}
+                skipEntryAnimation={hasRevealed}
+              />
+              <Card
+                card={shouldHideCards ? undefined : cards[1]}
+                isHidden={shouldHideCards}
+                size={cardSize}
+                isHighlighted={isActive && !shouldHideCards}
+                skipEntryAnimation={hasRevealed}
+              />
             </>
           )
         ) : (
           <>
-            <Card isHidden size="lg" />
-            <Card isHidden size="lg" />
+            <Card isHidden size={cardSize} />
+            <Card isHidden size={cardSize} />
           </>
         )}
       </div>

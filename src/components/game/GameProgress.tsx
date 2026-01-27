@@ -21,27 +21,27 @@ export function GameProgress({ difficulty, currentRound, className }: GameProgre
     <div className={cn('space-y-3', className)}>
       {/* 난이도 진행도 */}
       <div className="flex items-center gap-2">
-        <span className="text-xs text-slate-400 min-w-[50px]">난이도</span>
+        <span className="text-xs text-[#64748b] min-w-[50px]">난이도</span>
         <div className="flex-1 flex items-center gap-1">
           {DIFFICULTIES.map((diff, index) => {
             const isActive = index === currentDifficultyIndex;
             const isCompleted = index < currentDifficultyIndex;
-            const colors = difficultyColors[diff === 'god' ? 'master' : diff];
+            const colors = difficultyColors[diff];
 
             return (
               <div
                 key={diff}
                 className="flex-1 relative"
-                title={difficultyNames[diff === 'god' ? 'master' : diff]}
+                title={difficultyNames[diff]}
               >
                 <div
                   className={cn(
                     'h-2 rounded-full transition-all duration-300',
                     isActive
-                      ? cn(colors.bg, 'ring-2 ring-offset-1 ring-offset-slate-900', colors.border.replace('border-', 'ring-'))
+                      ? cn(colors.bg, 'ring-2 ring-offset-1 ring-offset-[#0a0e1a]', colors.border.replace('border-', 'ring-'))
                       : isCompleted
                       ? colors.bg
-                      : 'bg-slate-700'
+                      : 'bg-[#1a1f35]'
                   )}
                 />
                 {isActive && (
@@ -51,7 +51,7 @@ export function GameProgress({ difficulty, currentRound, className }: GameProgre
                       colors.text
                     )}
                   >
-                    {difficultyNames[diff === 'god' ? 'master' : diff]}
+                    {difficultyNames[diff]}
                   </div>
                 )}
               </div>
@@ -62,7 +62,7 @@ export function GameProgress({ difficulty, currentRound, className }: GameProgre
 
       {/* 라운드 진행도 */}
       <div className="flex items-center gap-2 mt-6">
-        <span className="text-xs text-slate-400 min-w-[50px]">라운드</span>
+        <span className="text-xs text-[#64748b] min-w-[50px]">라운드</span>
         <div className="flex-1 flex items-center">
           {ROUNDS.map((round, index) => {
             const isActive = index === currentRoundIndex;
@@ -75,10 +75,10 @@ export function GameProgress({ difficulty, currentRound, className }: GameProgre
                   className={cn(
                     'w-3 h-3 rounded-full transition-all duration-300 flex-shrink-0',
                     isActive
-                      ? 'bg-amber-500 ring-4 ring-amber-500/30'
+                      ? 'bg-[#00d4ff] ring-4 ring-[#00d4ff]/30'
                       : isCompleted
-                      ? 'bg-emerald-500'
-                      : 'bg-slate-600'
+                      ? 'bg-[#00ff88]'
+                      : 'bg-[#1a1f35]'
                   )}
                 />
                 {/* 연결선 */}
@@ -86,7 +86,7 @@ export function GameProgress({ difficulty, currentRound, className }: GameProgre
                   <div
                     className={cn(
                       'flex-1 h-0.5 transition-all duration-300',
-                      isCompleted ? 'bg-emerald-500' : 'bg-slate-700'
+                      isCompleted ? 'bg-[#00ff88]' : 'bg-[#1a1f35]'
                     )}
                   />
                 )}
@@ -108,7 +108,7 @@ export function GameProgress({ difficulty, currentRound, className }: GameProgre
                 key={round}
                 className={cn(
                   'flex-1 text-center text-xs transition-all duration-300',
-                  isActive ? 'text-amber-400 font-medium' : 'text-slate-500'
+                  isActive ? 'text-[#00d4ff] font-medium' : 'text-[#64748b]'
                 )}
               >
                 {roundNames[round]}
@@ -123,8 +123,8 @@ export function GameProgress({ difficulty, currentRound, className }: GameProgre
 
 // 컴팩트 버전 (헤더용)
 export function GameProgressCompact({ difficulty, currentRound, className }: GameProgressProps) {
-  const colors = difficultyColors[difficulty === 'god' ? 'master' : difficulty];
-  const diffName = difficultyNames[difficulty === 'god' ? 'master' : difficulty];
+  const colors = difficultyColors[difficulty];
+  const diffName = difficultyNames[difficulty];
   const roundName = roundNames[currentRound];
 
   return (
@@ -132,7 +132,7 @@ export function GameProgressCompact({ difficulty, currentRound, className }: Gam
       {/* 난이도 뱃지 */}
       <span
         className={cn(
-          'px-3 py-1 rounded-full text-sm font-medium',
+          'px-3 py-1 rounded-full text-sm font-bold',
           colors.bgSubtle,
           colors.text,
           colors.border,
@@ -143,15 +143,15 @@ export function GameProgressCompact({ difficulty, currentRound, className }: Gam
       </span>
 
       {/* 구분선 */}
-      <span className="text-slate-600">|</span>
+      <span className="text-[#1a1f35]">|</span>
 
       {/* 라운드 */}
-      <span className="text-slate-300 text-sm">
+      <span className="text-white/80 text-sm font-medium">
         {roundName}
       </span>
 
       {/* 라운드 도트 인디케이터 */}
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-1.5">
         {ROUNDS.map((round, index) => {
           const currentIndex = ROUNDS.indexOf(currentRound);
           const isActive = index === currentIndex;
@@ -163,10 +163,10 @@ export function GameProgressCompact({ difficulty, currentRound, className }: Gam
               className={cn(
                 'w-2 h-2 rounded-full transition-all duration-300',
                 isActive
-                  ? 'bg-amber-500'
+                  ? 'bg-[#00d4ff] shadow-[0_0_8px_rgba(0,212,255,0.5)]'
                   : isCompleted
-                  ? 'bg-emerald-500'
-                  : 'bg-slate-600'
+                  ? 'bg-[#00ff88]'
+                  : 'bg-[#1a1f35]'
               )}
             />
           );
@@ -186,8 +186,8 @@ export function DifficultyBadgeSimple({
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }) {
-  const colors = difficultyColors[difficulty === 'god' ? 'master' : difficulty];
-  const diffName = difficultyNames[difficulty === 'god' ? 'master' : difficulty];
+  const colors = difficultyColors[difficulty];
+  const diffName = difficultyNames[difficulty];
 
   const sizes = {
     sm: 'px-2 py-0.5 text-xs',
@@ -198,7 +198,7 @@ export function DifficultyBadgeSimple({
   return (
     <span
       className={cn(
-        'rounded-full font-medium inline-flex items-center',
+        'rounded-full font-bold inline-flex items-center',
         colors.bgSubtle,
         colors.text,
         colors.border,
