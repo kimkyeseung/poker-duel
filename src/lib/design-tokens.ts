@@ -7,85 +7,95 @@
 export const colors = {
   // 주요 색상
   primary: {
-    50: 'bg-amber-50',
-    100: 'bg-amber-100',
-    500: 'bg-amber-500',
-    600: 'bg-amber-600',
-    text: 'text-amber-500',
-    textLight: 'text-amber-400',
-    border: 'border-amber-500',
-    ring: 'ring-amber-500',
+    50: 'bg-[#00d4ff]/10',
+    100: 'bg-[#00d4ff]/20',
+    500: 'bg-[#00d4ff]',
+    600: 'bg-[#0066ff]',
+    text: 'text-[#00d4ff]',
+    textLight: 'text-[#00d4ff]/80',
+    border: 'border-[#00d4ff]',
+    ring: 'ring-[#00d4ff]',
   },
 
   // 성공/정답
   success: {
-    bg: 'bg-emerald-500',
-    bgSubtle: 'bg-emerald-500/20',
-    text: 'text-emerald-400',
-    border: 'border-emerald-500/50',
-    shadow: 'shadow-emerald-500/20',
+    bg: 'bg-[#00ff88]',
+    bgSubtle: 'bg-[#00ff88]/20',
+    text: 'text-[#00ff88]',
+    border: 'border-[#00ff88]/50',
+    shadow: 'shadow-[#00ff88]/20',
   },
 
   // 에러/오답
   error: {
-    bg: 'bg-red-500',
-    bgSubtle: 'bg-red-500/20',
-    text: 'text-red-400',
-    border: 'border-red-500/50',
-    shadow: 'shadow-red-500/20',
+    bg: 'bg-[#ff4444]',
+    bgSubtle: 'bg-[#ff4444]/20',
+    text: 'text-[#ff4444]',
+    border: 'border-[#ff4444]/50',
+    shadow: 'shadow-[#ff4444]/20',
   },
 
   // 경고
   warning: {
-    bg: 'bg-amber-500',
-    bgSubtle: 'bg-amber-500/20',
-    text: 'text-amber-500',
-    textLight: 'text-amber-400',
-    border: 'border-amber-500/50',
+    bg: 'bg-[#ffd700]',
+    bgSubtle: 'bg-[#ffd700]/20',
+    text: 'text-[#ffd700]',
+    textLight: 'text-[#ffb800]',
+    border: 'border-[#ffd700]/50',
   },
 
-  // 플레이어
+  // 플레이어 (Cyan)
   player: {
-    bg: 'bg-blue-500',
-    bgSubtle: 'bg-blue-500/20',
-    bgGradient: 'bg-gradient-to-br from-blue-500 to-blue-700',
-    text: 'text-blue-400',
-    border: 'border-blue-500/50',
-    shadow: 'shadow-blue-500/20',
+    bg: 'bg-[#00d4ff]',
+    bgSubtle: 'bg-[#00d4ff]/20',
+    bgGradient: 'bg-gradient-to-br from-[#00d4ff] to-[#0066ff]',
+    text: 'text-[#00d4ff]',
+    border: 'border-[#00d4ff]/50',
+    shadow: 'shadow-[#00d4ff]/20',
   },
 
-  // 컴퓨터
+  // 컴퓨터/딜러 (Pink)
   computer: {
-    bg: 'bg-red-500',
-    bgSubtle: 'bg-red-500/20',
-    bgGradient: 'bg-gradient-to-br from-red-500 to-red-700',
-    text: 'text-red-400',
-    border: 'border-red-500/50',
-    shadow: 'shadow-red-500/20',
+    bg: 'bg-[#ff4d94]',
+    bgSubtle: 'bg-[#ff4d94]/20',
+    bgGradient: 'bg-gradient-to-br from-[#ff4d94] to-[#ff0080]',
+    text: 'text-[#ff4d94]',
+    border: 'border-[#ff4d94]/50',
+    shadow: 'shadow-[#ff4d94]/20',
+  },
+
+  // 골드 (승리/보상)
+  gold: {
+    bg: 'bg-[#ffd700]',
+    bgSubtle: 'bg-[#ffd700]/20',
+    bgGradient: 'bg-gradient-to-br from-[#ffd700] to-[#ffb800]',
+    text: 'text-[#ffd700]',
+    border: 'border-[#ffd700]/50',
+    shadow: 'shadow-[#ffd700]/20',
   },
 
   // 배경/표면
   surface: {
-    primary: 'bg-slate-900',
-    secondary: 'bg-slate-800',
-    tertiary: 'bg-slate-700',
-    overlay: 'bg-slate-800/90',
-    glass: 'bg-slate-800/80 backdrop-blur-sm',
+    primary: 'bg-[#0a0e1a]',
+    secondary: 'bg-[#0f1424]',
+    tertiary: 'bg-[#1a1f35]',
+    overlay: 'bg-[#0f1424]/90',
+    glass: 'bg-[#1a1f35]/80 backdrop-blur-sm',
   },
 
   // 텍스트
   text: {
     primary: 'text-white',
-    secondary: 'text-slate-300',
-    muted: 'text-slate-400',
-    subtle: 'text-slate-500',
+    secondary: 'text-[#94a3b8]',
+    muted: 'text-[#64748b]',
+    subtle: 'text-[#475569]',
   },
 
   // 테두리
   border: {
-    default: 'border-slate-700',
-    subtle: 'border-slate-600',
-    active: 'border-amber-500',
+    default: 'border-white/10',
+    subtle: 'border-white/5',
+    active: 'border-[#00d4ff]',
   },
 } as const;
 
@@ -123,7 +133,7 @@ export const spacing = {
 export const typography = {
   // 제목
   heading: {
-    xl: 'text-4xl font-bold',
+    xl: 'text-4xl font-black',
     lg: 'text-3xl font-bold',
     md: 'text-2xl font-bold',
     sm: 'text-xl font-bold',
@@ -153,10 +163,12 @@ export const shadows = {
   lg: 'shadow-lg',
   xl: 'shadow-xl',
   glow: {
-    primary: 'shadow-lg shadow-amber-500/20',
-    success: 'shadow-lg shadow-emerald-500/20',
-    error: 'shadow-lg shadow-red-500/20',
-    player: 'shadow-lg shadow-blue-500/20',
+    primary: 'shadow-lg shadow-[#00d4ff]/20',
+    success: 'shadow-lg shadow-[#00ff88]/20',
+    error: 'shadow-lg shadow-[#ff4444]/20',
+    player: 'shadow-lg shadow-[#00d4ff]/20',
+    computer: 'shadow-lg shadow-[#ff4d94]/20',
+    gold: 'shadow-lg shadow-[#ffd700]/20',
   },
 } as const;
 
@@ -180,34 +192,46 @@ export const transitions = {
 // 난이도별 색상
 export const difficultyColors = {
   easy: {
-    bg: 'bg-emerald-500',
-    bgSubtle: 'bg-emerald-500/20',
-    text: 'text-emerald-400',
-    border: 'border-emerald-500/50',
+    bg: 'bg-[#00ff88]',
+    bgSubtle: 'bg-[#00ff88]/20',
+    text: 'text-[#00ff88]',
+    border: 'border-[#00ff88]/50',
+    gradient: 'from-[#00ff88] to-[#00cc66]',
   },
   normal: {
-    bg: 'bg-blue-500',
-    bgSubtle: 'bg-blue-500/20',
-    text: 'text-blue-400',
-    border: 'border-blue-500/50',
+    bg: 'bg-[#00d4ff]',
+    bgSubtle: 'bg-[#00d4ff]/20',
+    text: 'text-[#00d4ff]',
+    border: 'border-[#00d4ff]/50',
+    gradient: 'from-[#00d4ff] to-[#0066ff]',
   },
   hard: {
-    bg: 'bg-amber-500',
-    bgSubtle: 'bg-amber-500/20',
-    text: 'text-amber-400',
-    border: 'border-amber-500/50',
+    bg: 'bg-[#ffd700]',
+    bgSubtle: 'bg-[#ffd700]/20',
+    text: 'text-[#ffd700]',
+    border: 'border-[#ffd700]/50',
+    gradient: 'from-[#ffd700] to-[#ffb800]',
   },
   expert: {
-    bg: 'bg-purple-500',
-    bgSubtle: 'bg-purple-500/20',
-    text: 'text-purple-400',
-    border: 'border-purple-500/50',
+    bg: 'bg-[#ff4d94]',
+    bgSubtle: 'bg-[#ff4d94]/20',
+    text: 'text-[#ff4d94]',
+    border: 'border-[#ff4d94]/50',
+    gradient: 'from-[#ff4d94] to-[#ff0080]',
   },
   master: {
-    bg: 'bg-red-500',
-    bgSubtle: 'bg-red-500/20',
-    text: 'text-red-400',
-    border: 'border-red-500/50',
+    bg: 'bg-[#ff4444]',
+    bgSubtle: 'bg-[#ff4444]/20',
+    text: 'text-[#ff4444]',
+    border: 'border-[#ff4444]/50',
+    gradient: 'from-[#ff4444] to-[#cc0000]',
+  },
+  god: {
+    bg: 'bg-gradient-to-r from-[#ffd700] to-[#ff4d94]',
+    bgSubtle: 'bg-gradient-to-r from-[#ffd700]/20 to-[#ff4d94]/20',
+    text: 'text-[#ffd700]',
+    border: 'border-[#ffd700]/50',
+    gradient: 'from-[#ffd700] via-[#ff4d94] to-[#ff0080]',
   },
 } as const;
 
@@ -226,4 +250,5 @@ export const difficultyNames = {
   hard: '어려움',
   expert: '전문가',
   master: '홀덤의 신',
+  god: '홀덤의 신',
 } as const;
