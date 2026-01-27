@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback, useRef } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import { useGameStore } from '@/stores/gameStore';
 import { usePokerCalculator } from '@/hooks/usePokerCalculator';
 import { Button, TimerBar } from '@/components/ui';
@@ -26,8 +26,6 @@ const CARD_REVEAL_DURATION = 2000;
 
 export default function GamePage() {
   const router = useRouter();
-  const params = useParams();
-  const uuid = params.uuid as string;
 
   const {
     gameId,
@@ -68,14 +66,13 @@ export default function GamePage() {
   // 답변 제출 여부 추적 (타이머 경쟁 상태 방지)
   const hasSubmittedRef = useRef(false);
 
-  // 게임 초기화 (uuid가 변경될 때만 실행)
+  // 게임 초기화 (gameId가 없을 때만 실행)
   useEffect(() => {
-    // uuid가 변경되었거나 gameId가 없을 때만 초기화
-    if (!gameId || gameId !== uuid) {
+    if (!gameId) {
       initGame('easy');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [uuid]);
+  }, []);
 
   // 라운드 시작 시 승률 계산 및 카드 공개 애니메이션
   useEffect(() => {

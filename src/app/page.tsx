@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { v4 as uuidv4 } from 'uuid';
+import { useGameStore } from '@/stores/gameStore';
 import { Button } from '@/components/ui';
 import { TutorialDialog } from '@/components/TutorialDialog';
 import { getGameStats } from '@/lib/storage';
@@ -18,9 +18,11 @@ export default function Home() {
     setStats(getGameStats());
   }, []);
 
+  const { resetGame } = useGameStore();
+
   const handleStartGame = () => {
-    const gameId = uuidv4();
-    router.push(`/game/${gameId}`);
+    resetGame();
+    router.push('/game');
   };
 
   const handlePractice = () => {
