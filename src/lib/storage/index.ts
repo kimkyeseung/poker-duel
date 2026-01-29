@@ -143,6 +143,11 @@ export function saveSettings(settings: GameSettings): void {
   }
 }
 
+export function updateSettings(updates: Partial<GameSettings>): void {
+  const current = getSettings();
+  saveSettings({ ...current, ...updates });
+}
+
 // 연승 기록 업데이트
 export function updateStreak(isWin: boolean): void {
   updateGameStats((stats) => {
