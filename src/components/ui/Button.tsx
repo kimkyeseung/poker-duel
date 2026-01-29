@@ -1,7 +1,8 @@
 'use client';
 
-import { ButtonHTMLAttributes, forwardRef, ReactNode } from 'react';
+import { ButtonHTMLAttributes, forwardRef, ReactNode, useCallback } from 'react';
 import { cn } from '@/lib/utils';
+import { audioManager } from '@/lib/audio';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'ghost' | 'outline' | 'player' | 'computer' | 'gold';
@@ -10,10 +11,24 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
   fullWidth?: boolean;
+  enableSound?: boolean;
 }
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, variant = 'primary', size = 'md', isLoading, leftIcon, rightIcon, fullWidth, children, disabled, ...props }, ref) => {
+  ({ className, variant = 'primary', size = 'md', isLoading, leftIcon, rightIcon, fullWidth, enableSound = true, children, disabled, onClick, onMouseEnter, ...props }, ref) => {
+    const handleClick = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+      if (enableSound) {
+        audioManager.playSFX('button-click');
+      }
+      onClick?.(e);
+    }, [enableSound, onClick]);
+
+    const handleMouseEnter = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+      if (enableSound && !disabled && !isLoading) {
+        audioManager.playSFX('button-hover');
+      }
+      onMouseEnter?.(e);
+    }, [enableSound, disabled, isLoading, onMouseEnter]);
     const baseStyles = cn(
       'inline-flex items-center justify-center font-semibold rounded-full',
       'transition-all duration-200 ease-out',
@@ -101,6 +116,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           className
         )}
         disabled={disabled || isLoading}
+        onClick={handleClick}
+        onMouseEnter={handleMouseEnter}
         {...props}
       >
         {isLoading ? (

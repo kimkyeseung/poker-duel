@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Card as CardType, Suit } from '@/types';
 import { cn } from '@/lib/utils';
+import { audioManager } from '@/lib/audio';
 
 interface CardProps {
   card?: CardType;
@@ -89,6 +90,7 @@ export function Card({
     if (isFlipping && card) {
       const timer = setTimeout(() => {
         setIsFlipped(true);
+        audioManager.playSFX('card-flip');
         if (onFlipCompleteRef.current) {
           setTimeout(onFlipCompleteRef.current, 500);
         }
@@ -98,6 +100,12 @@ export function Card({
       setIsFlipped(false);
     }
   }, [isFlipping, flipDelay, card]);
+
+  const handleHover = useCallback(() => {
+    if (card && !isHidden) {
+      audioManager.playSFX('card-hover');
+    }
+  }, [card, isHidden]);
 
   // Card back
   const CardBack = () => (
@@ -252,6 +260,7 @@ export function Card({
         className
       )}
       style={{ animationDelay: skipEntryAnimation ? undefined : `${animationDelay}ms` }}
+      onMouseEnter={handleHover}
     >
       <CardFront cardData={card!} />
     </div>
