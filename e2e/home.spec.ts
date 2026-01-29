@@ -1,30 +1,29 @@
 import { test, expect } from '@playwright/test';
+import { goToHome } from './helpers';
 
 test.describe('홈 페이지', () => {
-  test('홈 페이지가 정상적으로 로드된다', async ({ page }) => {
-    await page.goto('/');
+  test.beforeEach(async ({ page }) => {
+    await goToHome(page);
+  });
 
-    // 타이틀 확인
-    await expect(page.getByRole('heading', { name: 'Poker Duel' })).toBeVisible();
-    await expect(page.getByText('홀덤 승률을 맞춰라!')).toBeVisible();
+  test('홈 페이지가 정상적으로 로드된다', async ({ page }) => {
+    // 타이틀 확인 - main 영역의 POKER DUEL
+    await expect(page.getByRole('main').getByRole('heading', { name: 'POKER DUEL' })).toBeVisible();
   });
 
   test('게임 시작 버튼이 존재하고 클릭 가능하다', async ({ page }) => {
-    await page.goto('/');
-
-    // 게임 시작 버튼 찾기
-    const startButton = page.getByRole('button', { name: /게임 시작/i });
+    // 게임 시작 버튼 찾기 (QUICK PLAY) - main 영역에서
+    const startButton = page.getByRole('main').getByRole('button', { name: 'QUICK PLAY' });
     await expect(startButton).toBeVisible();
 
     // 클릭 시 게임 페이지로 이동
     await startButton.click();
-    await expect(page).toHaveURL(/\/game\//);
+    await expect(page).toHaveURL(/\/game/);
   });
 
   test('연습 모드 버튼이 존재한다', async ({ page }) => {
-    await page.goto('/');
-
-    const practiceButton = page.getByRole('button', { name: /연습 모드/i });
+    // main 영역에서 PRACTICE 버튼 찾기
+    const practiceButton = page.getByRole('main').getByRole('button', { name: 'PRACTICE' });
     await expect(practiceButton).toBeVisible();
 
     await practiceButton.click();
@@ -32,40 +31,36 @@ test.describe('홈 페이지', () => {
   });
 
   test('일일 챌린지 버튼이 존재한다', async ({ page }) => {
-    await page.goto('/');
-
-    const dailyButton = page.getByRole('button', { name: /일일 챌린지/i });
+    const dailyButton = page.getByRole('main').getByRole('button', { name: 'DAILY RUN' });
     await expect(dailyButton).toBeVisible();
 
     await dailyButton.click();
     await expect(page).toHaveURL('/daily');
   });
 
-  test('통계 버튼이 존재한다', async ({ page }) => {
-    await page.goto('/');
-
-    const statsButton = page.getByRole('button', { name: /통계/i });
-    await expect(statsButton).toBeVisible();
-
-    await statsButton.click();
-    await expect(page).toHaveURL('/stats');
-  });
-
   test('설정 버튼이 존재한다', async ({ page }) => {
-    await page.goto('/');
-
-    // 설정 버튼 (⚙️ 아이콘)
-    const settingsButton = page.locator('footer button');
+    // 설정 버튼 (⚙️ 아이콘) - 헤더에 있음
+    const settingsButton = page.locator('header button').last();
     await expect(settingsButton).toBeVisible();
 
     await settingsButton.click();
     await expect(page).toHaveURL('/settings');
   });
 
-  test('게임 방법 버튼이 존재한다', async ({ page }) => {
-    await page.goto('/');
+  test('통계 페이지로 이동할 수 있다', async ({ page }) => {
+    // HI SCORE 버튼으로 통계 페이지 이동 (footer에 있음)
+    const statsButton = page.getByRole('contentinfo').getByText('HI SCORE');
+    await expect(statsButton).toBeVisible();
 
-    const tutorialButton = page.getByRole('button', { name: /게임 방법/i });
-    await expect(tutorialButton).toBeVisible();
+    await statsButton.click();
+    await expect(page).toHaveURL('/stats');
+  });
+
+  test('크레딧 페이지로 이동할 수 있다', async ({ page }) => {
+    const creditsButton = page.getByRole('contentinfo').getByText('CREDITS');
+    await expect(creditsButton).toBeVisible();
+
+    await creditsButton.click();
+    await expect(page).toHaveURL('/comments');
   });
 });

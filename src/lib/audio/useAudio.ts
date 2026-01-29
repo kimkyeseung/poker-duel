@@ -156,18 +156,60 @@ export function useSFX() {
   return { playSFX };
 }
 
-// BGM hook for pages
-export function useBGM(type: BGMType) {
-  useEffect(() => {
-    // Delay slightly for smoother page transitions
-    const timer = setTimeout(() => {
+// Track if user has interacted with the page
+let hasUserInteracted = false;
+let pendingBGMType: BGMType | null = null;
+
+// Setup global interaction listener once
+if (typeof window !== 'undefined') {
+  const handleFirstInteraction = () => {
+    hasUserInteracted = true;
+
+    // Play pending BGM if any
+    if (pendingBGMType) {
       try {
-        audioManager.playBGM(type);
+        audioManager.init().then(() => {
+          if (pendingBGMType) {
+            audioManager.playBGM(pendingBGMType);
+          }
+        });
       } catch {
         // Ignore errors
       }
-    }, 100);
+    }
 
-    return () => clearTimeout(timer);
+    // Remove listeners after first interaction
+    document.removeEventListener('click', handleFirstInteraction);
+    document.removeEventListener('touchstart', handleFirstInteraction);
+    document.removeEventListener('keydown', handleFirstInteraction);
+  };
+
+  document.addEventListener('click', handleFirstInteraction);
+  document.addEventListener('touchstart', handleFirstInteraction);
+  document.addEventListener('keydown', handleFirstInteraction);
+}
+
+// BGM hook for pages
+export function useBGM(type: BGMType) {
+  useEffect(() => {
+    pendingBGMType = type;
+
+    if (hasUserInteracted) {
+      // User has already interacted, play immediately
+      const timer = setTimeout(() => {
+        try {
+          audioManager.playBGM(type);
+        } catch {
+          // Ignore errors
+        }
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+
+    // If no interaction yet, the global listener will handle it
+    return () => {
+      // Don't clear pendingBGMType on unmount if it's the same type
+      // This allows the BGM to continue when navigating
+    };
   }, [type]);
 }

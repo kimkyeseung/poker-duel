@@ -47,7 +47,8 @@ poker-duel/
 │   │   │   ├── Button.tsx
 │   │   │   ├── Dialog.tsx
 │   │   │   ├── Timer.tsx
-│   │   │   └── AudioToggle.tsx # 음소거 토글 버튼
+│   │   │   ├── AudioToggle.tsx # 음소거 토글 버튼
+│   │   │   └── ClickToStart.tsx # 시작 오버레이 (오디오 활성화)
 │   │   └── TutorialDialog.tsx # 튜토리얼
 │   │
 │   ├── lib/
@@ -138,6 +139,8 @@ poker-duel/
 - **BGM**: Howler.js 사용, MP3 파일 재생 (크로스페이드 지원)
 - **SFX**: Web Audio API로 실시간 합성 (파일 불필요)
 - **Lazy Loading**: 동적 import로 SSR 이슈 방지
+- **Web Audio API 모드**: `html5: false`로 설정하여 자동재생 정책 우회
+- **Click to Start**: 브라우저 자동재생 정책으로 인해 첫 화면에서 사용자 클릭 필요
 
 ### BGM 타입 (`BGMType`)
 | 타입 | 파일 | 용도 |
@@ -157,22 +160,37 @@ poker-duel/
 
 ### React 훅 사용법
 ```tsx
-// BGM 재생 (페이지 단위)
+// BGM 재생 (useAudio 훅 사용)
+import { useAudio } from '@/lib/audio';
+const { playBGM, playSFX, isMuted, toggleMute } = useAudio();
+playBGM('game');
+
+// BGM 재생 (useBGM 훅 - 사용자 인터랙션 후 자동 재생)
 import { useBGM } from '@/lib/audio';
-useBGM('game'); // 컴포넌트 마운트 시 자동 재생
+useBGM('game'); // 사용자 인터랙션 감지 후 자동 재생
 
 // SFX 재생 (컴포넌트 단위)
 import { useSFX } from '@/lib/audio';
 const { playSFX } = useSFX();
 playSFX('button-click');
+```
 
-// 전체 오디오 제어
-import { useAudio } from '@/lib/audio';
-const { isMuted, toggleMute, setMuted } = useAudio();
+### Click to Start 오버레이
+```tsx
+// 홈 페이지에서 사용
+import { ClickToStart } from '@/components/ui';
+
+const handleStart = () => {
+  playBGM('home'); // 오디오 시스템이 활성화된 후 BGM 재생
+};
+
+<ClickToStart onStart={handleStart} />
 ```
 
 ### 주의사항
-- 브라우저 자동재생 정책으로 첫 사용자 인터랙션 후 BGM 재생
+- 브라우저 자동재생 정책으로 인해 **ClickToStart 오버레이 필수**
+- 첫 방문 시 "Click anywhere to start" 오버레이 표시
+- 클릭 후 `sessionStorage`에 `poker-duel-started` 저장 (세션 동안 다시 표시 안 됨)
 - `playSFX` 호출은 에러가 나도 게임 로직을 막지 않음 (try-catch 내장)
 - AudioToggle 컴포넌트로 헤더에 음소거 버튼 제공
 
@@ -240,11 +258,17 @@ export function Component({ ...props }: ComponentProps) {
 - `initGame` 같은 store 함수는 의존성 배열에서 제외 (무한 루프 방지)
 - `eslint-disable-next-line react-hooks/exhaustive-deps` 주석 필요시 사용
 
-## 로컬스토리지 키
+## 스토리지 키
 
+### 로컬스토리지
 | 키 | 용도 |
 |----|------|
 | `poker-duel-stats` | 게임 통계 |
 | `poker-duel-settings` | 설정 (사운드, 진동, 테마) |
 | `poker-duel-comments` | 엔딩 코멘트 |
 | `poker-duel-tutorial-seen` | 튜토리얼 완료 여부 |
+
+### 세션스토리지
+| 키 | 용도 |
+|----|------|
+| `poker-duel-started` | Click to Start 완료 여부 (세션당 1회)

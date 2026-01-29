@@ -1,13 +1,13 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, AudioToggle } from '@/components/ui';
+import { Button, AudioToggle, ClickToStart } from '@/components/ui';
 import { TutorialDialog } from '@/components/TutorialDialog';
 import { getGameStats } from '@/lib/storage';
 import { getCurrentTitle } from '@/lib/game/titles';
 import { useGameStore } from '@/stores/gameStore';
-import { useAudio, useBGM } from '@/lib/audio';
+import { useAudio } from '@/lib/audio';
 import { GameStats } from '@/types';
 
 // 마스코트 메시지 생성 함수
@@ -89,12 +89,16 @@ export default function Home() {
   const router = useRouter();
   const [showTutorial, setShowTutorial] = useState(false);
   const [stats, setStats] = useState<GameStats | null>(null);
+  const [isStarted, setIsStarted] = useState(false);
 
   const { resetGame } = useGameStore();
-  const { initAudio, playSFX } = useAudio();
+  const { initAudio, playSFX, playBGM } = useAudio();
 
-  // Initialize audio on first interaction and play home BGM
-  useBGM('home');
+  // Play BGM after user has started
+  const handleStart = useCallback(() => {
+    setIsStarted(true);
+    playBGM('home');
+  }, [playBGM]);
 
   useEffect(() => {
     setStats(getGameStats());
@@ -143,6 +147,9 @@ export default function Home() {
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: 'radial-gradient(circle at top center, #1a0b2e 0%, #0a0a1a 100%)' }}>
+      {/* Click to Start Overlay */}
+      <ClickToStart onStart={handleStart} />
+
       {/* Background Decorative Accents */}
       <div className="absolute top-[-10%] left-[-5%] w-96 h-96 bg-[#8b5cf6]/20 blur-[120px] rounded-full pointer-events-none"></div>
       <div className="absolute bottom-[-10%] right-[-5%] w-96 h-96 bg-[#00d4ff]/10 blur-[120px] rounded-full pointer-events-none"></div>

@@ -75,14 +75,12 @@ class AudioManager {
     try {
       const loaded = await this.loadDependencies();
       if (!loaded) {
-        console.warn('[AudioManager] Dependencies not loaded');
         this.isInitializing = false;
         return;
       }
 
       const HowlConstructor = this.Howl;
       if (!HowlConstructor) {
-        console.warn('[AudioManager] Howl constructor not available');
         this.isInitializing = false;
         return;
       }
@@ -98,7 +96,7 @@ class AudioManager {
             loop: true,
             volume: 0,
             preload: true,
-            html5: true,
+            html5: false, // Use Web Audio API instead of HTML5 Audio for better autoplay support
             onload: () => {
               this.bgmLoadedStates.set(bgmType, true);
               // Play pending BGM if this is the one we're waiting for
@@ -161,6 +159,13 @@ class AudioManager {
     const newBGM = this.bgmInstances.get(type);
     if (!newBGM) {
       return;
+    }
+
+    // Resume AudioContext if suspended (browser autoplay policy)
+    if (this.Howler?.ctx?.state === 'suspended') {
+      this.Howler.ctx.resume().catch(() => {
+        // Ignore resume errors
+      });
     }
 
     const config = BGM_CONFIG[type];
