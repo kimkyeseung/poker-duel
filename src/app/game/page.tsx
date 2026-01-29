@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGameStore } from '@/stores/gameStore';
 import { usePokerCalculator } from '@/hooks/usePokerCalculator';
-import { Button, Timer, TimerBar } from '@/components/ui';
+import { Button, Timer, TimerBar, AudioToggle } from '@/components/ui';
 import {
   Card,
   Table,
@@ -18,6 +18,7 @@ import {
 import { checkAnswer } from '@/lib/poker/calculator';
 import { evaluateStartingHand, compareStartingHands, StartingHandInfo } from '@/lib/poker/starting-hands';
 import { recordGameResult, updateStreak } from '@/lib/storage';
+import { useBGM, useSFX } from '@/lib/audio';
 import { DIFFICULTY_CONFIG, WinRateResult, AnswerResult, GameRound } from '@/types';
 import { cn } from '@/lib/utils';
 
@@ -57,9 +58,13 @@ export default function GamePage() {
   } = useGameStore();
 
   const { calculate, isCalculating } = usePokerCalculator();
+  const { playSFX } = useSFX();
   const [currentWinRate, setCurrentWinRate] = useState<WinRateResult | null>(null);
   const [lastAnswer, setLastAnswer] = useState<AnswerResult | null>(null);
   const [showResult, setShowResult] = useState(false);
+
+  // Play game BGM
+  useBGM('game');
 
   const [isRevealingCards, setIsRevealingCards] = useState(false);
   const [isRevealingPlayerCards, setIsRevealingPlayerCards] = useState(false);
@@ -83,16 +88,19 @@ export default function GamePage() {
           nextRound();
         } else {
           setIsRevealingPlayerCards(true);
+          playSFX('card-deal');
           setTimeout(() => {
             setIsRevealingPlayerCards(false);
             setHasPlayerCardsRevealed(true);
             hasSubmittedRef.current = false;
+            playSFX('round-start');
             startRound();
           }, CARD_REVEAL_DURATION);
         }
       } else if (currentRound === 'river') {
         setIsRevealingCards(true);
         setNewCardsCount(1);
+        playSFX('card-flip');
         calculate(playerHand, computerHand, communityCards)
           .then(result => {
             setCurrentWinRate(result);
@@ -111,6 +119,7 @@ export default function GamePage() {
         console.log('Flop started, communityCards:', communityCards);
         setIsRevealingCards(true);
         setNewCardsCount(3);
+        playSFX('card-deal');
         calculate(playerHand, computerHand, communityCards)
           .then(result => {
             console.log('Flop calculation result:', result);
@@ -120,6 +129,7 @@ export default function GamePage() {
               setNewCardsCount(0);
               hasSubmittedRef.current = false;
               console.log('Flop: calling startRound');
+              playSFX('round-start');
               startRound();
             }, CARD_REVEAL_DURATION);
           })
@@ -133,6 +143,7 @@ export default function GamePage() {
       } else if (currentRound === 'turn') {
         setIsRevealingCards(true);
         setNewCardsCount(1);
+        playSFX('card-flip');
         calculate(playerHand, computerHand, communityCards)
           .then(result => {
             setCurrentWinRate(result);
@@ -140,6 +151,7 @@ export default function GamePage() {
               setIsRevealingCards(false);
               setNewCardsCount(0);
               hasSubmittedRef.current = false;
+              playSFX('round-start');
               startRound();
             }, CARD_REVEAL_DURATION);
           })
@@ -158,10 +170,11 @@ export default function GamePage() {
   const handleTimeout = useCallback(() => {
     if (hasSubmittedRef.current) return;
     stopTimer();
+    playSFX('game-over');
     gameOver('Time Out!');
     recordGameResult(difficulty, false);
     updateStreak(false);
-  }, [stopTimer, gameOver, difficulty]);
+  }, [stopTimer, gameOver, difficulty, playSFX]);
 
   const handleSubmitAnswer = useCallback((answer: string | number) => {
     if (!playerHand || !computerHand) return;
@@ -211,7 +224,10 @@ export default function GamePage() {
     setLastAnswer(result);
     setShowResult(true);
 
-    if (!isCorrect) {
+    if (isCorrect) {
+      playSFX('correct');
+    } else {
+      playSFX('wrong');
       gameOver('Wrong Answer!');
       recordGameResult(difficulty, false);
       updateStreak(false);
@@ -245,7 +261,10 @@ export default function GamePage() {
     setLastAnswer(result);
     setShowResult(true);
 
-    if (!isCorrect) {
+    if (isCorrect) {
+      playSFX('correct');
+    } else {
+      playSFX('wrong');
       gameOver('Wrong Answer!');
       recordGameResult(difficulty, false);
       updateStreak(false);
@@ -274,8 +293,10 @@ export default function GamePage() {
       setHasPlayerCardsRevealed(false);
 
       if (difficulty === 'god') {
+        playSFX('victory');
         victory();
       } else {
+        playSFX('level-up');
         nextDifficulty();
       }
     } else {
@@ -326,6 +347,7 @@ export default function GamePage() {
             <span className="hidden sm:inline">Exit</span>
           </button>
           <GameProgressCompact difficulty={difficulty} currentRound={currentRound} />
+          <AudioToggle />
         </div>
       </header>
 

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui';
+import { Button, AudioToggle } from '@/components/ui';
 import {
   Card,
   Table,
@@ -15,6 +15,7 @@ import { usePokerCalculator } from '@/hooks/usePokerCalculator';
 import { createDeck, shuffleDeck } from '@/lib/poker';
 import { evaluateStartingHand, compareStartingHands, StartingHandInfo } from '@/lib/poker/starting-hands';
 import { checkAnswer } from '@/lib/poker/calculator';
+import { useAudio, useBGM, useSFX } from '@/lib/audio';
 import {
   Card as CardType,
   Difficulty,
@@ -31,6 +32,11 @@ const PRACTICE_DIFFICULTIES: Difficulty[] = ['easy', 'normal', 'hard'];
 export default function PracticePage() {
   const router = useRouter();
   const { calculate, isCalculating } = usePokerCalculator();
+  const { initAudio } = useAudio();
+  const { playSFX } = useSFX();
+
+  // Play game BGM for practice
+  useBGM('game');
 
   // 게임 상태
   const [difficulty, setDifficulty] = useState<Difficulty>('easy');
@@ -48,6 +54,9 @@ export default function PracticePage() {
 
   // 새 게임 시작
   const startNewGame = useCallback(() => {
+    initAudio();
+    playSFX('card-deal');
+
     const newDeck = shuffleDeck(createDeck());
     const newPlayerHand: [CardType, CardType] = [newDeck[0], newDeck[1]];
     const newComputerHand: [CardType, CardType] = [newDeck[2], newDeck[3]];
@@ -61,7 +70,7 @@ export default function PracticePage() {
     setLastAnswer(null);
     setShowResult(false);
     setIsPlaying(true);
-  }, []);
+  }, [initAudio, playSFX]);
 
   // 라운드 변경 시 승률 계산
   useEffect(() => {
@@ -77,6 +86,8 @@ export default function PracticePage() {
   // 정답 제출
   const handleSubmitAnswer = useCallback((answer: string | number) => {
     if (!playerHand || !computerHand) return;
+
+    playSFX('submit');
 
     if (currentRound === 'preflop') {
       // 프리플랍: 핸드랭킹 비교 (승률 계산 없음)
@@ -108,6 +119,11 @@ export default function PracticePage() {
         winRateResult: preflopResult,
       });
       setShowResult(true);
+
+      // Play correct/wrong SFX after a short delay
+      setTimeout(() => {
+        playSFX(isCorrect ? 'correct' : 'wrong');
+      }, 100);
     } else {
       if (!currentWinRate) return;
 
@@ -120,8 +136,13 @@ export default function PracticePage() {
         winRateResult: currentWinRate,
       });
       setShowResult(true);
+
+      // Play correct/wrong SFX after a short delay
+      setTimeout(() => {
+        playSFX(isCorrect ? 'correct' : 'wrong');
+      }, 100);
     }
-  }, [playerHand, computerHand, currentRound, difficulty, currentWinRate, calculate]);
+  }, [playerHand, computerHand, currentRound, difficulty, currentWinRate, playSFX]);
 
   // 다음 라운드
   const handleNextRound = useCallback(() => {
@@ -135,12 +156,15 @@ export default function PracticePage() {
       let newCommunityCards = [...communityCards];
 
       if (nextRound === 'flop') {
+        playSFX('card-deal');
         newCommunityCards = [deck[1], deck[2], deck[3]];
         setDeck(deck.slice(4));
       } else if (nextRound === 'turn') {
+        playSFX('card-flip');
         newCommunityCards = [...communityCards, deck[1]];
         setDeck(deck.slice(2));
       } else if (nextRound === 'river') {
+        playSFX('card-flip');
         newCommunityCards = [...communityCards, deck[1]];
         setDeck(deck.slice(2));
       }
@@ -154,7 +178,7 @@ export default function PracticePage() {
       // 모든 라운드 완료, 새 게임
       startNewGame();
     }
-  }, [currentRound, communityCards, deck, startNewGame]);
+  }, [currentRound, communityCards, deck, startNewGame, playSFX]);
 
   // 난이도 변경
   const handleDifficultyChange = (newDifficulty: Difficulty) => {
@@ -179,7 +203,7 @@ export default function PracticePage() {
             <span>Exit</span>
           </button>
           <div className="text-[#00d4ff] font-bold text-lg">PRACTICE MODE</div>
-          <div className="w-16" />
+          <AudioToggle />
         </div>
       </header>
 

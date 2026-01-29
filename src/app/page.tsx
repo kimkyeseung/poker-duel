@@ -1,12 +1,13 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui';
+import { Button, AudioToggle } from '@/components/ui';
 import { TutorialDialog } from '@/components/TutorialDialog';
 import { getGameStats } from '@/lib/storage';
 import { getCurrentTitle } from '@/lib/game/titles';
 import { useGameStore } from '@/stores/gameStore';
+import { useAudio, useBGM } from '@/lib/audio';
 import { GameStats } from '@/types';
 
 // 마스코트 메시지 생성 함수
@@ -90,21 +91,38 @@ export default function Home() {
   const [stats, setStats] = useState<GameStats | null>(null);
 
   const { resetGame } = useGameStore();
+  const { initAudio, playSFX } = useAudio();
+
+  // Initialize audio on first interaction and play home BGM
+  useBGM('home');
 
   useEffect(() => {
     setStats(getGameStats());
   }, []);
 
+  // Handle click with SFX
+  const handleButtonClick = useCallback((callback: () => void) => {
+    initAudio();
+    playSFX('button-click');
+    callback();
+  }, [initAudio, playSFX]);
+
   const handleStartGame = () => {
+    initAudio();
+    playSFX('button-click');
     resetGame();
     router.push('/game');
   };
 
   const handlePractice = () => {
+    initAudio();
+    playSFX('button-click');
     router.push('/practice');
   };
 
   const handleDailyChallenge = () => {
+    initAudio();
+    playSFX('button-click');
     router.push('/daily');
   };
 
@@ -148,6 +166,7 @@ export default function Home() {
                 <span className="text-white text-sm font-medium hidden sm:inline">{currentTitle.name}</span>
               </button>
             )}
+            <AudioToggle />
             <button
               onClick={() => router.push('/settings')}
               className="w-10 h-10 rounded-full bg-[#1a1f35] flex items-center justify-center text-[#64748b] hover:text-white hover:bg-[#252b45] transition-all"
