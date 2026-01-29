@@ -9,6 +9,7 @@ class AudioManager {
   private bgmInstances: Map<BGMType, Howl> = new Map();
   private sfxInstances: Map<SFXType, Howl> = new Map();
   private currentBGM: BGMType | null = null;
+  private pendingBGM: BGMType | null = null; // 초기화 전 요청된 BGM
   private isInitialized = false;
   private isMuted = false;
   private masterVolume = 1;
@@ -59,11 +60,22 @@ class AudioManager {
     });
 
     this.isInitialized = true;
+
+    // 대기 중인 BGM이 있으면 재생
+    if (this.pendingBGM) {
+      this.playBGM(this.pendingBGM);
+      this.pendingBGM = null;
+    }
   }
 
   // BGM 재생 (크로스페이드)
   playBGM(type: BGMType): void {
-    if (!this.isInitialized || this.isMuted) return;
+    // 초기화 전이면 대기열에 저장
+    if (!this.isInitialized) {
+      this.pendingBGM = type;
+      return;
+    }
+    if (this.isMuted) return;
     if (this.currentBGM === type) return;
 
     const newBGM = this.bgmInstances.get(type);

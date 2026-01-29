@@ -107,11 +107,10 @@ export function useSFX() {
 // BGM 훅 (페이지에서 사용)
 export function useBGM(type: BGMType) {
   useEffect(() => {
-    // 약간의 딜레이 후 BGM 재생 (페이지 전환 시 부드럽게)
+    // 약간의 딜레이 후 BGM 재생 요청 (페이지 전환 시 부드럽게)
+    // 초기화 전이면 AudioManager가 대기열에 저장하고, 초기화 후 자동 재생
     const timer = setTimeout(() => {
-      if (audioManager.getIsInitialized()) {
-        audioManager.playBGM(type);
-      }
+      audioManager.playBGM(type);
     }, 100);
 
     return () => clearTimeout(timer);
