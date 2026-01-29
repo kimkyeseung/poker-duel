@@ -6,78 +6,126 @@ import { BGMType, SFXType } from './config';
 import { getSettings, updateSettings } from '@/lib/storage';
 
 export function useAudio() {
-  const [isInitialized, setIsInitialized] = useState(false);
-  const [isMuted, setIsMuted] = useState(true);
+  // Initialize state from audioManager synchronously to avoid cascading renders
+  const [isInitialized, setIsInitialized] = useState(() => {
+    try {
+      return audioManager.getIsInitialized();
+    } catch {
+      return false;
+    }
+  });
 
-  // 설정에서 음소거 상태 로드
+  const [isMuted, setIsMuted] = useState(() => {
+    try {
+      return audioManager.getMuted();
+    } catch {
+      return false;
+    }
+  });
+
+  // Sync settings on mount (only apply settings, don't update state)
   useEffect(() => {
-    const settings = getSettings();
-    setIsMuted(!settings.soundEnabled);
-    audioManager.setMuted(!settings.soundEnabled);
-  }, []);
-
-  // 오디오 초기화 (사용자 인터랙션 시 호출)
-  const initAudio = useCallback(() => {
-    if (!audioManager.getIsInitialized()) {
-      audioManager.init();
-      setIsInitialized(true);
-
-      // 설정에 따라 음소거 상태 적용
+    try {
       const settings = getSettings();
-      audioManager.setMuted(!settings.soundEnabled);
-      setIsMuted(!settings.soundEnabled);
+      const shouldMute = !settings.soundEnabled;
+
+      if (audioManager.getMuted() !== shouldMute) {
+        audioManager.setMuted(shouldMute);
+      }
+    } catch {
+      // Ignore errors - audio is not critical
     }
   }, []);
 
-  // BGM 재생
+  // Initialize audio
+  const initAudio = useCallback(() => {
+    try {
+      if (!audioManager.getIsInitialized()) {
+        audioManager.init();
+        setIsInitialized(true);
+      }
+    } catch {
+      // Ignore errors
+    }
+  }, []);
+
+  // Play BGM
   const playBGM = useCallback((type: BGMType) => {
-    if (!audioManager.getIsInitialized()) {
-      audioManager.init();
-      setIsInitialized(true);
+    try {
+      if (!audioManager.getIsInitialized()) {
+        audioManager.init();
+        setIsInitialized(true);
+      }
+      audioManager.playBGM(type);
+    } catch {
+      // Ignore errors
     }
-    audioManager.playBGM(type);
   }, []);
 
-  // BGM 정지
+  // Stop BGM
   const stopBGM = useCallback(() => {
-    audioManager.stopBGM();
+    try {
+      audioManager.stopBGM();
+    } catch {
+      // Ignore errors
+    }
   }, []);
 
-  // 효과음 재생
+  // Play SFX
   const playSFX = useCallback((type: SFXType) => {
-    audioManager.playSFX(type);
+    try {
+      audioManager.playSFX(type);
+    } catch {
+      // Ignore errors
+    }
   }, []);
 
-  // 음소거 토글
+  // Toggle mute
   const toggleMute = useCallback(() => {
-    const newMuted = !audioManager.getMuted();
-    audioManager.setMuted(newMuted);
-    setIsMuted(newMuted);
-
-    // 설정에 저장
-    updateSettings({ soundEnabled: !newMuted });
+    try {
+      const newMuted = !audioManager.getMuted();
+      audioManager.setMuted(newMuted);
+      setIsMuted(newMuted);
+      updateSettings({ soundEnabled: !newMuted });
+    } catch {
+      // Ignore errors
+    }
   }, []);
 
-  // 음소거 설정
+  // Set muted
   const setMuted = useCallback((muted: boolean) => {
-    audioManager.setMuted(muted);
-    setIsMuted(muted);
-    updateSettings({ soundEnabled: !muted });
+    try {
+      audioManager.setMuted(muted);
+      setIsMuted(muted);
+      updateSettings({ soundEnabled: !muted });
+    } catch {
+      // Ignore errors
+    }
   }, []);
 
-  // 마스터 볼륨 설정
+  // Volume controls
   const setMasterVolume = useCallback((volume: number) => {
-    audioManager.setMasterVolume(volume);
+    try {
+      audioManager.setMasterVolume(volume);
+    } catch {
+      // Ignore errors
+    }
   }, []);
 
-  // BGM 볼륨 설정
   const setBGMVolume = useCallback((volume: number) => {
-    audioManager.setBGMVolume(volume);
+    try {
+      audioManager.setBGMVolume(volume);
+    } catch {
+      // Ignore errors
+    }
   }, []);
 
-  // SFX 볼륨 설정
   const setSFXVolume = useCallback((volume: number) => {
-    audioManager.setSFXVolume(volume);
+    try {
+      audioManager.setSFXVolume(volume);
+    } catch {
+      // Ignore errors
+    }
   }, []);
 
   return {
@@ -95,22 +143,29 @@ export function useAudio() {
   };
 }
 
-// 간단한 효과음 훅 (컴포넌트에서 바로 사용)
+// Simple SFX hook for components
 export function useSFX() {
   const playSFX = useCallback((type: SFXType) => {
-    audioManager.playSFX(type);
+    try {
+      audioManager.playSFX(type);
+    } catch {
+      // Silently fail - audio errors should not break the UI
+    }
   }, []);
 
   return { playSFX };
 }
 
-// BGM 훅 (페이지에서 사용)
+// BGM hook for pages
 export function useBGM(type: BGMType) {
   useEffect(() => {
-    // 약간의 딜레이 후 BGM 재생 요청 (페이지 전환 시 부드럽게)
-    // 초기화 전이면 AudioManager가 대기열에 저장하고, 초기화 후 자동 재생
+    // Delay slightly for smoother page transitions
     const timer = setTimeout(() => {
-      audioManager.playBGM(type);
+      try {
+        audioManager.playBGM(type);
+      } catch {
+        // Ignore errors
+      }
     }, 100);
 
     return () => clearTimeout(timer);

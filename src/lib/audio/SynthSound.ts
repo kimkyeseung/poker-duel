@@ -16,7 +16,7 @@ interface SoundOptions {
   pan?: number; // -1 (left) to 1 (right)
 }
 
-class SynthSoundManager {
+export class SynthSoundManager {
   private audioContext: AudioContext | null = null;
   private masterGain: GainNode | null = null;
   private isMuted = false;
@@ -137,8 +137,6 @@ class SynthSoundManager {
 
   /** 성공/정답 - 상승하는 두 음 */
   success(): void {
-    const ctx = this.getContext();
-
     // 첫 번째 음
     setTimeout(() => {
       this.playTone({

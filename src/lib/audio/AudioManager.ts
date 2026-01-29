@@ -1,164 +1,158 @@
 'use client';
 
-import { Howl, Howler } from 'howler';
 import { BGM_CONFIG, BGMType, SFXType, CROSSFADE_DURATION } from './config';
-import { synthSound } from './SynthSound';
+
+// Type definitions for lazy-loaded modules
+type HowlClass = import('howler').Howl;
+type HowlerType = typeof import('howler').Howler;
+type SynthSoundType = import('./SynthSound').SynthSoundManager;
 
 class AudioManager {
   private static instance: AudioManager | null = null;
-  private bgmInstances: Map<BGMType, Howl> = new Map();
+  private bgmInstances: Map<BGMType, HowlClass> = new Map();
   private currentBGM: BGMType | null = null;
   private pendingBGM: BGMType | null = null;
   private isInitialized = false;
+  private isInitializing = false;
   private isMuted = false;
   private masterVolume = 1;
   private bgmVolume = 1;
   private sfxVolume = 1;
   private bgmLoadedStates: Map<BGMType, boolean> = new Map();
-  private initPromise: Promise<void> | null = null;
+
+  // Lazy loaded modules
+  private Howl: typeof import('howler').Howl | null = null;
+  private Howler: HowlerType | null = null;
+  private synthSound: SynthSoundType | null = null;
 
   private constructor() {
-    console.log('[AudioManager] Constructor called');
+    // Constructor is private for singleton pattern
   }
 
   static getInstance(): AudioManager {
     if (!AudioManager.instance) {
-      console.log('[AudioManager] Creating new instance');
       AudioManager.instance = new AudioManager();
-
-      // 브라우저 환경에서만 자동 초기화 시도
-      if (typeof window !== 'undefined') {
-        AudioManager.instance.setupAutoInit();
-      }
     }
     return AudioManager.instance;
   }
 
-  // 자동 초기화 설정
-  private setupAutoInit(): void {
-    console.log('[AudioManager] Setting up auto-init');
+  // Load dependencies asynchronously
+  private async loadDependencies(): Promise<boolean> {
+    if (typeof window === 'undefined') return false;
 
-    // 이미 사용자 인터랙션이 있었는지 확인
-    const initOnInteraction = () => {
-      console.log('[AudioManager] User interaction detected');
-      this.init();
-    };
-
-    // 클릭, 터치, 키 입력 시 초기화
-    document.addEventListener('click', initOnInteraction, { once: true, capture: true });
-    document.addEventListener('touchstart', initOnInteraction, { once: true, capture: true });
-    document.addEventListener('keydown', initOnInteraction, { once: true, capture: true });
-
-    // 바로 초기화도 시도 (Tauri 등 데스크톱 앱용)
-    setTimeout(() => {
-      if (!this.isInitialized) {
-        console.log('[AudioManager] Attempting immediate init');
-        this.init();
+    try {
+      if (!this.Howl || !this.Howler) {
+        const howlerModule = await import('howler');
+        this.Howl = howlerModule.Howl;
+        this.Howler = howlerModule.Howler;
       }
-    }, 500);
+      if (!this.synthSound) {
+        const synthModule = await import('./SynthSound');
+        this.synthSound = synthModule.synthSound;
+      }
+      return true;
+    } catch (e) {
+      console.error('[AudioManager] Failed to load dependencies:', e);
+      return false;
+    }
   }
 
-  // 초기화
-  init(): void {
-    if (this.isInitialized) {
-      console.log('[AudioManager] Already initialized');
+  // Initialize audio system
+  async init(): Promise<void> {
+    if (this.isInitialized || this.isInitializing) {
       return;
     }
 
-    console.log('[AudioManager] Initializing...');
+    this.isInitializing = true;
 
     try {
-      // BGM 프리로드
-      Object.entries(BGM_CONFIG).forEach(([key, config]) => {
+      const loaded = await this.loadDependencies();
+      if (!loaded || !this.Howl) {
+        console.warn('[AudioManager] Dependencies not loaded');
+        this.isInitializing = false;
+        return;
+      }
+
+      // Preload all BGM
+      for (const [key, config] of Object.entries(BGM_CONFIG)) {
         const bgmType = key as BGMType;
         this.bgmLoadedStates.set(bgmType, false);
 
-        console.log(`[AudioManager] Creating BGM: ${key}, src: ${config.src}`);
-
-        const howl = new Howl({
-          src: [config.src],
-          loop: true,
-          volume: 0,
-          preload: true,
-          html5: true,
-          onload: () => {
-            console.log(`[AudioManager] BGM loaded: ${key}`);
-            this.bgmLoadedStates.set(bgmType, true);
-
-            // 대기 중인 BGM이 이 타입이면 재생
-            if (this.pendingBGM === bgmType && !this.isMuted) {
-              console.log(`[AudioManager] Playing pending BGM: ${key}`);
-              this.playBGMInternal(bgmType);
-            }
-          },
-          onloaderror: (id, error) => {
-            console.error(`[AudioManager] BGM load error (${key}):`, error);
-          },
-          onplayerror: (id, error) => {
-            console.error(`[AudioManager] BGM play error (${key}):`, error);
-            // 재생 실패 시 컨텍스트 resume 후 재시도
-            if (Howler.ctx && Howler.ctx.state === 'suspended') {
-              Howler.ctx.resume().then(() => {
-                console.log('[AudioManager] AudioContext resumed, retrying play');
-                howl.play();
-              });
-            }
-          },
-        });
-        this.bgmInstances.set(bgmType, howl);
-      });
+        try {
+          const howl = new this.Howl({
+            src: [config.src],
+            loop: true,
+            volume: 0,
+            preload: true,
+            html5: true,
+            onload: () => {
+              this.bgmLoadedStates.set(bgmType, true);
+              // Play pending BGM if this is the one we're waiting for
+              if (this.pendingBGM === bgmType && !this.isMuted) {
+                this.playBGMInternal(bgmType);
+              }
+            },
+            onloaderror: (_id: number, error: unknown) => {
+              console.warn(`[AudioManager] BGM load error (${key}):`, error);
+            },
+            onplayerror: (_id: number, _error: unknown) => {
+              // Try to resume audio context
+              if (this.Howler?.ctx?.state === 'suspended') {
+                this.Howler.ctx.resume().then(() => {
+                  howl.play();
+                });
+              }
+            },
+          });
+          this.bgmInstances.set(bgmType, howl);
+        } catch (e) {
+          console.warn(`[AudioManager] Failed to create BGM: ${key}`, e);
+        }
+      }
 
       this.isInitialized = true;
-      console.log('[AudioManager] Initialization complete');
-
     } catch (error) {
       console.error('[AudioManager] Init error:', error);
+    } finally {
+      this.isInitializing = false;
     }
   }
 
-  // BGM 재생 요청
+  // Request BGM playback
   playBGM(type: BGMType): void {
-    console.log(`[AudioManager] playBGM: ${type}`);
-
     this.pendingBGM = type;
 
     if (!this.isInitialized) {
-      console.log(`[AudioManager] Not initialized yet, BGM queued: ${type}`);
+      // Try to initialize if not yet done
+      this.init();
       return;
     }
 
     if (this.isMuted) {
-      console.log('[AudioManager] Muted, BGM queued but not playing');
       return;
     }
 
     if (this.currentBGM === type) {
-      console.log('[AudioManager] Same BGM already playing');
       return;
     }
 
-    // BGM이 로드됐으면 재생, 아니면 onload에서 재생
+    // Play if loaded, otherwise onload callback will handle it
     if (this.bgmLoadedStates.get(type)) {
       this.playBGMInternal(type);
-    } else {
-      console.log(`[AudioManager] BGM not loaded yet, will play when ready: ${type}`);
     }
   }
 
-  // 실제 BGM 재생 (내부용)
+  // Internal BGM playback
   private playBGMInternal(type: BGMType): void {
     const newBGM = this.bgmInstances.get(type);
     if (!newBGM) {
-      console.warn(`[AudioManager] BGM instance not found: ${type}`);
       return;
     }
 
     const config = BGM_CONFIG[type];
     const targetVolume = config.volume * this.bgmVolume * this.masterVolume;
 
-    console.log(`[AudioManager] Playing BGM: ${type}, targetVolume: ${targetVolume}`);
-
-    // 현재 BGM 페이드아웃
+    // Fade out current BGM
     if (this.currentBGM && this.currentBGM !== type) {
       const currentBGMInstance = this.bgmInstances.get(this.currentBGM);
       if (currentBGMInstance) {
@@ -170,7 +164,7 @@ class AudioManager {
       }
     }
 
-    // 새 BGM 페이드인
+    // Fade in new BGM
     newBGM.volume(0);
     newBGM.play();
     newBGM.fade(0, targetVolume, CROSSFADE_DURATION);
@@ -178,7 +172,7 @@ class AudioManager {
     this.currentBGM = type;
   }
 
-  // BGM 정지
+  // Stop BGM
   stopBGM(): void {
     if (this.currentBGM) {
       const currentBGMInstance = this.bgmInstances.get(this.currentBGM);
@@ -192,70 +186,97 @@ class AudioManager {
     }
   }
 
-  // 효과음 재생 (SynthSound 전용)
+  // Play SFX (using SynthSound)
   playSFX(type: SFXType): void {
     if (this.isMuted) return;
 
-    synthSound.setMuted(this.isMuted);
-    synthSound.setVolume(this.sfxVolume * this.masterVolume);
+    // Lazy load synthSound if needed
+    if (!this.synthSound) {
+      import('./SynthSound')
+        .then((module) => {
+          this.synthSound = module.synthSound;
+          this.playSFXInternal(type);
+        })
+        .catch(() => {
+          // Silently fail - audio is not critical
+        });
+      return;
+    }
 
-    switch (type) {
-      case 'button-click':
-        synthSound.buttonClick();
-        break;
-      case 'button-hover':
-        synthSound.buttonHover();
-        break;
-      case 'card-hover':
-        synthSound.cardHover();
-        break;
-      case 'card-flip':
-        synthSound.cardFlip();
-        break;
-      case 'card-deal':
-        synthSound.cardDeal();
-        break;
-      case 'correct':
-        synthSound.success();
-        break;
-      case 'wrong':
-        synthSound.error();
-        break;
-      case 'submit':
-        synthSound.submit();
-        break;
-      case 'timer-tick':
-        synthSound.timerTick();
-        break;
-      case 'timer-warning':
-        synthSound.timerWarning();
-        break;
-      case 'level-up':
-        synthSound.levelUp();
-        break;
-      case 'victory':
-        synthSound.victory();
-        break;
-      case 'game-over':
-        synthSound.gameOver();
-        break;
-      case 'round-start':
-        synthSound.roundStart();
-        break;
+    this.playSFXInternal(type);
+  }
+
+  private playSFXInternal(type: SFXType): void {
+    if (!this.synthSound) return;
+
+    try {
+      this.synthSound.setMuted(this.isMuted);
+      this.synthSound.setVolume(this.sfxVolume * this.masterVolume);
+
+      switch (type) {
+        case 'button-click':
+          this.synthSound.buttonClick();
+          break;
+        case 'button-hover':
+          this.synthSound.buttonHover();
+          break;
+        case 'card-hover':
+          this.synthSound.cardHover();
+          break;
+        case 'card-flip':
+          this.synthSound.cardFlip();
+          break;
+        case 'card-deal':
+          this.synthSound.cardDeal();
+          break;
+        case 'correct':
+          this.synthSound.success();
+          break;
+        case 'wrong':
+          this.synthSound.error();
+          break;
+        case 'submit':
+          this.synthSound.submit();
+          break;
+        case 'timer-tick':
+          this.synthSound.timerTick();
+          break;
+        case 'timer-warning':
+          this.synthSound.timerWarning();
+          break;
+        case 'level-up':
+          this.synthSound.levelUp();
+          break;
+        case 'victory':
+          this.synthSound.victory();
+          break;
+        case 'game-over':
+          this.synthSound.gameOver();
+          break;
+        case 'round-start':
+          this.synthSound.roundStart();
+          break;
+      }
+    } catch (e) {
+      // Silently fail - audio errors should not break the game
     }
   }
 
-  // 음소거 토글
+  // Set muted state
   setMuted(muted: boolean): void {
-    console.log(`[AudioManager] setMuted: ${muted}`);
     this.isMuted = muted;
-    Howler.mute(muted);
-    synthSound.setMuted(muted);
+
+    if (this.Howler) {
+      this.Howler.mute(muted);
+    }
+
+    if (this.synthSound) {
+      this.synthSound.setMuted(muted);
+    }
 
     if (muted) {
       this.stopBGM();
     } else if (this.pendingBGM && this.isInitialized) {
-      // 음소거 해제 시 대기 중인 BGM 재생
       if (this.bgmLoadedStates.get(this.pendingBGM)) {
         this.playBGMInternal(this.pendingBGM);
       }
@@ -286,7 +307,9 @@ class AudioManager {
 
   setSFXVolume(volume: number): void {
     this.sfxVolume = Math.max(0, Math.min(1, volume));
-    synthSound.setVolume(this.sfxVolume * this.masterVolume);
+    if (this.synthSound) {
+      this.synthSound.setVolume(this.sfxVolume * this.masterVolume);
+    }
   }
 
   getSFXVolume(): number {
@@ -312,7 +335,7 @@ class AudioManager {
   }
 
   dispose(): void {
-    this.bgmInstances.forEach(howl => howl.unload());
+    this.bgmInstances.forEach((howl) => howl.unload());
     this.bgmInstances.clear();
     this.bgmLoadedStates.clear();
     this.isInitialized = false;
@@ -321,5 +344,6 @@ class AudioManager {
   }
 }
 
+// Create singleton instance
 export const audioManager = AudioManager.getInstance();
 export default audioManager;
