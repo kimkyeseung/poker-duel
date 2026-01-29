@@ -1,51 +1,32 @@
-# Audio Files Required
+# Audio Files
 
-This directory needs the following audio files for the game to have sound.
+## BGM (Background Music) - 4개 필요
 
-## BGM (Background Music)
+| 파일 | 용도 | 검색 키워드 |
+|------|------|------------|
+| `bgm/home.mp3` | 홈 화면 | "casino lounge loop", "poker background" |
+| `bgm/game.mp3` | 게임 플레이 | "card game tension loop", "poker suspense" |
+| `bgm/result-win.mp3` | 승리 | "victory fanfare loop" |
+| `bgm/result-lose.mp3` | 패배 | "sad game over loop" |
 
-Place these files in `bgm/` directory:
+## SFX (효과음)
 
-| File | Description | Recommended Search Term |
-|------|-------------|------------------------|
-| `home.mp3` | Main menu music (looping, calm casino vibe) | "casino lounge jazz", "poker background music" |
-| `game.mp3` | In-game music (looping, tense but not distracting) | "card game tension", "poker suspense" |
-| `result-win.mp3` | Victory music (can be short fanfare) | "victory fanfare", "win celebration" |
-| `result-lose.mp3` | Defeat music (melancholic, short) | "game over sad", "defeat music" |
+**SFX는 파일이 필요 없습니다!**
 
-## SFX (Sound Effects)
+모든 효과음은 `SynthSound`가 Web Audio API로 실시간 생성합니다:
+- 버튼 클릭/호버
+- 카드 호버/뒤집기/배분
+- 정답/오답
+- 타이머
+- 레벨업/승리/게임오버
 
-Place these files in `sfx/` directory:
+## 권장 BGM 소스 (무료)
 
-| File | Description | Recommended Search Term |
-|------|-------------|------------------------|
-| `card-hover.mp3` | Card hover sound (subtle) | "card slide", "paper whoosh" |
-| `card-flip.mp3` | Card flip/reveal sound | "card flip", "playing card" |
-| `card-deal.mp3` | Card dealing sound | "card shuffle", "deal cards" |
-| `button-click.mp3` | Button click sound | "button click", "ui click" |
-| `button-hover.mp3` | Button hover sound (very subtle) | "soft click", "menu hover" |
-| `correct.mp3` | Correct answer sound | "correct answer", "success ding" |
-| `wrong.mp3` | Wrong answer sound | "wrong buzzer", "error sound" |
-| `timer-tick.mp3` | Timer tick sound | "clock tick", "timer beep" |
-| `timer-warning.mp3` | Timer warning (low time) | "alarm warning", "urgent beep" |
-| `level-up.mp3` | Level up/difficulty increase | "level up", "achievement unlocked" |
-| `victory.mp3` | Final victory sound | "victory trumpet", "champion fanfare" |
-| `game-over.mp3` | Game over sound | "game over", "failure sound" |
-| `round-start.mp3` | New round start | "round bell", "start signal" |
-| `submit.mp3` | Answer submit confirmation | "submit click", "confirm" |
+1. **Pixabay** (https://pixabay.com/music/) - 무료, 저작권 표기 불필요
+2. **FreePD** (https://freepd.com/) - 퍼블릭 도메인
 
-## Recommended Sources (Free)
+## 팁
 
-1. **Pixabay** (https://pixabay.com/music/) - Free, no attribution required
-2. **FreePD** (https://freepd.com/) - Public domain music
-3. **Freesound** (https://freesound.org/) - Creative Commons (check license)
-4. **OpenGameArt** (https://opengameart.org/) - Game-specific assets
-5. **Zapsplat** (https://www.zapsplat.com/) - Free with attribution
-
-## Tips
-
-- Keep BGM files under 2MB for faster loading
-- Keep SFX files under 100KB each
-- MP3 format recommended for compatibility
-- BGM should be seamlessly loopable
-- SFX should be short (under 1-2 seconds)
+- BGM은 **seamless loop** 가능한 파일 권장
+- 파일 크기 2MB 이하 권장
+- MP3 포맷 사용
