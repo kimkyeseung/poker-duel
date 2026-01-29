@@ -9,15 +9,20 @@ class AudioManager {
   private bgmInstances: Map<BGMType, Howl> = new Map();
   private sfxInstances: Map<SFXType, Howl> = new Map();
   private currentBGM: BGMType | null = null;
-  private pendingBGM: BGMType | null = null; // 초기화 전 요청된 BGM
+  private pendingBGM: BGMType | null = null;
   private isInitialized = false;
   private isMuted = false;
   private masterVolume = 1;
   private bgmVolume = 1;
   private sfxVolume = 1;
+  private bgmLoadedStates: Map<BGMType, boolean> = new Map();
 
   private constructor() {
-    // Singleton
+    // 페이지 로드 시 자동 초기화 시도 (데스크톱 앱용)
+    if (typeof window !== 'undefined') {
+      // 약간의 딜레이 후 자동 초기화 시도
+      setTimeout(() => this.tryAutoInit(), 100);
+    }
   }
 
   static getInstance(): AudioManager {
@@ -27,23 +32,79 @@ class AudioManager {
     return AudioManager.instance;
   }
 
-  // 초기화 (사용자 인터랙션 후 호출)
+  // 자동 초기화 시도 (데스크톱 앱에서는 작동, 브라우저에서는 suspended 상태일 수 있음)
+  private tryAutoInit(): void {
+    if (this.isInitialized) return;
+
+    try {
+      // AudioContext 상태 확인
+      const testContext = new (window.AudioContext || (window as typeof window & { webkitAudioContext: typeof AudioContext }).webkitAudioContext)();
+
+      if (testContext.state === 'running') {
+        // 자동재생 가능 - 바로 초기화
+        console.log('[AudioManager] Auto-init successful');
+        testContext.close();
+        this.init();
+      } else {
+        // suspended 상태 - 사용자 인터랙션 필요
+        console.log('[AudioManager] Auto-init blocked, waiting for user interaction');
+        testContext.close();
+
+        // 첫 클릭/터치 시 초기화
+        const initOnInteraction = () => {
+          this.init();
+          document.removeEventListener('click', initOnInteraction);
+          document.removeEventListener('touchstart', initOnInteraction);
+          document.removeEventListener('keydown', initOnInteraction);
+        };
+
+        document.addEventListener('click', initOnInteraction, { once: true });
+        document.addEventListener('touchstart', initOnInteraction, { once: true });
+        document.addEventListener('keydown', initOnInteraction, { once: true });
+      }
+    } catch (e) {
+      console.warn('[AudioManager] Auto-init failed:', e);
+    }
+  }
+
+  // 초기화
   init(): void {
     if (this.isInitialized) return;
 
+    console.log('[AudioManager] Initializing...');
+
     // BGM 프리로드
     Object.entries(BGM_CONFIG).forEach(([key, config]) => {
+      const bgmType = key as BGMType;
+      this.bgmLoadedStates.set(bgmType, false);
+
       const howl = new Howl({
         src: [config.src],
         loop: true,
         volume: 0,
         preload: true,
-        html5: true, // 스트리밍으로 메모리 절약
+        html5: true,
+        onload: () => {
+          console.log(`[AudioManager] BGM loaded: ${key}`);
+          this.bgmLoadedStates.set(bgmType, true);
+
+          // 대기 중인 BGM이 이 타입이면 재생
+          if (this.pendingBGM === bgmType) {
+            this.playBGM(bgmType);
+          }
+        },
         onloaderror: (id, error) => {
-          console.warn(`BGM load error (${key}):`, error);
+          console.warn(`[AudioManager] BGM load error (${key}):`, error);
+        },
+        onplayerror: (id, error) => {
+          console.warn(`[AudioManager] BGM play error (${key}):`, error);
+          // 재생 실패 시 unlock 후 재시도
+          Howler.ctx?.resume().then(() => {
+            howl.play();
+          });
         },
       });
-      this.bgmInstances.set(key as BGMType, howl);
+      this.bgmInstances.set(bgmType, howl);
     });
 
     // SFX 프리로드
@@ -53,36 +114,65 @@ class AudioManager {
         volume: config.volume * this.sfxVolume * this.masterVolume,
         preload: true,
         onloaderror: (id, error) => {
-          console.warn(`SFX load error (${key}):`, error);
+          // SFX 로드 실패는 조용히 처리 (SynthSound가 대체)
         },
       });
       this.sfxInstances.set(key as SFXType, howl);
     });
 
     this.isInitialized = true;
+    console.log('[AudioManager] Initialized');
 
-    // 대기 중인 BGM이 있으면 재생
+    // 대기 중인 BGM 재생 시도
     if (this.pendingBGM) {
-      this.playBGM(this.pendingBGM);
-      this.pendingBGM = null;
+      // BGM이 로드될 때까지 대기하거나, 이미 로드됐으면 바로 재생
+      const pending = this.pendingBGM;
+      if (this.bgmLoadedStates.get(pending)) {
+        this.playBGM(pending);
+      }
+      // 아니면 onload 콜백에서 처리됨
     }
   }
 
   // BGM 재생 (크로스페이드)
   playBGM(type: BGMType): void {
-    // 초기화 전이면 대기열에 저장
+    console.log(`[AudioManager] playBGM called: ${type}, initialized: ${this.isInitialized}, muted: ${this.isMuted}`);
+
+    // 항상 pendingBGM 업데이트 (페이지 전환 시 필요)
+    this.pendingBGM = type;
+
+    // 초기화 전이면 대기
     if (!this.isInitialized) {
-      this.pendingBGM = type;
+      console.log(`[AudioManager] Not initialized, BGM queued: ${type}`);
       return;
     }
-    if (this.isMuted) return;
-    if (this.currentBGM === type) return;
+
+    if (this.isMuted) {
+      console.log('[AudioManager] Muted, skipping BGM');
+      return;
+    }
+
+    if (this.currentBGM === type) {
+      console.log('[AudioManager] Same BGM already playing');
+      return;
+    }
 
     const newBGM = this.bgmInstances.get(type);
-    if (!newBGM) return;
+    if (!newBGM) {
+      console.warn(`[AudioManager] BGM not found: ${type}`);
+      return;
+    }
+
+    // BGM이 로드되지 않았으면 대기 (onload에서 재생됨)
+    if (!this.bgmLoadedStates.get(type)) {
+      console.log(`[AudioManager] BGM not loaded yet, waiting: ${type}`);
+      return;
+    }
 
     const config = BGM_CONFIG[type];
     const targetVolume = config.volume * this.bgmVolume * this.masterVolume;
+
+    console.log(`[AudioManager] Playing BGM: ${type}, volume: ${targetVolume}`);
 
     // 현재 BGM 페이드아웃
     if (this.currentBGM) {
@@ -101,6 +191,7 @@ class AudioManager {
     newBGM.fade(0, targetVolume, CROSSFADE_DURATION);
 
     this.currentBGM = type;
+    this.pendingBGM = null;
   }
 
   // BGM 정지
@@ -184,7 +275,7 @@ class AudioManager {
         synthSound.roundStart();
         break;
       default:
-        console.warn(`Unknown SFX type: ${type}`);
+        console.warn(`[AudioManager] Unknown SFX type: ${type}`);
     }
   }
 
@@ -196,6 +287,9 @@ class AudioManager {
 
     if (muted) {
       this.stopBGM();
+    } else if (this.pendingBGM) {
+      // 음소거 해제 시 대기 중인 BGM 재생
+      this.playBGM(this.pendingBGM);
     }
   }
 
@@ -263,8 +357,10 @@ class AudioManager {
     this.sfxInstances.forEach(howl => howl.unload());
     this.bgmInstances.clear();
     this.sfxInstances.clear();
+    this.bgmLoadedStates.clear();
     this.isInitialized = false;
     this.currentBGM = null;
+    this.pendingBGM = null;
   }
 }
 
