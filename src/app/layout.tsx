@@ -13,13 +13,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Poker Duel - 홀덤 승률 예측 게임",
-  description: "텍사스 홀덤의 승률을 맞추는 1:1 대결 게임. 5단계 난이도를 클리어하고 홀덤의 신이 되어보세요!",
-  keywords: ["포커", "홀덤", "텍사스 홀덤", "카드 게임", "확률", "게임"],
-  authors: [{ name: "Poker Duel" }],
+  title: "Hol'Damn It! - The Ultimate Equity Challenge",
+  description: "텍사스 홀덤의 승률을 맞추는 퀴즈 게임. 5단계 난이도를 클리어하고 홀덤의 신이 되어보세요!",
+  keywords: ["포커", "홀덤", "텍사스 홀덤", "카드 게임", "확률", "게임", "에퀴티"],
+  authors: [{ name: "Hol'Damn It!" }],
   openGraph: {
-    title: "Poker Duel - 홀덤 승률 예측 게임",
-    description: "텍사스 홀덤의 승률을 맞추는 1:1 대결 게임",
+    title: "Hol'Damn It! - The Ultimate Equity Challenge",
+    description: "텍사스 홀덤의 승률을 맞추는 퀴즈 게임",
     type: "website",
   },
 };

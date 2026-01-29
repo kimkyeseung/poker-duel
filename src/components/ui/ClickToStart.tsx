@@ -12,7 +12,7 @@ export function ClickToStart({ onStart }: ClickToStartProps) {
 
   useEffect(() => {
     // Check if user has already interacted in this session
-    const hasStarted = sessionStorage.getItem('poker-duel-started');
+    const hasStarted = sessionStorage.getItem('holdamnit-started');
     if (!hasStarted) {
       setIsVisible(true);
     } else {
@@ -23,7 +23,7 @@ export function ClickToStart({ onStart }: ClickToStartProps) {
 
   const handleClick = async () => {
     // Mark as started first (before any potential errors)
-    sessionStorage.setItem('poker-duel-started', 'true');
+    sessionStorage.setItem('holdamnit-started', 'true');
 
     try {
       // Initialize audio system
@@ -57,9 +57,10 @@ export function ClickToStart({ onStart }: ClickToStartProps) {
         {/* Logo */}
         <div className="space-y-2">
           <h1 className="text-5xl md:text-7xl font-black tracking-tight">
-            <span className="block text-gradient-secondary">POKER</span>
-            <span className="block text-gradient-primary">DUEL</span>
+            <span className="block text-gradient-secondary">HOL&apos;DAMN</span>
+            <span className="block text-gradient-primary">IT!</span>
           </h1>
+          <p className="text-slate-400 text-xs tracking-widest">THE ULTIMATE EQUITY CHALLENGE</p>
         </div>
 
         {/* Click to Start */}

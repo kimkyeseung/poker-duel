@@ -7,8 +7,8 @@ test.describe('홈 페이지', () => {
   });
 
   test('홈 페이지가 정상적으로 로드된다', async ({ page }) => {
-    // 타이틀 확인 - main 영역의 POKER DUEL
-    await expect(page.getByRole('main').getByRole('heading', { name: 'POKER DUEL' })).toBeVisible();
+    // 타이틀 확인 - main 영역의 HOL'DAMN IT!
+    await expect(page.getByRole('main').getByRole('heading', { name: /HOL.*DAMN.*IT/i })).toBeVisible();
   });
 
   test('게임 시작 버튼이 존재하고 클릭 가능하다', async ({ page }) => {

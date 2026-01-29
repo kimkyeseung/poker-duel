@@ -163,10 +163,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#ffd700] to-[#ff8c00] flex items-center justify-center text-[#0a0e1a] font-black text-lg shadow-lg shadow-[#ffd700]/30">
-              P
+              H
             </div>
             <div>
-              <span className="text-white font-bold text-lg">POKER DUEL</span>
+              <span className="text-white font-bold text-lg">HOL&apos;DAMN IT!</span>
               <span className="text-[#64748b] text-xs ml-2">Alpha 0.1</span>
             </div>
           </div>
@@ -253,10 +253,11 @@ export default function Home() {
           <div className="text-center space-y-6">
             {/* Title */}
             <div>
-              <h1 className="text-6xl md:text-8xl font-black tracking-tight leading-none">
-                <span className="block text-gradient-secondary">POKER</span>
-                <span className="block text-gradient-primary">DUEL</span>
+              <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none">
+                <span className="block text-gradient-secondary">HOL&apos;DAMN</span>
+                <span className="block text-gradient-primary">IT!</span>
               </h1>
+              <p className="text-slate-400 text-sm mt-2 tracking-widest">THE ULTIMATE EQUITY CHALLENGE</p>
             </div>
 
 

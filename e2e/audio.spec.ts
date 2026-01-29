@@ -46,7 +46,7 @@ test.describe('Click to Start 오버레이', () => {
 
     // 세션 스토리지 확인
     const started = await page.evaluate(() => {
-      return sessionStorage.getItem('poker-duel-started');
+      return sessionStorage.getItem('holdamnit-started');
     });
     expect(started).toBe('true');
   });
@@ -110,7 +110,7 @@ test.describe('오디오 토글', () => {
 
     // 로컬 스토리지에서 설정 확인
     const settings = await page.evaluate(() => {
-      const stored = localStorage.getItem('poker-duel-settings');
+      const stored = localStorage.getItem('holdamnit-settings');
       return stored ? JSON.parse(stored) : null;
     });
 
@@ -129,7 +129,7 @@ test.describe('오디오 토글', () => {
 
     // 로컬 스토리지에서 설정 확인
     const settings = await page.evaluate(() => {
-      const stored = localStorage.getItem('poker-duel-settings');
+      const stored = localStorage.getItem('holdamnit-settings');
       return stored ? JSON.parse(stored) : null;
     });
 
@@ -181,7 +181,7 @@ test.describe('오디오 시스템 통합', () => {
 
     // 설정 확인
     const settings = await page.evaluate(() => {
-      const stored = localStorage.getItem('poker-duel-settings');
+      const stored = localStorage.getItem('holdamnit-settings');
       return stored ? JSON.parse(stored) : null;
     });
 

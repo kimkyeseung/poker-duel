@@ -1,10 +1,10 @@
-# Poker Duel - Implementation Workflow
+# Hol'Damn It! - Implementation Workflow
 
 ## 프로젝트 개요
-- **프로젝트명**: poker-duel
-- **기술스택**: Next.js 14 (App Router) + TypeScript + Tailwind CSS
+- **프로젝트명**: holdamnit (Hol'Damn It!)
+- **기술스택**: Next.js 16 (App Router) + TypeScript + Tailwind CSS 4
 - **플랫폼**: 모바일/PC 반응형 웹앱
-- **컨셉**: 홀덤 승률 예측 1:1 대결 게임
+- **컨셉**: Texas Hold'em 승률 예측 퀴즈 게임 - The Ultimate Equity Challenge
 
 ---
 
@@ -18,7 +18,7 @@
 - [ ] 폴더 구조 설계
 
 ```
-poker-duel/
+holdamnit/
 ├── src/
 │   ├── app/                    # App Router 페이지
 │   │   ├── page.tsx           # 메인 페이지

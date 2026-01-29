@@ -18,7 +18,7 @@ const TUTORIAL_SLIDES = [
     content: (
       <div className="space-y-3 text-white/80">
         <p>
-          <strong className="text-white">Poker Duel</strong> is a game where you predict
+          <strong className="text-white">Hol'Damn It!</strong> is a game where you predict
           Texas Hold'em win rates.
         </p>
         <p>

@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "Poker Duel",
+  "productName": "Hol'Damn It!",
   "version": "0.1.0",
-  "identifier": "com.pokerduel.app",
+  "identifier": "com.holdamnit.app",
   "build": {
     "frontendDist": "../out",
     "devUrl": "http://localhost:3000",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "Poker Duel",
+        "title": "Hol'Damn It!",
         "width": 1200,
         "height": 800,
         "minWidth": 400,

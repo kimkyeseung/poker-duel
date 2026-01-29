@@ -1,8 +1,8 @@
-# Poker Duel - 프로젝트 가이드
+# Hol'Damn It! - 프로젝트 가이드
 
 ## 프로젝트 개요
 
-**Poker Duel**은 Texas Hold'em 승률 예측 게임입니다. 사용자는 컴퓨터와 1:1로 대결하며, 각 라운드(프리플랍, 플랍, 턴, 리버)에서 자신의 승률을 예측합니다.
+**Hol'Damn It!**은 Texas Hold'em 승률 예측 게임입니다. 사용자는 각 라운드(프리플랍, 플랍, 턴, 리버)에서 자신의 승률을 예측합니다. 이름은 "Hold'em"과 "Damn it!"의 언어유희로, 한 번 틀리면 게임오버되는 긴장감을 표현합니다.
 
 ### 핵심 게임 규칙
 - **5단계 난이도**: 쉬움 → 보통 → 어려움 → 전문가 → 홀덤의 신
@@ -21,7 +21,7 @@
 ## 프로젝트 구조
 
 ```
-poker-duel/
+holdamnit/
 ├── src/
 │   ├── app/                    # Next.js App Router 페이지
 │   │   ├── page.tsx           # 메인 페이지 (게임 시작)
@@ -190,7 +190,7 @@ const handleStart = () => {
 ### 주의사항
 - 브라우저 자동재생 정책으로 인해 **ClickToStart 오버레이 필수**
 - 첫 방문 시 "Click anywhere to start" 오버레이 표시
-- 클릭 후 `sessionStorage`에 `poker-duel-started` 저장 (세션 동안 다시 표시 안 됨)
+- 클릭 후 `sessionStorage`에 `holdamnit-started` 저장 (세션 동안 다시 표시 안 됨)
 - `playSFX` 호출은 에러가 나도 게임 로직을 막지 않음 (try-catch 내장)
 - AudioToggle 컴포넌트로 헤더에 음소거 버튼 제공
 
@@ -263,12 +263,12 @@ export function Component({ ...props }: ComponentProps) {
 ### 로컬스토리지
 | 키 | 용도 |
 |----|------|
-| `poker-duel-stats` | 게임 통계 |
-| `poker-duel-settings` | 설정 (사운드, 진동, 테마) |
-| `poker-duel-comments` | 엔딩 코멘트 |
-| `poker-duel-tutorial-seen` | 튜토리얼 완료 여부 |
+| `holdamnit-stats` | 게임 통계 |
+| `holdamnit-settings` | 설정 (사운드, 진동, 테마) |
+| `holdamnit-comments` | 엔딩 코멘트 |
+| `holdamnit-tutorial-seen` | 튜토리얼 완료 여부 |
 
 ### 세션스토리지
 | 키 | 용도 |
 |----|------|
-| `poker-duel-started` | Click to Start 완료 여부 (세션당 1회)
+| `holdamnit-started` | Click to Start 완료 여부 (세션당 1회)

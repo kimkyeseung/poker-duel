@@ -53,9 +53,9 @@ export default function SettingsPage() {
 
   const handleResetData = () => {
     if (confirm('All game data will be deleted. Continue?')) {
-      localStorage.removeItem('poker-duel-stats');
-      localStorage.removeItem('poker-duel-comments');
-      localStorage.removeItem('poker-duel-tutorial-seen');
+      localStorage.removeItem('holdamnit-stats');
+      localStorage.removeItem('holdamnit-comments');
+      localStorage.removeItem('holdamnit-tutorial-seen');
       alert('Data has been reset.');
       router.push('/');
     }
@@ -171,7 +171,7 @@ export default function SettingsPage() {
               </div>
               <div className="flex justify-between">
                 <span>Developer</span>
-                <span className="text-white">Poker Duel Team</span>
+                <span className="text-white">Hol'Damn It! Team</span>
               </div>
             </div>
           </div>

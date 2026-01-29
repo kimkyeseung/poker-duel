@@ -21,7 +21,7 @@ class SoundManager {
 
   private loadSettings(): void {
     try {
-      const settings = localStorage.getItem('poker-duel-settings');
+      const settings = localStorage.getItem('holdamnit-settings');
       if (settings) {
         const parsed = JSON.parse(settings);
         this.enabled = parsed.soundEnabled ?? true;
@@ -161,7 +161,7 @@ class VibrationManager {
 
   private loadSettings(): void {
     try {
-      const settings = localStorage.getItem('poker-duel-settings');
+      const settings = localStorage.getItem('holdamnit-settings');
       if (settings) {
         const parsed = JSON.parse(settings);
         this.enabled = parsed.vibrationEnabled ?? true;

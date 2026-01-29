@@ -62,7 +62,7 @@ export function getCurrentTheme(): ThemeId {
   if (typeof window === 'undefined') return 'casino';
 
   try {
-    const settings = localStorage.getItem('poker-duel-settings');
+    const settings = localStorage.getItem('holdamnit-settings');
     if (settings) {
       const parsed = JSON.parse(settings);
       return parsed.theme || 'casino';
@@ -79,10 +79,10 @@ export function setTheme(themeId: ThemeId): void {
   if (typeof window === 'undefined') return;
 
   try {
-    const settings = localStorage.getItem('poker-duel-settings');
+    const settings = localStorage.getItem('holdamnit-settings');
     const parsed = settings ? JSON.parse(settings) : {};
     parsed.theme = themeId;
-    localStorage.setItem('poker-duel-settings', JSON.stringify(parsed));
+    localStorage.setItem('holdamnit-settings', JSON.stringify(parsed));
   } catch {
     // ignore
   }

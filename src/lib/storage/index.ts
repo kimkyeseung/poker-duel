@@ -3,10 +3,10 @@
 import { GameStats, initialGameStats, HandRecord, DailyChallengeRecord, EndingComment } from '@/types';
 
 const STORAGE_KEYS = {
-  STATS: 'poker-duel-stats',
-  COMMENTS: 'poker-duel-comments',
-  SETTINGS: 'poker-duel-settings',
-  TUTORIAL_SEEN: 'poker-duel-tutorial-seen',
+  STATS: 'holdamnit-stats',
+  COMMENTS: 'holdamnit-comments',
+  SETTINGS: 'holdamnit-settings',
+  TUTORIAL_SEEN: 'holdamnit-tutorial-seen',
 };
 
 // 통계 관련

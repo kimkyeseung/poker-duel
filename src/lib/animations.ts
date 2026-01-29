@@ -1,6 +1,6 @@
 /**
  * Animation System - 일관된 애니메이션과 reduced motion 지원
- * Poker Duel 프로젝트의 모든 애니메이션을 중앙 관리합니다.
+ * Hol'Damn It! 프로젝트의 모든 애니메이션을 중앙 관리합니다.
  */
 
 // CSS 애니메이션 클래스

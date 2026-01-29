@@ -117,7 +117,7 @@ export function GameOverDialog({
 
         {/* Encouragement */}
         <p className="text-center text-[#64748b] text-sm">
-          Don't give up! Practice makes perfect.
+          Don&apos;t give up! Practice makes perfect.
         </p>
       </DialogContent>
 
