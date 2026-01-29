@@ -46,7 +46,8 @@ poker-duel/
 │   │   ├── ui/                # 공통 UI 컴포넌트
 │   │   │   ├── Button.tsx
 │   │   │   ├── Dialog.tsx
-│   │   │   └── Timer.tsx
+│   │   │   ├── Timer.tsx
+│   │   │   └── AudioToggle.tsx # 음소거 토글 버튼
 │   │   └── TutorialDialog.tsx # 튜토리얼
 │   │
 │   ├── lib/
@@ -55,11 +56,16 @@ poker-duel/
 │   │   │   ├── evaluator.ts   # 핸드 평가 (7장→5장)
 │   │   │   ├── calculator.ts  # 승률 계산 (완전탐색)
 │   │   │   └── starting-hands.ts # 169개 프리플랍 핸드랭킹
+│   │   ├── audio/             # 오디오 시스템
+│   │   │   ├── AudioManager.ts # BGM 관리 (Howler.js)
+│   │   │   ├── SynthSound.ts  # SFX 생성 (Web Audio API)
+│   │   │   ├── useAudio.ts    # React 훅 (useAudio, useSFX, useBGM)
+│   │   │   ├── config.ts      # 오디오 설정 및 타입
+│   │   │   └── index.ts       # 모듈 exports
 │   │   ├── game/              # 게임 시스템
 │   │   │   ├── titles.ts      # 14개 칭호
 │   │   │   ├── achievements.ts # 18개 도전과제
 │   │   │   ├── hints.ts       # 힌트 시스템
-│   │   │   ├── sounds.ts      # 사운드/진동 매니저
 │   │   │   └── themes.ts      # 테마 시스템
 │   │   ├── storage/           # 로컬스토리지 관리
 │   │   └── utils.ts           # 유틸리티 (cn 함수)
@@ -75,8 +81,14 @@ poker-duel/
 │       └── game.ts            # 게임 상태 타입
 │
 └── public/
-    └── workers/
-        └── poker-calculator.js # 승률 계산 Web Worker
+    ├── workers/
+    │   └── poker-calculator.js # 승률 계산 Web Worker
+    └── audio/
+        └── bgm/               # BGM 파일 (MP3)
+            ├── home.mp3       # 홈 화면 BGM
+            ├── game.mp3       # 게임 플레이 BGM
+            ├── result-win.mp3 # 승리 BGM
+            └── result-lose.mp3 # 패배 BGM
 ```
 
 ## 핵심 로직
@@ -119,6 +131,50 @@ poker-duel/
 - 사운드 ON/OFF
 - 진동 ON/OFF (모바일)
 - 테마 선택 (카지노, 미니멀, 다크)
+
+## 오디오 시스템
+
+### 아키텍처
+- **BGM**: Howler.js 사용, MP3 파일 재생 (크로스페이드 지원)
+- **SFX**: Web Audio API로 실시간 합성 (파일 불필요)
+- **Lazy Loading**: 동적 import로 SSR 이슈 방지
+
+### BGM 타입 (`BGMType`)
+| 타입 | 파일 | 용도 |
+|------|------|------|
+| `home` | `/audio/bgm/home.mp3` | 홈 화면 |
+| `game` | `/audio/bgm/game.mp3` | 게임 플레이 |
+| `result-win` | `/audio/bgm/result-win.mp3` | 승리 |
+| `result-lose` | `/audio/bgm/result-lose.mp3` | 패배 |
+
+### SFX 타입 (`SFXType`) - 파일 불필요
+- `button-click`, `button-hover` - UI 버튼
+- `card-hover`, `card-flip`, `card-deal` - 카드
+- `correct`, `wrong` - 정답/오답
+- `timer-tick`, `timer-warning` - 타이머
+- `level-up`, `victory`, `game-over` - 게임 진행
+- `round-start`, `submit` - 라운드
+
+### React 훅 사용법
+```tsx
+// BGM 재생 (페이지 단위)
+import { useBGM } from '@/lib/audio';
+useBGM('game'); // 컴포넌트 마운트 시 자동 재생
+
+// SFX 재생 (컴포넌트 단위)
+import { useSFX } from '@/lib/audio';
+const { playSFX } = useSFX();
+playSFX('button-click');
+
+// 전체 오디오 제어
+import { useAudio } from '@/lib/audio';
+const { isMuted, toggleMute, setMuted } = useAudio();
+```
+
+### 주의사항
+- 브라우저 자동재생 정책으로 첫 사용자 인터랙션 후 BGM 재생
+- `playSFX` 호출은 에러가 나도 게임 로직을 막지 않음 (try-catch 내장)
+- AudioToggle 컴포넌트로 헤더에 음소거 버튼 제공
 
 ## 개발 명령어
 
