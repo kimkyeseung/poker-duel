@@ -42,9 +42,16 @@ class AudioManager {
 
     try {
       if (!this.Howl || !this.Howler) {
+        // Howler uses CommonJS exports, need to handle both default and named exports
         const howlerModule = await import('howler');
-        this.Howl = howlerModule.Howl;
-        this.Howler = howlerModule.Howler;
+        // Try different export patterns
+        this.Howl = howlerModule.Howl ?? (howlerModule as { default?: { Howl: typeof import('howler').Howl } }).default?.Howl ?? null;
+        this.Howler = howlerModule.Howler ?? (howlerModule as { default?: { Howler: typeof import('howler').Howler } }).default?.Howler ?? null;
+
+        if (!this.Howl) {
+          console.error('[AudioManager] Howl not found in module:', Object.keys(howlerModule));
+          return false;
+        }
       }
       if (!this.synthSound) {
         const synthModule = await import('./SynthSound');
@@ -67,8 +74,15 @@ class AudioManager {
 
     try {
       const loaded = await this.loadDependencies();
-      if (!loaded || !this.Howl) {
+      if (!loaded) {
         console.warn('[AudioManager] Dependencies not loaded');
+        this.isInitializing = false;
+        return;
+      }
+
+      const HowlConstructor = this.Howl;
+      if (!HowlConstructor) {
+        console.warn('[AudioManager] Howl constructor not available');
         this.isInitializing = false;
         return;
       }
@@ -79,7 +93,7 @@ class AudioManager {
         this.bgmLoadedStates.set(bgmType, false);
 
         try {
-          const howl = new this.Howl({
+          const howl = new HowlConstructor({
             src: [config.src],
             loop: true,
             volume: 0,
