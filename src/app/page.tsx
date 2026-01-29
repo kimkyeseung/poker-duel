@@ -131,8 +131,15 @@ export default function Home() {
     ? Math.round((stats.totalWins / stats.totalGames) * 100)
     : 0;
 
-  // 마스코트 메시지 (컴포넌트 마운트 시 한 번만 생성)
-  const mascotMessage = useMemo(() => getMascotMessage(stats), [stats]);
+  // 마스코트 메시지 (클라이언트에서만 랜덤 선택 - hydration 에러 방지)
+  const [mascotMessage, setMascotMessage] = useState<{ message: string; type: string }>({
+    message: "포켓 에이스(AA)는\n169개 핸드 중 1위예요!",
+    type: "tip"
+  });
+
+  useEffect(() => {
+    setMascotMessage(getMascotMessage(stats));
+  }, [stats]);
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: 'radial-gradient(circle at top center, #1a0b2e 0%, #0a0a1a 100%)' }}>
