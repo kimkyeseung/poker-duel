@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useCallback } from 'react';
+import { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 
 interface TimerProps {
@@ -20,20 +20,44 @@ export function Timer({
   onTimeout,
   className,
 }: TimerProps) {
+  const secondsRef = useRef(seconds);
+  const onTickRef = useRef(onTick);
+  const onTimeoutRef = useRef(onTimeout);
+
+  // refs 업데이트
+  useEffect(() => {
+    secondsRef.current = seconds;
+  }, [seconds]);
+
+  useEffect(() => {
+    onTickRef.current = onTick;
+  }, [onTick]);
+
+  useEffect(() => {
+    onTimeoutRef.current = onTimeout;
+  }, [onTimeout]);
+
+  // 타이머 interval (isRunning이 변경될 때만 재생성)
   useEffect(() => {
     if (!isRunning) return;
 
-    if (seconds <= 0) {
-      onTimeout();
-      return;
-    }
-
     const timer = setInterval(() => {
-      onTick();
+      if (secondsRef.current <= 0) {
+        onTimeoutRef.current();
+      } else {
+        onTickRef.current();
+      }
     }, 1000);
 
     return () => clearInterval(timer);
-  }, [isRunning, seconds, onTick, onTimeout]);
+  }, [isRunning]);
+
+  // 타임아웃 체크 (seconds가 0이 되면 즉시 호출)
+  useEffect(() => {
+    if (isRunning && seconds <= 0) {
+      onTimeout();
+    }
+  }, [isRunning, seconds, onTimeout]);
 
   const percentage = (seconds / maxSeconds) * 100;
   const isWarning = seconds <= 3;
@@ -114,21 +138,45 @@ export function TimerBar({
   onTimeout,
   className,
 }: TimerProps) {
+  const secondsRef = useRef(seconds);
+  const onTickRef = useRef(onTick);
+  const onTimeoutRef = useRef(onTimeout);
+
+  // refs 업데이트
+  useEffect(() => {
+    secondsRef.current = seconds;
+  }, [seconds]);
+
+  useEffect(() => {
+    onTickRef.current = onTick;
+  }, [onTick]);
+
+  useEffect(() => {
+    onTimeoutRef.current = onTimeout;
+  }, [onTimeout]);
+
+  // 타이머 interval (isRunning이 변경될 때만 재생성)
   useEffect(() => {
     if (!isRunning) return;
 
-    if (seconds <= 0) {
-      onTimeout();
-      return;
-    }
-
     // 0.1초 단위로 업데이트
     const timer = setInterval(() => {
-      onTick();
+      if (secondsRef.current <= 0) {
+        onTimeoutRef.current();
+      } else {
+        onTickRef.current();
+      }
     }, 100);
 
     return () => clearInterval(timer);
-  }, [isRunning, seconds, onTick, onTimeout]);
+  }, [isRunning]);
+
+  // 타임아웃 체크 (seconds가 0이 되면 즉시 호출)
+  useEffect(() => {
+    if (isRunning && seconds <= 0) {
+      onTimeout();
+    }
+  }, [isRunning, seconds, onTimeout]);
 
   const percentage = (seconds / maxSeconds) * 100;
   const isWarning = seconds <= 3;
