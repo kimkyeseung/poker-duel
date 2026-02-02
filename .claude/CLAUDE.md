@@ -14,8 +14,9 @@
 
 - **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
-- **Styling**: Tailwind CSS 4
+- **Styling**: Tailwind CSS 4 (`@tailwindcss/postcss`)
 - **State Management**: Zustand
+- **Testing**: Vitest (Unit) + Playwright (E2E)
 - **Package Manager**: npm
 
 ## 프로젝트 구조
@@ -23,73 +24,133 @@
 ```
 holdamnit/
 ├── src/
-│   ├── app/                    # Next.js App Router 페이지
-│   │   ├── page.tsx           # 메인 페이지 (게임 시작)
-│   │   ├── game/[uuid]/       # 메인 게임 페이지
-│   │   ├── practice/          # 연습 모드
-│   │   ├── daily/             # 일일 챌린지
-│   │   ├── stats/             # 통계 페이지
-│   │   ├── comments/          # 엔딩 코멘트
-│   │   └── settings/          # 설정 페이지
+│   ├── app/                           # Next.js App Router 페이지
+│   │   ├── layout.tsx                 # 루트 레이아웃 (providers 포함)
+│   │   ├── page.tsx                   # 메인 페이지 (게임 시작)
+│   │   ├── globals.css                # 전역 스타일 + Tailwind + 커스텀 CSS
+│   │   ├── game/
+│   │   │   └── page.tsx               # 메인 게임 페이지
+│   │   ├── practice/
+│   │   │   └── page.tsx               # 연습 모드
+│   │   ├── daily/
+│   │   │   └── page.tsx               # 일일 챌린지
+│   │   ├── stats/
+│   │   │   └── page.tsx               # 통계 페이지
+│   │   ├── settings/
+│   │   │   └── page.tsx               # 설정 페이지
+│   │   └── comments/
+│   │       └── page.tsx               # 엔딩 코멘트 페이지
 │   │
 │   ├── components/
-│   │   ├── game/              # 게임 관련 컴포넌트
-│   │   │   ├── Card.tsx       # 카드 컴포넌트
-│   │   │   ├── Table.tsx      # 테이블 (커뮤니티 카드)
-│   │   │   ├── PlayerArea.tsx # 플레이어 영역
-│   │   │   ├── AnswerInput.tsx # 답변 입력 (난이도별 UI)
-│   │   │   ├── ResultDisplay.tsx # 결과 표시
-│   │   │   ├── DifficultyBadge.tsx # 난이도 뱃지
-│   │   │   ├── GameOverDialog.tsx # 게임오버 다이얼로그
-│   │   │   ├── VictoryDialog.tsx # 승리 다이얼로그
-│   │   │   └── HintButton.tsx # 힌트 버튼
-│   │   ├── ui/                # 공통 UI 컴포넌트
-│   │   │   ├── Button.tsx
-│   │   │   ├── Dialog.tsx
-│   │   │   ├── Timer.tsx
-│   │   │   ├── AudioToggle.tsx # 음소거 토글 버튼
-│   │   │   └── ClickToStart.tsx # 시작 오버레이 (오디오 활성화)
-│   │   └── TutorialDialog.tsx # 튜토리얼
+│   │   ├── game/                      # 게임 관련 컴포넌트
+│   │   │   ├── Card.tsx               # 카드 컴포넌트
+│   │   │   ├── Table.tsx              # 테이블 (커뮤니티 카드)
+│   │   │   ├── PlayerArea.tsx         # 플레이어 영역
+│   │   │   ├── AnswerInput.tsx        # 답변 입력 (난이도별 UI)
+│   │   │   ├── ResultDisplay.tsx      # 결과 표시
+│   │   │   ├── ResultDialog.tsx       # 결과 다이얼로그 (통계 바 포함)
+│   │   │   ├── DifficultyBadge.tsx    # 난이도 뱃지
+│   │   │   ├── GameOverDialog.tsx     # 게임오버 다이얼로그
+│   │   │   ├── VictoryDialog.tsx      # 승리 다이얼로그
+│   │   │   ├── GameProgress.tsx       # 게임 진행 상태 표시
+│   │   │   ├── HintButton.tsx         # 힌트 버튼
+│   │   │   ├── LevelStartOverlay.tsx  # 레벨 시작 오버레이 (전환 화면)
+│   │   │   ├── DevAnswerOverlay.tsx   # 개발용 정답 오버레이
+│   │   │   └── index.ts               # 컴포넌트 exports
+│   │   │
+│   │   ├── ui/                        # 공통 UI 컴포넌트
+│   │   │   ├── Button.tsx             # 버튼
+│   │   │   ├── Dialog.tsx             # 다이얼로그
+│   │   │   ├── Timer.tsx              # 타이머
+│   │   │   ├── Typography.tsx         # 텍스트 스타일
+│   │   │   ├── AudioToggle.tsx        # 음소거 토글 버튼
+│   │   │   ├── ClickToStart.tsx       # 시작 오버레이 (오디오 활성화)
+│   │   │   ├── LanguageSelector.tsx   # 언어 선택기
+│   │   │   └── index.ts               # UI exports
+│   │   │
+│   │   └── TutorialDialog.tsx         # 튜토리얼 다이얼로그
 │   │
 │   ├── lib/
-│   │   ├── poker/             # 포커 엔진
-│   │   │   ├── deck.ts        # 덱 관리, 셔플
-│   │   │   ├── evaluator.ts   # 핸드 평가 (7장→5장)
-│   │   │   ├── calculator.ts  # 승률 계산 (완전탐색)
-│   │   │   └── starting-hands.ts # 169개 프리플랍 핸드랭킹
-│   │   ├── audio/             # 오디오 시스템
-│   │   │   ├── AudioManager.ts # BGM 관리 (Howler.js)
-│   │   │   ├── SynthSound.ts  # SFX 생성 (Web Audio API)
-│   │   │   ├── useAudio.ts    # React 훅 (useAudio, useSFX, useBGM)
-│   │   │   ├── config.ts      # 오디오 설정 및 타입
-│   │   │   └── index.ts       # 모듈 exports
-│   │   ├── game/              # 게임 시스템
-│   │   │   ├── titles.ts      # 14개 칭호
-│   │   │   ├── achievements.ts # 18개 도전과제
-│   │   │   ├── hints.ts       # 힌트 시스템
-│   │   │   └── themes.ts      # 테마 시스템
-│   │   ├── storage/           # 로컬스토리지 관리
-│   │   └── utils.ts           # 유틸리티 (cn 함수)
+│   │   ├── poker/                     # 포커 엔진
+│   │   │   ├── deck.ts                # 덱 관리, 셔플
+│   │   │   ├── evaluator.ts           # 핸드 평가 (7장→5장)
+│   │   │   ├── calculator.ts          # 승률 계산 (완전탐색)
+│   │   │   ├── starting-hands.ts      # 169개 프리플랍 핸드랭킹
+│   │   │   ├── starting-hands.test.ts # 핸드랭킹 테스트
+│   │   │   └── index.ts               # 포커 exports
+│   │   │
+│   │   ├── audio/                     # 오디오 시스템
+│   │   │   ├── AudioManager.ts        # BGM 관리 (Howler.js)
+│   │   │   ├── SynthSound.ts          # SFX 생성 (Web Audio API)
+│   │   │   ├── config.ts              # 오디오 설정 및 타입
+│   │   │   ├── useAudio.ts            # React 훅 (useAudio, useSFX, useBGM)
+│   │   │   └── index.ts               # 오디오 exports
+│   │   │
+│   │   ├── game/                      # 게임 시스템
+│   │   │   ├── titles.ts              # 14개 칭호
+│   │   │   ├── achievements.ts        # 18개 도전과제
+│   │   │   ├── hints.ts               # 힌트 시스템
+│   │   │   ├── themes.ts              # 테마 시스템
+│   │   │   ├── sounds.ts              # SoundManager, VibrationManager
+│   │   │   └── index.ts               # 게임 exports
+│   │   │
+│   │   ├── i18n/                      # 다국어 지원 시스템
+│   │   │   ├── config.ts              # 로케일 설정 및 유틸리티
+│   │   │   ├── useTranslation.ts      # 번역 훅
+│   │   │   ├── index.ts               # i18n exports
+│   │   │   └── translations/          # 번역 파일
+│   │   │       ├── index.ts           # 번역 exports
+│   │   │       ├── en.ts              # English
+│   │   │       ├── es.ts              # Español
+│   │   │       ├── fr.ts              # Français
+│   │   │       ├── it.ts              # Italiano
+│   │   │       ├── ja.ts              # 日本語
+│   │   │       ├── ko.ts              # 한국어
+│   │   │       └── zh.ts              # 中文
+│   │   │
+│   │   ├── storage/                   # 로컬스토리지 관리
+│   │   │   └── index.ts               # 스토리지 유틸리티
+│   │   │
+│   │   ├── animations.ts              # 애니메이션 프리셋 및 유틸리티
+│   │   ├── design-tokens.ts           # 디자인 토큰 (색상, 간격, 타이포그래피)
+│   │   └── utils.ts                   # 유틸리티 (cn 함수)
 │   │
 │   ├── stores/
-│   │   └── gameStore.ts       # Zustand 게임 상태 관리
+│   │   ├── gameStore.ts               # Zustand 게임 상태 관리
+│   │   └── localeStore.ts             # Zustand 언어 상태 관리
 │   │
 │   ├── hooks/
-│   │   └── usePokerCalculator.ts # Web Worker 승률 계산 훅
+│   │   └── usePokerCalculator.ts      # Web Worker 승률 계산 훅
 │   │
 │   └── types/
-│       ├── poker.ts           # 포커 관련 타입
-│       └── game.ts            # 게임 상태 타입
+│       ├── index.ts                   # 타입 exports
+│       ├── poker.ts                   # 포커 관련 타입
+│       └── game.ts                    # 게임 상태 타입
 │
-└── public/
-    ├── workers/
-    │   └── poker-calculator.js # 승률 계산 Web Worker
-    └── audio/
-        └── bgm/               # BGM 파일 (MP3)
-            ├── home.mp3       # 홈 화면 BGM
-            ├── game.mp3       # 게임 플레이 BGM
-            ├── result-win.mp3 # 승리 BGM
-            └── result-lose.mp3 # 패배 BGM
+├── public/
+│   ├── audio/
+│   │   ├── README.md                  # 오디오 문서
+│   │   └── bgm/                       # BGM 파일 (MP3)
+│   │       ├── home.mp3               # 홈 화면 BGM
+│   │       ├── game.mp3               # 게임 플레이 BGM
+│   │       ├── result-win.mp3         # 승리 BGM
+│   │       └── result-lose.mp3        # 패배 BGM
+│   │
+│   └── workers/
+│       └── poker-calculator.js        # 승률 계산 Web Worker
+│
+├── tests/                             # E2E 테스트
+│   └── e2e/
+│       └── *.spec.ts                  # Playwright 테스트 파일
+│
+└── 설정 파일
+    ├── package.json                   # 의존성 및 스크립트
+    ├── tsconfig.json                  # TypeScript 설정
+    ├── next.config.ts                 # Next.js 설정
+    ├── postcss.config.mjs             # PostCSS (Tailwind) 설정
+    ├── playwright.config.ts           # E2E 테스트 설정
+    ├── vitest.config.ts               # 유닛 테스트 설정
+    └── eslint.config.mjs              # 린트 설정
 ```
 
 ## 핵심 로직
@@ -132,6 +193,86 @@ holdamnit/
 - 사운드 ON/OFF
 - 진동 ON/OFF (모바일)
 - 테마 선택 (카지노, 미니멀, 다크)
+- 언어 선택 (7개 언어 지원)
+
+## 다국어 지원 (i18n)
+
+### 지원 언어
+| 코드 | 언어 | 아이콘 |
+|------|------|--------|
+| `en` | English | 🇺🇸 |
+| `es` | Español | 🇪🇸 |
+| `fr` | Français | 🇫🇷 |
+| `it` | Italiano | 🇮🇹 |
+| `ja` | 日本語 | 🇯🇵 |
+| `zh` | 中文 | 🇨🇳 |
+| `ko` | 한국어 | 🇰🇷 |
+
+### 사용법
+```tsx
+// useTranslation 훅 사용
+import { useTranslation } from '@/lib/i18n';
+
+function MyComponent() {
+  const { t } = useTranslation();
+
+  return (
+    <div>
+      <h1>{t('game.title')}</h1>
+      <p>{t('game.round.preflop')}</p>
+    </div>
+  );
+}
+
+// 언어 변경 (localeStore 사용)
+import { useLocaleStore } from '@/stores/localeStore';
+
+function LanguageSwitcher() {
+  const { locale, setLocale } = useLocaleStore();
+
+  return (
+    <button onClick={() => setLocale('ko')}>
+      한국어로 변경
+    </button>
+  );
+}
+```
+
+### 번역 키 구조
+번역 파일은 중첩 객체 구조로 구성됩니다:
+- `common` - 공통 UI 텍스트
+- `game` - 게임 관련 텍스트
+- `difficulty` - 난이도 이름 및 설명
+- `round` - 라운드 이름
+- `result` - 결과 메시지
+- `settings` - 설정 관련 텍스트
+- `achievements` - 도전과제
+- `titles` - 칭호
+- `quotes` - 포커 명언
+
+## 디자인 시스템
+
+### Design Tokens (`lib/design-tokens.ts`)
+중앙 집중식 디자인 토큰 시스템:
+- **색상**: primary, success, error, warning, player, computer, gold, surface, text, border
+- **간격**: padding, gap, margin
+- **타이포그래피**: headings, body, special
+- **그림자**: standard, glow effects
+- **난이도별 색상**: 각 난이도마다 고유 색상 스킴
+
+### 애니메이션 시스템 (`lib/animations.ts`)
+재사용 가능한 애니메이션 프리셋:
+- **기본 애니메이션**: fade, slide, zoom, spin, pulse, bounce
+- **트랜지션**: fast, default, slow
+- **접근성**: motion-safe variants
+- **게임 특화**: 카드 뒤집기, 결과 표시, 타이머, 버튼, 진행 바
+
+### 전역 CSS (`app/globals.css`)
+- CSS 커스텀 속성 (다크 테마 변수)
+- 글래스모피즘 효과
+- 네온 보더
+- 그라데이션 유틸리티
+- 커스텀 애니메이션 (shake, float, pulse-glow, shimmer, bounce-in, slide-up)
 
 ## 오디오 시스템
 
@@ -194,6 +335,35 @@ const handleStart = () => {
 - `playSFX` 호출은 에러가 나도 게임 로직을 막지 않음 (try-catch 내장)
 - AudioToggle 컴포넌트로 헤더에 음소거 버튼 제공
 
+## 사운드 & 진동 매니저 (`lib/game/sounds.ts`)
+
+### SoundManager
+Web Audio API를 사용한 사운드 효과 합성:
+```tsx
+import { SoundManager } from '@/lib/game/sounds';
+
+const soundManager = new SoundManager();
+soundManager.playCardFlip();
+soundManager.playCorrect();
+soundManager.playWrong();
+soundManager.playTimerWarning();
+soundManager.playVictory();
+soundManager.playGameOver();
+```
+
+### VibrationManager
+모바일 햅틱 피드백:
+```tsx
+import { VibrationManager } from '@/lib/game/sounds';
+
+const vibrationManager = new VibrationManager();
+vibrationManager.vibrate('light');   // 가벼운 진동
+vibrationManager.vibrate('medium');  // 중간 진동
+vibrationManager.vibrate('heavy');   // 강한 진동
+vibrationManager.vibrate('success'); // 성공 패턴
+vibrationManager.vibrate('error');   // 에러 패턴
+```
+
 ## 개발 명령어
 
 ```bash
@@ -208,6 +378,15 @@ npm start
 
 # 린트
 npm run lint
+
+# 유닛 테스트
+npm run test
+
+# 유닛 테스트 (단일 실행)
+npm run test:run
+
+# E2E 테스트
+npm run test:e2e
 ```
 
 ## 코딩 컨벤션
@@ -216,6 +395,7 @@ npm run lint
 - 컴포넌트: `PascalCase.tsx`
 - 유틸/훅: `camelCase.ts`
 - 타입 파일: `camelCase.ts`
+- 테스트 파일: `*.test.ts` 또는 `*.spec.ts`
 
 ### 컴포넌트 구조
 ```tsx
@@ -223,12 +403,14 @@ npm run lint
 
 import { useState } from 'react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
 
 interface ComponentProps {
   // props 정의
 }
 
 export function Component({ ...props }: ComponentProps) {
+  const { t } = useTranslation();
   // 구현
 }
 ```
@@ -237,9 +419,10 @@ export function Component({ ...props }: ComponentProps) {
 - Tailwind CSS 클래스 사용
 - 조건부 클래스는 `cn()` 유틸리티 사용
 - 색상: slate(배경), amber(액센트), emerald(성공), red(실패)
+- 디자인 토큰 사용 권장 (`lib/design-tokens.ts`)
 
 ### 상태 관리
-- 전역 상태: Zustand (`gameStore`)
+- 전역 상태: Zustand (`gameStore`, `localeStore`)
 - 로컬 상태: React useState
 - 영구 저장: localStorage (`lib/storage`)
 
@@ -258,6 +441,11 @@ export function Component({ ...props }: ComponentProps) {
 - `initGame` 같은 store 함수는 의존성 배열에서 제외 (무한 루프 방지)
 - `eslint-disable-next-line react-hooks/exhaustive-deps` 주석 필요시 사용
 
+### i18n 관련
+- 모든 사용자 표시 문자열은 번역 키 사용
+- 새 문자열 추가 시 7개 언어 모두에 번역 추가 필요
+- 번역 키는 점(.) 표기법으로 접근 (예: `t('game.round.preflop')`)
+
 ## 스토리지 키
 
 ### 로컬스토리지
@@ -267,8 +455,34 @@ export function Component({ ...props }: ComponentProps) {
 | `holdamnit-settings` | 설정 (사운드, 진동, 테마) |
 | `holdamnit-comments` | 엔딩 코멘트 |
 | `holdamnit-tutorial-seen` | 튜토리얼 완료 여부 |
+| `holdamnit-locale` | 사용자 언어 설정 |
 
 ### 세션스토리지
 | 키 | 용도 |
 |----|------|
-| `holdamnit-started` | Click to Start 완료 여부 (세션당 1회)
+| `holdamnit-started` | Click to Start 완료 여부 (세션당 1회) |
+
+## 주요 의존성
+
+```json
+{
+  "dependencies": {
+    "next": "16.1.1",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "zustand": "^5.0.9",
+    "howler": "^2.2.4",
+    "uuid": "^13.0.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.4.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "@types/react": "^19",
+    "@playwright/test": "^1.57.0",
+    "vitest": "^4.0.18"
+  }
+}
+```
