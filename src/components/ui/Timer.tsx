@@ -32,7 +32,7 @@ export function Timer({
 
     const timer = setInterval(() => {
       onTick();
-    }, 1000);
+    }, 100);
 
     return () => clearInterval(timer);
   }, [isRunning, seconds, onTick, onTimeout]);
