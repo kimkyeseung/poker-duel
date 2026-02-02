@@ -104,6 +104,8 @@ export const ko: TranslationKeys = {
     handRankingComparison: "핸드 랭킹 비교",
     winProbability: "승률",
     finalResult: "최종 결과",
+    nextIs: "다음 레벨은",
+    nextIsSuffix: "입니다.",
     yourAnswer: "당신의 답",
     correctAnswer: "정답",
     win: "승",

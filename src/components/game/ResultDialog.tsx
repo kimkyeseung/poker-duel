@@ -2,7 +2,7 @@
 
 import { Dialog, DialogContent, DialogFooter } from '@/components/ui/Dialog';
 import { Button } from '@/components/ui';
-import { WinRateResult, AnswerResult, GameRound } from '@/types';
+import { WinRateResult, AnswerResult, GameRound, Difficulty } from '@/types';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
 
@@ -14,6 +14,7 @@ interface ResultDialogProps {
   onContinue: () => void;
   onViewRiver?: () => void;
   isViewingRiver?: boolean;
+  difficulty?: Difficulty;
 }
 
 export function ResultDialog({
@@ -24,6 +25,7 @@ export function ResultDialog({
   onContinue,
   onViewRiver,
   isViewingRiver = false,
+  difficulty,
 }: ResultDialogProps) {
   const { t } = useTranslation();
   const { playerWinRate, computerWinRate, tieRate, playerWins, computerWins, ties } = winRateResult;
@@ -32,6 +34,19 @@ export function ResultDialog({
   const isPreflop = round === 'preflop';
   const isRiver = currentRound === 'river';
   const isTurn = currentRound === 'turn';
+
+  // Get next difficulty
+  const getNextDifficulty = (): Difficulty | null => {
+    if (!difficulty) return null;
+    const difficulties: Difficulty[] = ['easy', 'normal', 'hard', 'expert', 'god'];
+    const currentIndex = difficulties.indexOf(difficulty);
+    if (currentIndex < difficulties.length - 1) {
+      return difficulties[currentIndex + 1];
+    }
+    return null; // Already at god level
+  };
+
+  const nextDifficulty = getNextDifficulty();
 
   const getRiverWinner = () => {
     if (playerWinRate > computerWinRate) return 'player';
@@ -151,8 +166,14 @@ export function ResultDialog({
               </div>
             </div>
           ) : isViewingRiver && isRiver ? (
-            // View River Mode: Just show the button (content is empty, cards are visible behind dialog)
-            null
+            // View River Mode: Show next difficulty info
+            <div className="text-center py-6">
+              {nextDifficulty && (
+                <p className="text-[#64748b] text-lg">
+                  {t.results.nextIs} <span className="text-white font-bold">{t.difficulty[nextDifficulty]}</span>{t.results.nextIsSuffix}
+                </p>
+              )}
+            </div>
           ) : (
             // Flop/Turn/River: Win rate comparison
             <div className="space-y-5">

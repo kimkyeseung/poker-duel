@@ -104,6 +104,8 @@ export const fr: TranslationKeys = {
     handRankingComparison: "Comparaison des Mains",
     winProbability: "Probabilité de Gain",
     finalResult: "Résultat Final",
+    nextIs: "Le niveau suivant est",
+    nextIsSuffix: ".",
     yourAnswer: "Votre réponse",
     correctAnswer: "Correcte",
     win: "Vic.",

@@ -464,6 +464,7 @@ export default function GamePage() {
           onContinue={handleContinue}
           onViewRiver={handleViewRiver}
           isViewingRiver={isViewingRiver}
+          difficulty={difficulty}
         />
       )}
 

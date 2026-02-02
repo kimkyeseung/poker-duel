@@ -104,6 +104,8 @@ export const zh: TranslationKeys = {
     handRankingComparison: "牌型比较",
     winProbability: "胜率",
     finalResult: "最终结果",
+    nextIs: "下一关是",
+    nextIsSuffix: "。",
     yourAnswer: "你的答案",
     correctAnswer: "正确答案",
     win: "胜",

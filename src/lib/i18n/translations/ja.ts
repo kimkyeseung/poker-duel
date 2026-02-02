@@ -104,6 +104,8 @@ export const ja: TranslationKeys = {
     handRankingComparison: "ハンドランキング比較",
     winProbability: "勝率",
     finalResult: "最終結果",
+    nextIs: "次のレベルは",
+    nextIsSuffix: "です。",
     yourAnswer: "あなたの回答",
     correctAnswer: "正解",
     win: "勝",

@@ -102,6 +102,8 @@ export const en = {
     handRankingComparison: "Hand Ranking Comparison",
     winProbability: "Win Probability",
     finalResult: "Final Result",
+    nextIs: "Next level is",
+    nextIsSuffix: ".",
     yourAnswer: "Your answer",
     correctAnswer: "Correct",
     win: "Win",
