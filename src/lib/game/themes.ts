@@ -56,34 +56,3 @@ export const THEMES: Record<ThemeId, Theme> = {
     },
   },
 };
-
-// 현재 테마 가져오기
-export function getCurrentTheme(): ThemeId {
-  if (typeof window === 'undefined') return 'casino';
-
-  try {
-    const settings = localStorage.getItem('holdamnit-settings');
-    if (settings) {
-      const parsed = JSON.parse(settings);
-      return parsed.theme || 'casino';
-    }
-  } catch {
-    // ignore
-  }
-
-  return 'casino';
-}
-
-// 테마 저장
-export function setTheme(themeId: ThemeId): void {
-  if (typeof window === 'undefined') return;
-
-  try {
-    const settings = localStorage.getItem('holdamnit-settings');
-    const parsed = settings ? JSON.parse(settings) : {};
-    parsed.theme = themeId;
-    localStorage.setItem('holdamnit-settings', JSON.stringify(parsed));
-  } catch {
-    // ignore
-  }
-}

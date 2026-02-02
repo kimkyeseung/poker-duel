@@ -79,29 +79,8 @@ export function compareCards(a: Card, b: Card): number {
   return rankToNumber(b.rank) - rankToNumber(a.rank);
 }
 
-// 카드를 문자열로 변환
-export function cardToString(card: Card): string {
-  const suitSymbol: Record<Suit, string> = {
-    hearts: '♥',
-    diamonds: '♦',
-    clubs: '♣',
-    spades: '♠',
-  };
-  return `${card.rank}${suitSymbol[card.suit]}`;
-}
-
-// 카드 배열을 문자열로 변환
-export function cardsToString(cards: Card[]): string {
-  return cards.map(cardToString).join(' ');
-}
-
-// 카드 ID 생성 (고유 식별자)
-export function getCardId(card: Card): string {
-  return `${card.suit}-${card.rank}`;
-}
-
 // 두 카드가 같은지 확인
-export function isSameCard(a: Card, b: Card): boolean {
+function isSameCard(a: Card, b: Card): boolean {
   return a.suit === b.suit && a.rank === b.rank;
 }
 

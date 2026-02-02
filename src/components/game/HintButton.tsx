@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { WinRateResult, Card as CardType } from '@/types';
-import { getRangeHint, getDirectionHint, Hint } from '@/lib/game/hints';
+import { getRangeHint, Hint } from '@/lib/game/hints';
 import { cn } from '@/lib/utils';
 
 interface HintButtonProps {

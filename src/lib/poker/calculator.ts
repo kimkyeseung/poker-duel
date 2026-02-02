@@ -141,26 +141,6 @@ export function calculateWinRateRiver(
   }
 }
 
-// 승률 비교 결과
-export interface WinRateComparison {
-  playerFavorite: boolean;
-  computerFavorite: boolean;
-  isTie: boolean;
-  difference: number;
-}
-
-// 누가 유리한지 비교
-export function compareWinRates(result: WinRateResult): WinRateComparison {
-  const { playerWinRate, computerWinRate } = result;
-
-  return {
-    playerFavorite: playerWinRate > computerWinRate,
-    computerFavorite: computerWinRate > playerWinRate,
-    isTie: Math.abs(playerWinRate - computerWinRate) < 0.01,
-    difference: Math.abs(playerWinRate - computerWinRate),
-  };
-}
-
 // 정답 검증
 export function checkAnswer(
   difficulty: 'easy' | 'normal' | 'hard' | 'expert' | 'god',
@@ -181,7 +161,6 @@ export function checkAnswer(
 
     case 'normal':
       // 5지선다 (자신의 승률 구간)
-      const ranges = ['0-20', '20-40', '40-60', '60-80', '80-100'];
       const correctRange = getRangeForWinRate(playerWinRate);
       return playerAnswer === correctRange;
 

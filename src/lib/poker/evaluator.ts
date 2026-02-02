@@ -1,5 +1,5 @@
 import { Card, HandRank, HandEvaluation } from '@/types';
-import { rankToNumber, SUITS } from './deck';
+import { rankToNumber } from './deck';
 
 // 핸드 랭크 이름
 const HAND_RANK_NAMES: Record<HandRank, string> = {

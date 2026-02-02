@@ -3,9 +3,6 @@ import { Card, Difficulty, GameRound, WinRateResult } from './poker';
 // 게임 상태
 export type GameStatus = 'waiting' | 'playing' | 'answering' | 'result' | 'gameover' | 'victory';
 
-// 플레이어 타입
-export type PlayerType = 'player' | 'computer';
-
 // 핸드 순위 정보 (프리플랍용)
 export interface HandRankInfo {
   name: string;

@@ -234,21 +234,3 @@ export const difficultyColors = {
     gradient: 'from-[#ffd700] via-[#ff4d94] to-[#ff0080]',
   },
 } as const;
-
-// 라운드 이름 (한글)
-export const roundNames = {
-  preflop: '프리플랍',
-  flop: '플랍',
-  turn: '턴',
-  river: '리버',
-} as const;
-
-// 난이도 이름 (한글)
-export const difficultyNames = {
-  easy: '쉬움',
-  normal: '보통',
-  hard: '어려움',
-  expert: '전문가',
-  master: '홀덤의 신',
-  god: '홀덤의 신',
-} as const;
