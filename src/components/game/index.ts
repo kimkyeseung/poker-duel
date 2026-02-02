@@ -8,3 +8,4 @@ export * from './VictoryDialog';
 export * from './DifficultyBadge';
 export * from './HintButton';
 export * from './GameProgress';
+export * from './DevAnswerOverlay';

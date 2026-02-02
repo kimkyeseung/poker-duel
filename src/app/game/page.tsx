@@ -14,6 +14,7 @@ import {
   GameOverDialog,
   VictoryDialog,
   GameProgressCompact,
+  DevAnswerOverlay,
 } from '@/components/game';
 import { checkAnswer } from '@/lib/poker/calculator';
 import { evaluateStartingHand, compareStartingHands, StartingHandInfo } from '@/lib/poker/starting-hands';
@@ -491,6 +492,9 @@ export default function GamePage() {
         onGoHome={handleGoHome}
         onWriteComment={handleWriteComment}
       />
+
+      {/* Dev Answer Overlay - only visible in development */}
+      <DevAnswerOverlay currentWinRate={currentWinRate} />
     </div>
   );
 }
