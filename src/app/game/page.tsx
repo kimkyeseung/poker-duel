@@ -463,6 +463,8 @@ export default function GamePage() {
           currentRound={currentRound}
           onContinue={handleContinue}
           onViewRiver={handleViewRiver}
+          onRetry={handleRetry}
+          onGoHome={handleGoHome}
           isViewingRiver={isViewingRiver}
           difficulty={difficulty}
         />

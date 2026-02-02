@@ -13,6 +13,8 @@ interface ResultDialogProps {
   currentRound: GameRound;
   onContinue: () => void;
   onViewRiver?: () => void;
+  onRetry?: () => void;
+  onGoHome?: () => void;
   isViewingRiver?: boolean;
   difficulty?: Difficulty;
 }
@@ -24,6 +26,8 @@ export function ResultDialog({
   currentRound,
   onContinue,
   onViewRiver,
+  onRetry,
+  onGoHome,
   isViewingRiver = false,
   difficulty,
 }: ResultDialogProps) {
@@ -300,7 +304,24 @@ export function ResultDialog({
           >
             {isRiver ? t.game.actions.nextLevel : t.game.actions.nextRound}
           </Button>
-        ) : null}
+        ) : (
+          <div className="flex gap-3 w-full">
+            <Button
+              variant="secondary"
+              onClick={onGoHome}
+              fullWidth
+            >
+              {t.common.exit}
+            </Button>
+            <Button
+              variant="primary"
+              onClick={onRetry}
+              fullWidth
+            >
+              {t.gameOver.tryAgain}
+            </Button>
+          </div>
+        )}
       </DialogFooter>
     </Dialog>
   );
