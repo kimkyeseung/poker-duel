@@ -103,6 +103,7 @@ export const ko: TranslationKeys = {
     xpGain: "+{amount} XP",
     handRankingComparison: "핸드 랭킹 비교",
     winProbability: "승률",
+    finalResult: "최종 결과",
     yourAnswer: "당신의 답",
     correctAnswer: "정답",
     win: "승",

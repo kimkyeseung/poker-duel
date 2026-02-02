@@ -13,6 +13,7 @@ interface ResultDialogProps {
   currentRound: GameRound;
   onContinue: () => void;
   onViewRiver?: () => void;
+  isViewingRiver?: boolean;
 }
 
 export function ResultDialog({
@@ -22,6 +23,7 @@ export function ResultDialog({
   currentRound,
   onContinue,
   onViewRiver,
+  isViewingRiver = false,
 }: ResultDialogProps) {
   const { t } = useTranslation();
   const { playerWinRate, computerWinRate, tieRate, playerWins, computerWins, ties } = winRateResult;
@@ -40,46 +42,48 @@ export function ResultDialog({
   return (
     <Dialog isOpen={isOpen} onClose={() => {}} className="max-w-lg">
       <DialogContent className="p-0">
-        {/* Result Header */}
-        <div className="text-center pt-8 pb-4">
-          {isRiver ? (
-            <div className="animate-bounce-in">
-              {getRiverWinner() === 'player' && (
-                <div className="flex flex-col items-center gap-2">
-                  <h2 className="text-5xl font-black text-gradient-primary text-glow-cyan">
-                    {t.results.winner}
+        {/* Result Header - hide when viewing river */}
+        {!isViewingRiver && (
+          <div className="text-center pt-8 pb-4">
+            {isRiver ? (
+              <div className="animate-bounce-in">
+                {getRiverWinner() === 'player' && (
+                  <div className="flex flex-col items-center gap-2">
+                    <h2 className="text-5xl font-black text-gradient-primary text-glow-cyan">
+                      {t.results.winner}
+                    </h2>
+                    <span className="badge badge-primary text-base px-4 py-1">{t.results.xpGain.replace('{amount}', '100')}</span>
+                  </div>
+                )}
+                {getRiverWinner() === 'computer' && (
+                  <h2 className="text-5xl font-black text-gradient-secondary text-glow-pink">
+                    {t.results.defeat}
                   </h2>
-                  <span className="badge badge-primary text-base px-4 py-1">{t.results.xpGain.replace('{amount}', '100')}</span>
-                </div>
-              )}
-              {getRiverWinner() === 'computer' && (
-                <h2 className="text-5xl font-black text-gradient-secondary text-glow-pink">
-                  {t.results.defeat}
-                </h2>
-              )}
-              {getRiverWinner() === 'tie' && (
-                <h2 className="text-5xl font-black text-[#a0aec0]">
-                  {t.results.draw}
-                </h2>
-              )}
-            </div>
-          ) : (
-            <div className="animate-bounce-in">
-              {isCorrect ? (
-                <div className="flex flex-col items-center gap-2">
-                  <h2 className="text-5xl font-black text-[#00ff88] text-glow-green">
-                    {t.results.correct}
+                )}
+                {getRiverWinner() === 'tie' && (
+                  <h2 className="text-5xl font-black text-[#a0aec0]">
+                    {t.results.draw}
                   </h2>
-                  <span className="badge badge-gold text-base px-4 py-1">{t.results.xpGain.replace('{amount}', '50')}</span>
-                </div>
-              ) : (
-                <h2 className="text-5xl font-black text-[#ff4444]">
-                  {t.results.wrong}
-                </h2>
-              )}
-            </div>
-          )}
-        </div>
+                )}
+              </div>
+            ) : (
+              <div className="animate-bounce-in">
+                {isCorrect ? (
+                  <div className="flex flex-col items-center gap-2">
+                    <h2 className="text-5xl font-black text-[#00ff88] text-glow-green">
+                      {t.results.correct}
+                    </h2>
+                    <span className="badge badge-gold text-base px-4 py-1">{t.results.xpGain.replace('{amount}', '50')}</span>
+                  </div>
+                ) : (
+                  <h2 className="text-5xl font-black text-[#ff4444]">
+                    {t.results.wrong}
+                  </h2>
+                )}
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Content */}
         <div className="px-6 pb-6">
@@ -146,6 +150,9 @@ export function ResultDialog({
                 </div>
               </div>
             </div>
+          ) : isViewingRiver && isRiver ? (
+            // View River Mode: Just show the button (content is empty, cards are visible behind dialog)
+            null
           ) : (
             // Flop/Turn/River: Win rate comparison
             <div className="space-y-5">

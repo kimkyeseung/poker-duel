@@ -103,6 +103,7 @@ export const ja: TranslationKeys = {
     xpGain: "+{amount} XP",
     handRankingComparison: "ハンドランキング比較",
     winProbability: "勝率",
+    finalResult: "最終結果",
     yourAnswer: "あなたの回答",
     correctAnswer: "正解",
     win: "勝",

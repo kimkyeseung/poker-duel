@@ -103,6 +103,7 @@ export const es: TranslationKeys = {
     xpGain: "+{amount} XP",
     handRankingComparison: "Comparación de Manos",
     winProbability: "Probabilidad de Ganar",
+    finalResult: "Resultado Final",
     yourAnswer: "Tu respuesta",
     correctAnswer: "Correcta",
     win: "Gan.",

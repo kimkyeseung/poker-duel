@@ -103,6 +103,7 @@ export const zh: TranslationKeys = {
     xpGain: "+{amount} XP",
     handRankingComparison: "牌型比较",
     winProbability: "胜率",
+    finalResult: "最终结果",
     yourAnswer: "你的答案",
     correctAnswer: "正确答案",
     win: "胜",

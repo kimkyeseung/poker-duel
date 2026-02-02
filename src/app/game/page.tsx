@@ -68,6 +68,7 @@ export default function GamePage() {
   const [newCardsCount, setNewCardsCount] = useState(0);
   const [hasPlayerCardsRevealed, setHasPlayerCardsRevealed] = useState(false);
   const [showLevelOverlay, setShowLevelOverlay] = useState(true);
+  const [isViewingRiver, setIsViewingRiver] = useState(false);
 
   const hasSubmittedRef = useRef(false);
 
@@ -284,6 +285,7 @@ export default function GamePage() {
     setShowResult(false);
     setLastAnswer(null);
     setCurrentWinRate(null);
+    setIsViewingRiver(false);
 
     if (currentRound === 'river' || currentRound === 'turn') {
       recordGameResult(difficulty, true);
@@ -307,6 +309,7 @@ export default function GamePage() {
     setShowResult(false);
     setLastAnswer(null);
     setCurrentWinRate(null);
+    setIsViewingRiver(true);
     nextRound();
   };
 
@@ -460,6 +463,7 @@ export default function GamePage() {
           currentRound={currentRound}
           onContinue={handleContinue}
           onViewRiver={handleViewRiver}
+          isViewingRiver={isViewingRiver}
         />
       )}
 

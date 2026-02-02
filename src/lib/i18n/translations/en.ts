@@ -101,6 +101,7 @@ export const en = {
     xpGain: "+{amount} XP",
     handRankingComparison: "Hand Ranking Comparison",
     winProbability: "Win Probability",
+    finalResult: "Final Result",
     yourAnswer: "Your answer",
     correctAnswer: "Correct",
     win: "Win",
