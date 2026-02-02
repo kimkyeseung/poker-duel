@@ -15,6 +15,7 @@ import {
   VictoryDialog,
   GameProgressCompact,
   DevAnswerOverlay,
+  LevelStartOverlay,
 } from '@/components/game';
 import { checkAnswer } from '@/lib/poker/calculator';
 import { evaluateStartingHand, compareStartingHands, StartingHandInfo } from '@/lib/poker/starting-hands';
@@ -71,6 +72,7 @@ export default function GamePage() {
   const [isRevealingPlayerCards, setIsRevealingPlayerCards] = useState(false);
   const [newCardsCount, setNewCardsCount] = useState(0);
   const [hasPlayerCardsRevealed, setHasPlayerCardsRevealed] = useState(false);
+  const [showLevelOverlay, setShowLevelOverlay] = useState(true);
 
   const hasSubmittedRef = useRef(false);
 
@@ -82,7 +84,7 @@ export default function GamePage() {
   }, []);
 
   useEffect(() => {
-    if (status === 'playing' && playerHand && computerHand) {
+    if (status === 'playing' && playerHand && computerHand && !showLevelOverlay) {
       if (currentRound === 'preflop') {
         if (shouldSkipPreflop()) {
           setHasPlayerCardsRevealed(true);
@@ -166,7 +168,7 @@ export default function GamePage() {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, currentRound, communityCards.length]);
+  }, [status, currentRound, communityCards.length, showLevelOverlay]);
 
   const handleTimeout = useCallback(() => {
     if (hasSubmittedRef.current) return;
@@ -298,6 +300,7 @@ export default function GamePage() {
         victory();
       } else {
         playSFX('level-up');
+        setShowLevelOverlay(true);
         nextDifficulty();
       }
     } else {
@@ -319,7 +322,12 @@ export default function GamePage() {
     setLastAnswer(null);
     setCurrentWinRate(null);
     setHasPlayerCardsRevealed(false);
+    setShowLevelOverlay(true);
   };
+
+  const handleLevelOverlayComplete = useCallback(() => {
+    setShowLevelOverlay(false);
+  }, []);
 
   const handleGoHome = () => {
     resetGame();
@@ -476,6 +484,13 @@ export default function GamePage() {
 
       {/* Dev Answer Overlay - only visible in development */}
       <DevAnswerOverlay currentWinRate={currentWinRate} />
+
+      {/* Level Start Overlay */}
+      <LevelStartOverlay
+        isVisible={showLevelOverlay}
+        difficulty={difficulty}
+        onComplete={handleLevelOverlayComplete}
+      />
     </div>
   );
 }
