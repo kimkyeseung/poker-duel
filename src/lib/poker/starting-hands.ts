@@ -82,11 +82,16 @@ const HAND_RANKINGS: Record<string, number> = {
   '92o': 166, '83o': 167, '82o': 168, '72o': 169,
 };
 
+// rank를 표준 표기로 변환 (10 → T)
+function normalizeRank(rank: string): string {
+  return rank === '10' ? 'T' : rank;
+}
+
 // 핸드 이름 생성 (예: AKs, QJo, 77)
 function getHandName(cards: [Card, Card]): string {
   const [card1, card2] = cards;
-  const rank1 = card1.rank;
-  const rank2 = card2.rank;
+  const rank1 = normalizeRank(card1.rank);
+  const rank2 = normalizeRank(card2.rank);
   const suited = card1.suit === card2.suit;
   const isPair = rank1 === rank2;
 
