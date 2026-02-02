@@ -54,7 +54,7 @@ export function DevAnswerOverlay({ currentWinRate }: DevAnswerOverlayProps) {
       </>
     );
   } else if (currentWinRate) {
-    const tolerance = config.tolerance;
+    const tolerance = config.tolerance ?? 0;
     const minAnswer = Math.max(0, Math.round(currentWinRate.playerWinRate) - tolerance);
     const maxAnswer = Math.min(100, Math.round(currentWinRate.playerWinRate) + tolerance);
 

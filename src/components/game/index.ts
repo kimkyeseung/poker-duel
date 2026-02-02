@@ -9,3 +9,4 @@ export * from './DifficultyBadge';
 export * from './HintButton';
 export * from './GameProgress';
 export * from './DevAnswerOverlay';
+export * from './ResultDialog';

@@ -4,13 +4,13 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGameStore } from '@/stores/gameStore';
 import { usePokerCalculator } from '@/hooks/usePokerCalculator';
-import { Button, Timer, TimerBar, AudioToggle } from '@/components/ui';
+import { Timer, AudioToggle } from '@/components/ui';
 import {
   Card,
   Table,
   PlayerArea,
   AnswerInput,
-  ResultDisplay,
+  ResultDialog,
   GameOverDialog,
   VictoryDialog,
   GameProgressCompact,
@@ -436,45 +436,26 @@ export default function GamePage() {
             />
           )}
 
-          {/* Result Display */}
-          {showResult && lastAnswer && currentWinRate && (
-            <div className="space-y-3">
-              <ResultDisplay
-                winRateResult={currentWinRate}
-                answerResult={lastAnswer}
-                isRiverConfirmation={currentRound === 'river'}
-                compact
-              />
-              {lastAnswer.isCorrect && currentRound === 'turn' ? (
-                <div className="flex gap-2">
-                  <Button
-                    variant="secondary"
-                    onClick={handleViewRiver}
-                    fullWidth
-                  >
-                    View River
-                  </Button>
-                  <Button
-                    variant="success"
-                    onClick={handleContinue}
-                    fullWidth
-                  >
-                    Next Level →
-                  </Button>
-                </div>
-              ) : lastAnswer.isCorrect || currentRound === 'river' ? (
-                <Button
-                  variant="success"
-                  onClick={handleContinue}
-                  fullWidth
-                >
-                  {currentRound === 'river' ? 'Next Level' : 'Next Round'} →
-                </Button>
-              ) : null}
+          {/* Waiting for result */}
+          {!showResult && status === 'playing' && !isRevealingCards && !isRevealingPlayerCards && !isCalculating && (
+            <div className="text-center text-[#64748b]">
+              Preparing next round...
             </div>
           )}
         </div>
       </main>
+
+      {/* Result Dialog */}
+      {showResult && lastAnswer && currentWinRate && (
+        <ResultDialog
+          isOpen={showResult}
+          winRateResult={currentWinRate}
+          answerResult={lastAnswer}
+          currentRound={currentRound}
+          onContinue={handleContinue}
+          onViewRiver={handleViewRiver}
+        />
+      )}
 
       {/* Game Over Dialog */}
       <GameOverDialog
