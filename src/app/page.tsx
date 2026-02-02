@@ -2,12 +2,13 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, AudioToggle, ClickToStart } from '@/components/ui';
+import { Button, AudioToggle, ClickToStart, LanguageSelector } from '@/components/ui';
 import { TutorialDialog } from '@/components/TutorialDialog';
 import { getGameStats } from '@/lib/storage';
 import { getCurrentTitle } from '@/lib/game/titles';
 import { useGameStore } from '@/stores/gameStore';
 import { useAudio } from '@/lib/audio';
+import { useTranslation } from '@/lib/i18n';
 import { GameStats } from '@/types';
 
 // 마스코트 메시지 생성 함수
@@ -87,6 +88,7 @@ function getMascotMessage(stats: GameStats | null): { message: string; type: str
 
 export default function Home() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [showTutorial, setShowTutorial] = useState(false);
   const [stats, setStats] = useState<GameStats | null>(null);
   const [isStarted, setIsStarted] = useState(false);
@@ -180,6 +182,7 @@ export default function Home() {
                 <span className="text-white text-sm font-medium hidden sm:inline">{currentTitle.name}</span>
               </button>
             )}
+            <LanguageSelector />
             <AudioToggle />
             <button
               onClick={() => router.push('/settings')}
@@ -257,7 +260,7 @@ export default function Home() {
                 <span className="block text-gradient-secondary">HOL&apos;DAMN</span>
                 <span className="block text-gradient-primary">IT!</span>
               </h1>
-              <p className="text-slate-400 text-sm mt-2 tracking-widest">THE ULTIMATE EQUITY CHALLENGE</p>
+              <p className="text-slate-400 text-sm mt-2 tracking-widest">{t.common.tagline}</p>
             </div>
 
 
@@ -270,7 +273,7 @@ export default function Home() {
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
                 </svg>
-                QUICK PLAY
+                {t.home.quickPlay}
               </button>
 
               <div className="flex gap-3">
@@ -278,13 +281,13 @@ export default function Home() {
                   onClick={handlePractice}
                   className="flex-1 py-3 px-4 rounded-full bg-[#1a1f35] text-white font-semibold border border-white/10 hover:bg-[#252b45] hover:border-white/20 transition-all"
                 >
-                  PRACTICE
+                  {t.home.practice}
                 </button>
                 <button
                   onClick={handleDailyChallenge}
                   className="flex-1 py-3 px-4 rounded-full bg-[#1a1f35] text-white font-semibold border border-white/10 hover:bg-[#252b45] hover:border-white/20 transition-all"
                 >
-                  DAILY RUN
+                  {t.home.dailyRun}
                 </button>
               </div>
 
@@ -292,7 +295,7 @@ export default function Home() {
                 onClick={() => setShowTutorial(true)}
                 className="text-[#64748b] hover:text-[#00d4ff] transition-colors text-sm"
               >
-                VIEW COLLECTION
+                {t.home.viewCollection}
               </button>
             </div>
           </div>
@@ -302,7 +305,7 @@ export default function Home() {
             {/* Total Wins */}
             <div className="bg-[#1a1f35] rounded-2xl p-4 border border-white/5">
               <div className="flex justify-between items-start mb-2">
-                <span className="text-[#64748b] text-xs uppercase tracking-wider">Total Wins</span>
+                <span className="text-[#64748b] text-xs uppercase tracking-wider">{t.home.totalWins}</span>
                 <div className="w-6 h-6 rounded-full bg-[#00d4ff]/20 flex items-center justify-center">
                   <svg className="w-3 h-3 text-[#00d4ff]" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -317,7 +320,7 @@ export default function Home() {
             {/* High Score */}
             <div className="bg-[#1a1f35] rounded-2xl p-4 border border-white/5">
               <div className="flex justify-between items-start mb-2">
-                <span className="text-[#64748b] text-xs uppercase tracking-wider">Best Streak</span>
+                <span className="text-[#64748b] text-xs uppercase tracking-wider">{t.home.bestStreak}</span>
                 <div className="px-2 py-0.5 rounded-full bg-[#ffd700]/20 text-[#ffd700] text-xs font-bold">
                   BEST
                 </div>
@@ -329,7 +332,7 @@ export default function Home() {
 
             {/* Rank Status */}
             <div className="bg-[#1a1f35] rounded-2xl p-4 border border-white/5">
-              <div className="text-[#64748b] text-xs uppercase tracking-wider mb-2">Rank Status</div>
+              <div className="text-[#64748b] text-xs uppercase tracking-wider mb-2">{t.home.rankStatus}</div>
               <div className="flex items-center gap-2">
                 <span className="text-2xl">{currentTitle?.icon ?? '🎮'}</span>
                 <span className="text-lg font-bold text-gradient-gold">
@@ -350,17 +353,17 @@ export default function Home() {
           >
             <div className="text-center">
               <div className="text-xl font-bold text-white tabular-nums">{stats.totalWins}</div>
-              <div className="text-xs text-[#64748b]">Wins</div>
+              <div className="text-xs text-[#64748b]">{t.home.wins}</div>
             </div>
             <div className="w-px bg-white/10"></div>
             <div className="text-center">
               <div className="text-xl font-bold text-[#ffd700] tabular-nums">{stats.maxStreak}</div>
-              <div className="text-xs text-[#64748b]">Streak</div>
+              <div className="text-xs text-[#64748b]">{t.home.streak}</div>
             </div>
             <div className="w-px bg-white/10"></div>
             <div className="text-center">
               <div className="text-xl font-bold text-[#00d4ff] tabular-nums">{winRate}%</div>
-              <div className="text-xs text-[#64748b]">Win Rate</div>
+              <div className="text-xs text-[#64748b]">{t.home.winRate}</div>
             </div>
           </button>
         </div>
@@ -371,19 +374,19 @@ export default function Home() {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex gap-6">
             <button className="text-white text-sm font-medium hover:text-[#00d4ff] transition-colors">
-              HOME
+              {t.nav.home}
             </button>
             <button
               onClick={handlePractice}
               className="text-[#64748b] text-sm hover:text-white transition-colors"
             >
-              PRACTICE
+              {t.nav.practice}
             </button>
             <button
               onClick={() => router.push('/comments')}
               className="text-[#64748b] text-sm hover:text-white transition-colors"
             >
-              CREDITS
+              {t.nav.credits}
             </button>
           </div>
 
@@ -398,7 +401,7 @@ export default function Home() {
             onClick={() => router.push('/stats')}
             className="text-[#64748b] text-sm hover:text-white transition-colors"
           >
-            HI SCORE
+            {t.nav.hiScore}
           </button>
         </div>
       </footer>

@@ -2,14 +2,16 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui';
+import { Button, LanguageSelector } from '@/components/ui';
 import { getSettings, saveSettings, GameSettings } from '@/lib/storage';
 import { THEMES, ThemeId } from '@/lib/game/themes';
 import { soundManager, vibrationManager } from '@/lib/game/sounds';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
 
 export default function SettingsPage() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [settings, setSettings] = useState<GameSettings>({
     soundEnabled: true,
     vibrationEnabled: true,
@@ -52,7 +54,7 @@ export default function SettingsPage() {
   };
 
   const handleResetData = () => {
-    if (confirm('All game data will be deleted. Continue?')) {
+    if (confirm(t.settings.resetConfirm)) {
       localStorage.removeItem('holdamnit-stats');
       localStorage.removeItem('holdamnit-comments');
       localStorage.removeItem('holdamnit-tutorial-seen');
@@ -73,10 +75,10 @@ export default function SettingsPage() {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            <span>Back</span>
+            <span>{t.common.back}</span>
           </button>
-          <div className="text-[#00d4ff] font-bold text-lg">SETTINGS</div>
-          <div className="w-16" />
+          <div className="text-[#00d4ff] font-bold text-lg">{t.settings.title}</div>
+          <LanguageSelector />
         </div>
       </header>
 
@@ -86,17 +88,17 @@ export default function SettingsPage() {
           <div className="game-card p-6">
             <h3 className="text-white font-bold mb-4 flex items-center gap-2">
               <span className="w-8 h-8 rounded-full bg-[#00d4ff]/20 flex items-center justify-center text-[#00d4ff] text-sm">S</span>
-              Sound & Vibration
+              {t.settings.soundVibration}
             </h3>
             <div className="space-y-4">
               <ToggleSetting
-                label="Sound Effects"
+                label={t.settings.soundEffects}
                 description="Play in-game sounds"
                 enabled={settings.soundEnabled}
                 onToggle={handleSoundToggle}
               />
               <ToggleSetting
-                label="Vibration"
+                label={t.settings.vibration}
                 description="Mobile haptic feedback"
                 enabled={settings.vibrationEnabled}
                 onToggle={handleVibrationToggle}
@@ -108,7 +110,7 @@ export default function SettingsPage() {
           <div className="game-card p-6">
             <h3 className="text-white font-bold mb-4 flex items-center gap-2">
               <span className="w-8 h-8 rounded-full bg-[#ff4d94]/20 flex items-center justify-center text-[#ff4d94] text-sm">T</span>
-              Theme
+              {t.settings.theme}
             </h3>
             <div className="grid gap-3">
               {(Object.values(THEMES) as typeof THEMES[ThemeId][]).map((theme) => (
@@ -143,7 +145,7 @@ export default function SettingsPage() {
           <div className="game-card p-6">
             <h3 className="text-white font-bold mb-4 flex items-center gap-2">
               <span className="w-8 h-8 rounded-full bg-[#ff4444]/20 flex items-center justify-center text-[#ff4444] text-sm">D</span>
-              Data Management
+              {t.settings.dataManagement}
             </h3>
             <Button
               variant="danger"
@@ -151,7 +153,7 @@ export default function SettingsPage() {
               onClick={handleResetData}
               fullWidth
             >
-              Reset All Data
+              {t.settings.resetData}
             </Button>
             <p className="text-xs text-[#64748b] mt-3 text-center">
               All game records, stats, and achievements will be deleted.

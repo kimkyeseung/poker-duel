@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useGameStore } from '@/stores/gameStore';
 import { usePokerCalculator } from '@/hooks/usePokerCalculator';
-import { Timer, AudioToggle } from '@/components/ui';
+import { Timer, AudioToggle, LanguageSelector } from '@/components/ui';
 import {
   Card,
   Table,
@@ -356,7 +356,10 @@ export default function GamePage() {
             <span className="hidden sm:inline">Exit</span>
           </button>
           <GameProgressCompact difficulty={difficulty} currentRound={currentRound} />
-          <AudioToggle />
+          <div className="flex items-center gap-2">
+            <LanguageSelector />
+            <AudioToggle />
+          </div>
         </div>
       </header>
 

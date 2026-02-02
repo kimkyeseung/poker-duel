@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { audioManager } from '@/lib/audio/AudioManager';
+import { useTranslation } from '@/lib/i18n';
 
 interface ClickToStartProps {
   onStart: () => void;
 }
 
 export function ClickToStart({ onStart }: ClickToStartProps) {
+  const { t } = useTranslation();
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
@@ -60,7 +62,7 @@ export function ClickToStart({ onStart }: ClickToStartProps) {
             <span className="block text-gradient-secondary">HOL&apos;DAMN</span>
             <span className="block text-gradient-primary">IT!</span>
           </h1>
-          <p className="text-slate-400 text-xs tracking-widest">THE ULTIMATE EQUITY CHALLENGE</p>
+          <p className="text-slate-400 text-xs tracking-widest">{t.common.tagline}</p>
         </div>
 
         {/* Click to Start */}
@@ -79,7 +81,7 @@ export function ClickToStart({ onStart }: ClickToStartProps) {
           </div>
 
           <p className="text-white/70 text-lg font-medium animate-pulse">
-            Click anywhere to start
+            {t.home.clickToStart}
           </p>
 
           <p className="text-white/40 text-sm">

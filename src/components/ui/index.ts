@@ -4,3 +4,4 @@ export * from './Timer';
 export * from './Typography';
 export * from './AudioToggle';
 export * from './ClickToStart';
+export * from './LanguageSelector';
