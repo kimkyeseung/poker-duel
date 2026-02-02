@@ -1,6 +1,7 @@
 'use client';
 
-import { Fragment, ReactNode } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
 
 interface DialogProps {
@@ -11,31 +12,55 @@ interface DialogProps {
 }
 
 export function Dialog({ isOpen, onClose, children, className }: DialogProps) {
-  if (!isOpen) return null;
+  const [mounted, setMounted] = useState(false);
 
-  return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
+  if (!isOpen || !mounted) return null;
+
+  const dialogContent = (
+    <div
+      className="fixed inset-0 flex items-center justify-center p-4"
+      style={{ zIndex: 99999 }}
+    >
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-[#0a0e1a]/90 backdrop-blur-md"
+        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
         onClick={onClose}
+        style={{ zIndex: 99999 }}
       />
 
       {/* Content */}
       <div
         className={cn(
-          'relative z-[10000] w-full max-w-md',
+          'relative w-full max-w-md',
           'bg-[#0f1424] rounded-2xl',
           'shadow-2xl shadow-black/50',
-          'border border-white/5',
-          'animate-in fade-in zoom-in-95 duration-300',
+          'border border-white/10',
+          'animate-in fade-in zoom-in-95 duration-200',
           className
         )}
+        style={{ zIndex: 100000 }}
       >
         {children}
       </div>
     </div>
   );
+
+  return createPortal(dialogContent, document.body);
 }
 
 interface DialogHeaderProps {
