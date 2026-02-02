@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { goToHome } from './helpers';
+import { goToHome, goToGame, goToPractice, goToDaily } from './helpers';
 
 test.describe('홈 페이지', () => {
   test.beforeEach(async ({ page }) => {
@@ -12,8 +12,10 @@ test.describe('홈 페이지', () => {
   });
 
   test('게임 시작 버튼이 존재하고 클릭 가능하다', async ({ page }) => {
-    // 게임 시작 버튼 찾기 (QUICK PLAY) - main 영역에서
-    const startButton = page.getByRole('main').getByRole('button', { name: 'QUICK PLAY' });
+    // 게임 시작 버튼 (다양한 언어)
+    const startButton = page.getByRole('main').locator('button').filter({
+      hasText: /QUICK PLAY|빠른 시작|クイックプレイ|快速开始|JUEGO RÁPIDO|JEU RAPIDE|GIOCO RAPIDO/i
+    });
     await expect(startButton).toBeVisible();
 
     // 클릭 시 게임 페이지로 이동
@@ -22,8 +24,10 @@ test.describe('홈 페이지', () => {
   });
 
   test('연습 모드 버튼이 존재한다', async ({ page }) => {
-    // main 영역에서 PRACTICE 버튼 찾기
-    const practiceButton = page.getByRole('main').getByRole('button', { name: 'PRACTICE' });
+    // 연습 모드 버튼 (다양한 언어)
+    const practiceButton = page.getByRole('main').locator('button').filter({
+      hasText: /PRACTICE|연습|練習|练习|PRÁCTICA|ENTRAÎNEMENT|PRATICA/i
+    });
     await expect(practiceButton).toBeVisible();
 
     await practiceButton.click();
@@ -31,7 +35,10 @@ test.describe('홈 페이지', () => {
   });
 
   test('일일 챌린지 버튼이 존재한다', async ({ page }) => {
-    const dailyButton = page.getByRole('main').getByRole('button', { name: 'DAILY RUN' });
+    // 일일 챌린지 버튼 (다양한 언어)
+    const dailyButton = page.getByRole('main').locator('button').filter({
+      hasText: /DAILY|일일|デイリー|每日|DIARIO|QUOTIDIEN|GIORNALIER/i
+    });
     await expect(dailyButton).toBeVisible();
 
     await dailyButton.click();
@@ -39,7 +46,7 @@ test.describe('홈 페이지', () => {
   });
 
   test('설정 버튼이 존재한다', async ({ page }) => {
-    // 설정 버튼 (⚙️ 아이콘) - 헤더에 있음
+    // 설정 버튼 - header에 있는 톱니바퀴 버튼
     const settingsButton = page.locator('header button').last();
     await expect(settingsButton).toBeVisible();
 
@@ -48,19 +55,24 @@ test.describe('홈 페이지', () => {
   });
 
   test('통계 페이지로 이동할 수 있다', async ({ page }) => {
-    // HI SCORE 버튼으로 통계 페이지 이동 (footer에 있음)
-    const statsButton = page.getByRole('contentinfo').getByText('HI SCORE');
-    await expect(statsButton).toBeVisible();
+    // HI SCORE/최고 점수 등 (다양한 언어)
+    const statsLink = page.getByRole('contentinfo').locator('a, button').filter({
+      hasText: /HI SCORE|최고 점수|SCORE|ハイスコア|最高分|RÉCORD|MEILLEUR|RECORD/i
+    });
+    await expect(statsLink).toBeVisible();
 
-    await statsButton.click();
+    await statsLink.click();
     await expect(page).toHaveURL('/stats');
   });
 
   test('크레딧 페이지로 이동할 수 있다', async ({ page }) => {
-    const creditsButton = page.getByRole('contentinfo').getByText('CREDITS');
-    await expect(creditsButton).toBeVisible();
+    // CREDITS/크레딧 등 (다양한 언어)
+    const creditsLink = page.getByRole('contentinfo').locator('a, button').filter({
+      hasText: /CREDITS|크레딧|クレジット|制作人员|CRÉDITOS|CRÉDITS|CREDITI/i
+    });
+    await expect(creditsLink).toBeVisible();
 
-    await creditsButton.click();
+    await creditsLink.click();
     await expect(page).toHaveURL('/comments');
   });
 });

@@ -40,6 +40,7 @@ export function PlayerArea({
 
   return (
     <div
+      data-testid={isComputer ? 'dealer-area' : 'player-area'}
       className={cn(
         'flex flex-col items-center',
         compact ? 'gap-2' : 'gap-3',

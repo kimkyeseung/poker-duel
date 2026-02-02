@@ -32,7 +32,7 @@ export function Table({
   };
 
   return (
-    <div className={cn('relative', className)}>
+    <div data-testid="game-table" className={cn('relative', className)}>
       {/* Table background - darker, more modern */}
       <div className={cn(
         'absolute inset-0 bg-gradient-to-b from-[#1a1f35] to-[#0f1424] shadow-2xl border border-white/5',

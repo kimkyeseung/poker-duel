@@ -42,6 +42,7 @@ export function ClickToStart({ onStart }: ClickToStartProps) {
 
   return (
     <div
+      data-testid="click-to-start"
       className="fixed inset-0 z-[9999] flex items-center justify-center cursor-pointer"
       style={{
         background: 'radial-gradient(circle at center, #1a0b2e 0%, #0a0a1a 100%)',
