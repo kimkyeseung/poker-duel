@@ -51,6 +51,7 @@ export const it: TranslationKeys = {
     newBadge: "NUOVO",
     hotTables: "I tavoli sono caldi!",
     clickToStart: "Clicca ovunque per iniziare",
+    soundEnabled: "Il suono verrà attivato",
   },
 
   // Game
@@ -73,15 +74,22 @@ export const it: TranslationKeys = {
       timeOut: "Tempo scaduto!",
       wrongAnswer: "Risposta sbagliata!",
     },
+    questions: {
+      whoHasBetterHand: "Chi ha la mano migliore?",
+      whoHasHigherWinRate: "Chi ha la probabilità di vincita più alta?",
+      selectWinRate: "Seleziona l'intervallo di probabilità",
+      enterWinRate: "Inserisci la tua previsione di probabilità",
+      whatIsWinProbability: "Qual è la tua probabilità di vincita?",
+    },
+    tolerance: "Tolleranza: ±{tolerance}%",
+    validation: {
+      invalidRange: "Inserisci un valore tra 0 e 100",
+    },
     actions: {
       nextRound: "Prossimo Turno",
       nextLevel: "Prossimo Livello",
       viewRiver: "Vedi River",
-    },
-    questions: {
-      whoHasBetterHand: "Chi ha la mano migliore?",
-      selectWinRate: "Seleziona l'intervallo di probabilità",
-      enterWinRate: "Inserisci la tua previsione di probabilità",
+      submit: "INVIA",
     },
   },
 
@@ -174,6 +182,10 @@ export const it: TranslationKeys = {
     finalScore: "Punteggio Finale",
     tryAgain: "Riprova",
     goHome: "Vai alla Home",
+    reachedLevel: "Livello Raggiunto",
+    finalHandAnalysis: "Analisi Finale della Mano",
+    encouragement: "Non arrenderti! La pratica rende perfetti.",
+    nextDuel: "RIPROVA →",
   },
 
   // Settings
@@ -255,5 +267,37 @@ export const it: TranslationKeys = {
     expert: "Esperto di Poker",
     master: "Maestro del Poker",
     legend: "Leggenda Vivente",
+    godOfHoldem: "Dio dell'Holdem",
+  },
+
+  // Mascot Messages
+  mascot: {
+    tips: [
+      "Gli Assi in tasca (AA) sono\nil #1 su 169 mani!",
+      "Le mani suited sono\ncirca 3% migliori di offsuit",
+      "Più tardi è la posizione,\npiù mani puoi giocare",
+      "La probabilità di fare coppia\nal flop è circa 32%",
+      "Le coppie in tasca fanno set\ncirca il 12% delle volte",
+      "AKs vs QQ è\nquasi un lancio di moneta!",
+    ],
+    events: [
+      "Nella Sfida Giornaliera tutti\nrisolvono lo stesso problema!",
+      "La modalità pratica\nnon ha limiti di tempo!",
+      "Completa tutte e 5 le difficoltà\nper entrare nella Hall of Fame!",
+    ],
+    challenges: {
+      firstGame: "Pronto a iniziare\nla tua prima partita? 🎮",
+      threeStreak: "Prova a ottenere\nuna serie di 3!",
+      fiveStreak: "Punta a una\nserie di 5!",
+      godChallenge: "Pronto a sfidare\nil Dio dell'Holdem? 👑",
+    },
+    status: {
+      onStreak: "Serie di {count}! Incredibile! 🔥",
+      winsAchieved: "{count} vittorie! Congratulazioni! 🎉",
+      tryPractice: "Che ne dici di scaldarti\nin modalità pratica?",
+      proLevel: "Tasso del {rate}%! Livello pro! 👑",
+    },
+    luckyCard: "Carta fortunata: {card}",
+    hotTables: "I tavoli sono caldi!",
   },
 };

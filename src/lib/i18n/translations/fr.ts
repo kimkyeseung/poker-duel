@@ -51,6 +51,7 @@ export const fr: TranslationKeys = {
     newBadge: "NOUVEAU",
     hotTables: "Les tables sont chaudes!",
     clickToStart: "Cliquez n'importe où pour commencer",
+    soundEnabled: "Le son sera activé",
   },
 
   // Game
@@ -73,15 +74,22 @@ export const fr: TranslationKeys = {
       timeOut: "Temps écoulé!",
       wrongAnswer: "Mauvaise réponse!",
     },
+    questions: {
+      whoHasBetterHand: "Qui a la meilleure main?",
+      whoHasHigherWinRate: "Qui a la probabilité de gain la plus élevée?",
+      selectWinRate: "Sélectionnez la plage de probabilité",
+      enterWinRate: "Entrez votre prédiction de probabilité",
+      whatIsWinProbability: "Quelle est votre probabilité de gagner?",
+    },
+    tolerance: "Tolérance: ±{tolerance}%",
+    validation: {
+      invalidRange: "Entrez une valeur entre 0 et 100",
+    },
     actions: {
       nextRound: "Tour Suivant",
       nextLevel: "Niveau Suivant",
       viewRiver: "Voir River",
-    },
-    questions: {
-      whoHasBetterHand: "Qui a la meilleure main?",
-      selectWinRate: "Sélectionnez la plage de probabilité",
-      enterWinRate: "Entrez votre prédiction de probabilité",
+      submit: "VALIDER",
     },
   },
 
@@ -174,6 +182,10 @@ export const fr: TranslationKeys = {
     finalScore: "Score Final",
     tryAgain: "Réessayer",
     goHome: "Accueil",
+    reachedLevel: "Niveau Atteint",
+    finalHandAnalysis: "Analyse Finale de Main",
+    encouragement: "N'abandonnez pas! C'est en forgeant qu'on devient forgeron.",
+    nextDuel: "RÉESSAYER →",
   },
 
   // Settings
@@ -255,5 +267,37 @@ export const fr: TranslationKeys = {
     expert: "Expert en Poker",
     master: "Maître du Poker",
     legend: "Légende Vivante",
+    godOfHoldem: "Dieu du Holdem",
+  },
+
+  // Mascot Messages
+  mascot: {
+    tips: [
+      "Les As de poche (AA) sont\nle #1 sur 169 mains!",
+      "Les mains assorties sont\nenviron 3% meilleures",
+      "Plus votre position est tardive,\nplus vous pouvez jouer de mains",
+      "La chance de toucher une paire\nau flop est d'environ 32%",
+      "Les paires de poche font un set\nenviron 12% du temps",
+      "AKs vs QQ c'est\npresque pile ou face!",
+    ],
+    events: [
+      "Dans le Défi Quotidien, tous\nrésolvent le même problème!",
+      "Le mode entraînement\nn'a pas de limite de temps!",
+      "Terminez les 5 difficultés\npour entrer au Panthéon!",
+    ],
+    challenges: {
+      firstGame: "Prêt à commencer\nvotre première partie? 🎮",
+      threeStreak: "Essayez d'obtenir\nune série de 3!",
+      fiveStreak: "Visez une\nsérie de 5!",
+      godChallenge: "Prêt à défier\nle Dieu du Holdem? 👑",
+    },
+    status: {
+      onStreak: "Série de {count}! Incroyable! 🔥",
+      winsAchieved: "{count} victoires! Félicitations! 🎉",
+      tryPractice: "Que diriez-vous de vous\néchauffer en mode entraînement?",
+      proLevel: "Taux de {rate}%! Niveau pro! 👑",
+    },
+    luckyCard: "Carte porte-bonheur: {card}",
+    hotTables: "Les tables sont chaudes!",
   },
 };

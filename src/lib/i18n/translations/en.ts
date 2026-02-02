@@ -49,6 +49,7 @@ export const en = {
     newBadge: "NEW",
     hotTables: "The tables are hot!",
     clickToStart: "Click anywhere to start",
+    soundEnabled: "Sound will be enabled",
   },
 
   // Game
@@ -71,15 +72,22 @@ export const en = {
       timeOut: "Time Out!",
       wrongAnswer: "Wrong Answer!",
     },
+    questions: {
+      whoHasBetterHand: "Who has the better hand?",
+      whoHasHigherWinRate: "Who has a higher win rate?",
+      selectWinRate: "Select the win rate range",
+      enterWinRate: "Enter your win rate prediction",
+      whatIsWinProbability: "What's your win probability?",
+    },
+    tolerance: "Tolerance: ±{tolerance}%",
+    validation: {
+      invalidRange: "Please enter a value between 0 and 100",
+    },
     actions: {
       nextRound: "Next Round",
       nextLevel: "Next Level",
       viewRiver: "View River",
-    },
-    questions: {
-      whoHasBetterHand: "Who has the better hand?",
-      selectWinRate: "Select the win rate range",
-      enterWinRate: "Enter your win rate prediction",
+      submit: "SUBMIT",
     },
   },
 
@@ -172,6 +180,10 @@ export const en = {
     finalScore: "Final Score",
     tryAgain: "Try Again",
     goHome: "Go Home",
+    reachedLevel: "Reached Level",
+    finalHandAnalysis: "Final Hand Analysis",
+    encouragement: "Don't give up! Practice makes perfect.",
+    nextDuel: "TRY AGAIN →",
   },
 
   // Settings
@@ -253,6 +265,38 @@ export const en = {
     expert: "Poker Expert",
     master: "Poker Master",
     legend: "Living Legend",
+    godOfHoldem: "God of Holdem",
+  },
+
+  // Mascot Messages
+  mascot: {
+    tips: [
+      "Pocket Aces (AA) ranks #1\namong 169 starting hands!",
+      "Suited hands are about\n3% better than offsuit",
+      "Later position means you can\nplay more hands profitably",
+      "The chance to hit a pair\non the flop is about 32%",
+      "Pocket pairs flop a set\nabout 12% of the time",
+      "AKs vs QQ is\nalmost a coin flip!",
+    ],
+    events: [
+      "In Daily Challenge, all players\nsolve the same puzzle!",
+      "Practice mode has\nno time limits!",
+      "Clear all 5 difficulties\nto enter the Hall of Fame!",
+    ],
+    challenges: {
+      firstGame: "Ready to start\nyour first game? 🎮",
+      threeStreak: "Try to get a\n3-win streak!",
+      fiveStreak: "Aim for a\n5-win streak!",
+      godChallenge: "Ready to challenge\nGod of Holdem? 👑",
+    },
+    status: {
+      onStreak: "{count}-win streak! Amazing! 🔥",
+      winsAchieved: "{count} wins achieved! Congrats! 🎉",
+      tryPractice: "How about warming up\nin practice mode?",
+      proLevel: "{rate}% win rate! Pro level! 👑",
+    },
+    luckyCard: "Today's lucky card: {card}",
+    hotTables: "The tables are hot!",
   },
 };
 

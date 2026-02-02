@@ -2,6 +2,7 @@
 
 import { Difficulty, DIFFICULTY_CONFIG } from '@/types';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
 
 interface DifficultyBadgeProps {
   difficulty: Difficulty;
@@ -30,7 +31,7 @@ export function DifficultyBadge({
   size = 'md',
   className,
 }: DifficultyBadgeProps) {
-  const config = DIFFICULTY_CONFIG[difficulty];
+  const { t } = useTranslation();
   const color = DIFFICULTY_COLORS[difficulty];
 
   const sizes = {
@@ -53,7 +54,7 @@ export function DifficultyBadge({
       <span className="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-xs">
         {DIFFICULTY_ICONS[difficulty]}
       </span>
-      <span>{config.nameKo}</span>
+      <span>{t.difficulty[difficulty]}</span>
     </div>
   );
 }

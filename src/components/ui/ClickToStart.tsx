@@ -85,7 +85,7 @@ export function ClickToStart({ onStart }: ClickToStartProps) {
           </p>
 
           <p className="text-white/40 text-sm">
-            Sound will be enabled
+            {t.home.soundEnabled}
           </p>
         </div>
 

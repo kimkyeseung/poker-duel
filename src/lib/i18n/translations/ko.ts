@@ -51,6 +51,7 @@ export const ko: TranslationKeys = {
     newBadge: "NEW",
     hotTables: "테이블이 뜨겁습니다!",
     clickToStart: "아무 곳이나 클릭하여 시작",
+    soundEnabled: "사운드가 활성화됩니다",
   },
 
   // Game
@@ -73,15 +74,22 @@ export const ko: TranslationKeys = {
       timeOut: "시간 초과!",
       wrongAnswer: "오답!",
     },
+    questions: {
+      whoHasBetterHand: "누가 더 좋은 패를 가지고 있나요?",
+      whoHasHigherWinRate: "누구의 승률이 더 높을까요?",
+      selectWinRate: "승률 범위를 선택하세요",
+      enterWinRate: "예상 승률을 입력하세요",
+      whatIsWinProbability: "당신의 승률은?",
+    },
+    tolerance: "허용 오차: ±{tolerance}%",
+    validation: {
+      invalidRange: "0에서 100 사이의 값을 입력하세요",
+    },
     actions: {
       nextRound: "다음 라운드",
       nextLevel: "다음 레벨",
       viewRiver: "리버 보기",
-    },
-    questions: {
-      whoHasBetterHand: "누가 더 좋은 패를 가지고 있나요?",
-      selectWinRate: "승률 범위를 선택하세요",
-      enterWinRate: "예상 승률을 입력하세요",
+      submit: "제출",
     },
   },
 
@@ -174,6 +182,10 @@ export const ko: TranslationKeys = {
     finalScore: "최종 점수",
     tryAgain: "다시 시도",
     goHome: "홈으로",
+    reachedLevel: "도달 레벨",
+    finalHandAnalysis: "최종 핸드 분석",
+    encouragement: "포기하지 마세요! 연습이 완벽을 만듭니다.",
+    nextDuel: "재도전 →",
   },
 
   // Settings
@@ -255,5 +267,37 @@ export const ko: TranslationKeys = {
     expert: "포커 전문가",
     master: "포커 마스터",
     legend: "살아있는 전설",
+    godOfHoldem: "홀덤의 신",
+  },
+
+  // Mascot Messages
+  mascot: {
+    tips: [
+      "포켓 에이스(AA)는\n169개 핸드 중 1위예요!",
+      "suited 핸드는 offsuit보다\n약 3% 더 유리해요",
+      "포지션이 늦을수록 더 많은\n핸드를 플레이할 수 있어요",
+      "플랍에서 페어가 될 확률은\n약 32%예요",
+      "포켓 페어로 셋이 될 확률은\n약 12%예요",
+      "AKs vs QQ는\n거의 동전 던지기예요!",
+    ],
+    events: [
+      "일일 챌린지에서 모든 유저가\n같은 문제를 풀어요!",
+      "연습 모드에서\n시간 제한 없이 연습해보세요!",
+      "5단계 난이도를 모두 클리어하면\n명예의 전당에 등록!",
+    ],
+    challenges: {
+      firstGame: "첫 게임을\n시작해볼까요? 🎮",
+      threeStreak: "3연승에\n도전해보세요!",
+      fiveStreak: "5연승 달성이\n목표예요!",
+      godChallenge: "홀덤의 신에 도전해볼\n준비 됐나요? 👑",
+    },
+    status: {
+      onStreak: "{count}연승 중! 대단해요! 🔥",
+      winsAchieved: "{count}승 달성! 축하해요! 🎉",
+      tryPractice: "연습 모드에서 감을 익혀보는 건 어때요?",
+      proLevel: "승률 {rate}%! 프로 수준이네요! 👑",
+    },
+    luckyCard: "오늘의 럭키 카드: {card}",
+    hotTables: "테이블이 뜨겁네요!",
   },
 };

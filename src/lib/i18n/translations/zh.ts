@@ -51,6 +51,7 @@ export const zh: TranslationKeys = {
     newBadge: "新",
     hotTables: "牌桌火热！",
     clickToStart: "点击任意位置开始",
+    soundEnabled: "将启用声音",
   },
 
   // Game
@@ -73,15 +74,22 @@ export const zh: TranslationKeys = {
       timeOut: "时间到！",
       wrongAnswer: "答案错误！",
     },
+    questions: {
+      whoHasBetterHand: "谁的牌更好？",
+      whoHasHigherWinRate: "谁的胜率更高？",
+      selectWinRate: "选择胜率范围",
+      enterWinRate: "输入你的胜率预测",
+      whatIsWinProbability: "你的胜率是多少？",
+    },
+    tolerance: "容差: ±{tolerance}%",
+    validation: {
+      invalidRange: "请输入0到100之间的值",
+    },
     actions: {
       nextRound: "下一轮",
       nextLevel: "下一级",
       viewRiver: "查看河牌",
-    },
-    questions: {
-      whoHasBetterHand: "谁的牌更好？",
-      selectWinRate: "选择胜率范围",
-      enterWinRate: "输入你的胜率预测",
+      submit: "提交",
     },
   },
 
@@ -174,6 +182,10 @@ export const zh: TranslationKeys = {
     finalScore: "最终分数",
     tryAgain: "再试一次",
     goHome: "返回主页",
+    reachedLevel: "达到等级",
+    finalHandAnalysis: "最终手牌分析",
+    encouragement: "别放弃！熟能生巧。",
+    nextDuel: "再次挑战 →",
   },
 
   // Settings
@@ -255,5 +267,37 @@ export const zh: TranslationKeys = {
     expert: "扑克专家",
     master: "扑克大师",
     legend: "活着的传奇",
+    godOfHoldem: "德州之神",
+  },
+
+  // Mascot Messages
+  mascot: {
+    tips: [
+      "口袋A(AA)是\n169种起手牌中排名第一!",
+      "同花牌比杂色牌\n大约好3%",
+      "位置越靠后,可以打的\n起手牌就越多",
+      "翻牌中对子的概率\n大约是32%",
+      "口袋对子翻牌成三条的\n概率大约是12%",
+      "AKs vs QQ\n几乎是抛硬币!",
+    ],
+    events: [
+      "每日挑战中,所有玩家\n解决相同的问题!",
+      "练习模式\n没有时间限制!",
+      "通关所有5个难度\n进入名人堂!",
+    ],
+    challenges: {
+      firstGame: "准备开始\n第一局游戏吗? 🎮",
+      threeStreak: "尝试获得\n3连胜!",
+      fiveStreak: "目标是\n5连胜!",
+      godChallenge: "准备挑战\n德州之神吗? 👑",
+    },
+    status: {
+      onStreak: "{count}连胜! 太棒了! 🔥",
+      winsAchieved: "达成{count}胜! 恭喜! 🎉",
+      tryPractice: "要不要在练习模式\n热身一下?",
+      proLevel: "胜率{rate}%! 专业水准! 👑",
+    },
+    luckyCard: "今日幸运牌: {card}",
+    hotTables: "牌桌火热!",
   },
 };

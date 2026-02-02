@@ -1,71 +1,70 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, AudioToggle, ClickToStart, LanguageSelector } from '@/components/ui';
 import { TutorialDialog } from '@/components/TutorialDialog';
 import { getGameStats } from '@/lib/storage';
-import { getCurrentTitle } from '@/lib/game/titles';
+import { getCurrentTitle, getTitleKey } from '@/lib/game/titles';
 import { useGameStore } from '@/stores/gameStore';
 import { useAudio } from '@/lib/audio';
-import { useTranslation } from '@/lib/i18n';
+import { useTranslation, TranslationKeys } from '@/lib/i18n';
 import { GameStats } from '@/types';
 
 // 마스코트 메시지 생성 함수
-function getMascotMessage(stats: GameStats | null): { message: string; type: string } {
+function getMascotMessage(
+  stats: GameStats | null,
+  t: TranslationKeys
+): { message: string; type: string } {
   const messages: { message: string; type: string }[] = [];
 
   // 1. 데일리 팁/힌트
-  const tips = [
-    { message: "포켓 에이스(AA)는\n169개 핸드 중 1위예요!", type: "tip" },
-    { message: "suited 핸드는 offsuit보다\n약 3% 더 유리해요", type: "tip" },
-    { message: "포지션이 늦을수록 더 많은\n핸드를 플레이할 수 있어요", type: "tip" },
-    { message: "플랍에서 페어가 될 확률은\n약 32%예요", type: "tip" },
-    { message: "포켓 페어로 셋이 될 확률은\n약 12%예요", type: "tip" },
-    { message: "AKs vs QQ는\n거의 동전 던지기예요!", type: "tip" },
-  ];
+  const tips = t.mascot.tips.map(tip => ({ message: tip, type: "tip" }));
   messages.push(tips[Math.floor(Math.random() * tips.length)]);
 
   // 2. 동적 상태 메시지 (유저 상황 기반)
   if (stats) {
-    if (stats.currentStreak >= 5) {
-      messages.push({ message: `${stats.currentStreak}연승 중! 대단해요! 🔥`, type: "status" });
-    } else if (stats.currentStreak >= 3) {
-      messages.push({ message: `${stats.currentStreak}연승! 오늘 운이 좋네요!`, type: "status" });
+    if (stats.currentStreak >= 3) {
+      messages.push({
+        message: t.mascot.status.onStreak.replace('{count}', String(stats.currentStreak)),
+        type: "status"
+      });
     }
 
     if (stats.totalWins > 0 && stats.totalWins % 10 === 0) {
-      messages.push({ message: `${stats.totalWins}승 달성! 축하해요! 🎉`, type: "status" });
+      messages.push({
+        message: t.mascot.status.winsAchieved.replace('{count}', String(stats.totalWins)),
+        type: "status"
+      });
     }
 
     if (stats.totalGames > 0 && stats.totalGames === stats.totalLosses) {
-      messages.push({ message: "연습 모드에서 감을 익혀보는 건 어때요?", type: "status" });
+      messages.push({ message: t.mascot.status.tryPractice, type: "status" });
     }
 
     const winRate = stats.totalGames > 0 ? (stats.totalWins / stats.totalGames) * 100 : 0;
     if (winRate >= 70 && stats.totalGames >= 10) {
-      messages.push({ message: `승률 ${winRate.toFixed(0)}%! 프로 수준이네요! 👑`, type: "status" });
+      messages.push({
+        message: t.mascot.status.proLevel.replace('{rate}', winRate.toFixed(0)),
+        type: "status"
+      });
     }
   }
 
   // 3. 이벤트/공지 알림
-  const events = [
-    { message: "일일 챌린지에서 모든 유저가\n같은 문제를 풀어요!", type: "event" },
-    { message: "연습 모드에서\n시간 제한 없이 연습해보세요!", type: "event" },
-    { message: "5단계 난이도를 모두 클리어하면\n명예의 전당에 등록!", type: "event" },
-  ];
+  const events = t.mascot.events.map(event => ({ message: event, type: "event" }));
   messages.push(events[Math.floor(Math.random() * events.length)]);
 
   // 4. 개인화된 도전 제안
   if (stats) {
     if (stats.totalGames === 0) {
-      messages.push({ message: "첫 게임을\n시작해볼까요? 🎮", type: "challenge" });
+      messages.push({ message: t.mascot.challenges.firstGame, type: "challenge" });
     } else if (stats.maxStreak < 3) {
-      messages.push({ message: "3연승에\n도전해보세요!", type: "challenge" });
+      messages.push({ message: t.mascot.challenges.threeStreak, type: "challenge" });
     } else if (stats.maxStreak < 5) {
-      messages.push({ message: "5연승 달성이\n목표예요!", type: "challenge" });
+      messages.push({ message: t.mascot.challenges.fiveStreak, type: "challenge" });
     } else {
-      messages.push({ message: "홀덤의 신에 도전해볼\n준비 됐나요? 👑", type: "challenge" });
+      messages.push({ message: t.mascot.challenges.godChallenge, type: "challenge" });
     }
   }
 
@@ -77,8 +76,9 @@ function getMascotMessage(stats: GameStats | null): { message: string; type: str
   const luckyRank = ranks[seed % ranks.length];
   const luckySuit = suits[seed % suits.length];
   const isRed = luckySuit === '♥' || luckySuit === '♦';
+  const cardStr = `${isRed ? '🔴' : '⚫'} ${luckySuit}${luckyRank}`;
   messages.push({
-    message: `오늘의 럭키 카드: ${isRed ? '🔴' : '⚫'} ${luckySuit}${luckyRank}`,
+    message: t.mascot.luckyCard.replace('{card}', cardStr),
     type: "lucky"
   });
 
@@ -139,13 +139,13 @@ export default function Home() {
 
   // 마스코트 메시지 (클라이언트에서만 랜덤 선택 - hydration 에러 방지)
   const [mascotMessage, setMascotMessage] = useState<{ message: string; type: string }>({
-    message: "포켓 에이스(AA)는\n169개 핸드 중 1위예요!",
+    message: "",
     type: "tip"
   });
 
   useEffect(() => {
-    setMascotMessage(getMascotMessage(stats));
-  }, [stats]);
+    setMascotMessage(getMascotMessage(stats, t));
+  }, [stats, t]);
 
   return (
     <div className="min-h-screen flex flex-col relative overflow-hidden" style={{ background: 'radial-gradient(circle at top center, #1a0b2e 0%, #0a0a1a 100%)' }}>
@@ -179,7 +179,7 @@ export default function Home() {
                 className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1f35] hover:bg-[#252b45] transition-colors"
               >
                 <span className="text-lg">{currentTitle.icon}</span>
-                <span className="text-white text-sm font-medium hidden sm:inline">{currentTitle.name}</span>
+                <span className="text-white text-sm font-medium hidden sm:inline">{t.titles[getTitleKey(currentTitle.id) as keyof typeof t.titles]}</span>
               </button>
             )}
             <LanguageSelector />
@@ -246,7 +246,7 @@ export default function Home() {
 
                 {/* Card Bottom */}
                 <div className="absolute bottom-0 left-0 right-0 p-3 bg-gradient-to-t from-[#0a0e1a] to-transparent">
-                  <p className="text-xs text-[#64748b] text-center">The tables are hot!</p>
+                  <p className="text-xs text-[#64748b] text-center">{t.mascot.hotTables}</p>
                 </div>
               </div>
             </div>
@@ -336,7 +336,7 @@ export default function Home() {
               <div className="flex items-center gap-2">
                 <span className="text-2xl">{currentTitle?.icon ?? '🎮'}</span>
                 <span className="text-lg font-bold text-gradient-gold">
-                  {currentTitle?.name ?? 'Beginner'}
+                  {currentTitle ? t.titles[getTitleKey(currentTitle.id) as keyof typeof t.titles] : t.titles.beginner}
                 </span>
               </div>
             </div>

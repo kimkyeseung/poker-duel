@@ -2,7 +2,8 @@
 
 import { cn } from '@/lib/utils';
 import { Difficulty, GameRound, DIFFICULTY_CONFIG } from '@/types/poker';
-import { difficultyColors, difficultyNames, roundNames } from '@/lib/design-tokens';
+import { difficultyColors } from '@/lib/design-tokens';
+import { useTranslation } from '@/lib/i18n';
 
 interface GameProgressProps {
   difficulty: Difficulty;
@@ -14,6 +15,7 @@ const DIFFICULTIES: Difficulty[] = ['easy', 'normal', 'hard', 'expert', 'god'];
 const ROUNDS: GameRound[] = ['preflop', 'flop', 'turn', 'river'];
 
 export function GameProgress({ difficulty, currentRound, className }: GameProgressProps) {
+  const { t } = useTranslation();
   const currentDifficultyIndex = DIFFICULTIES.indexOf(difficulty);
   const currentRoundIndex = ROUNDS.indexOf(currentRound);
 
@@ -21,7 +23,7 @@ export function GameProgress({ difficulty, currentRound, className }: GameProgre
     <div className={cn('space-y-3', className)}>
       {/* 난이도 진행도 */}
       <div className="flex items-center gap-2">
-        <span className="text-xs text-[#64748b] min-w-[50px]">난이도</span>
+        <span className="text-xs text-[#64748b] min-w-[50px]">{t.difficulty.level.replace('{number}', '')}</span>
         <div className="flex-1 flex items-center gap-1">
           {DIFFICULTIES.map((diff, index) => {
             const isActive = index === currentDifficultyIndex;
@@ -32,7 +34,7 @@ export function GameProgress({ difficulty, currentRound, className }: GameProgre
               <div
                 key={diff}
                 className="flex-1 relative"
-                title={difficultyNames[diff]}
+                title={t.difficulty[diff]}
               >
                 <div
                   className={cn(
@@ -51,7 +53,7 @@ export function GameProgress({ difficulty, currentRound, className }: GameProgre
                       colors.text
                     )}
                   >
-                    {difficultyNames[diff]}
+                    {t.difficulty[diff]}
                   </div>
                 )}
               </div>
@@ -62,7 +64,7 @@ export function GameProgress({ difficulty, currentRound, className }: GameProgre
 
       {/* 라운드 진행도 */}
       <div className="flex items-center gap-2 mt-6">
-        <span className="text-xs text-[#64748b] min-w-[50px]">라운드</span>
+        <span className="text-xs text-[#64748b] min-w-[50px]">{t.game.rounds.preflop.substring(0, 3)}</span>
         <div className="flex-1 flex items-center">
           {ROUNDS.map((round, index) => {
             const isActive = index === currentRoundIndex;
@@ -111,7 +113,7 @@ export function GameProgress({ difficulty, currentRound, className }: GameProgre
                   isActive ? 'text-[#00d4ff] font-medium' : 'text-[#64748b]'
                 )}
               >
-                {roundNames[round]}
+                {t.game.rounds[round]}
               </div>
             );
           })}
@@ -123,9 +125,10 @@ export function GameProgress({ difficulty, currentRound, className }: GameProgre
 
 // 컴팩트 버전 (헤더용)
 export function GameProgressCompact({ difficulty, currentRound, className }: GameProgressProps) {
+  const { t } = useTranslation();
   const colors = difficultyColors[difficulty];
-  const diffName = difficultyNames[difficulty];
-  const roundName = roundNames[currentRound];
+  const diffName = t.difficulty[difficulty];
+  const roundName = t.game.rounds[currentRound];
 
   return (
     <div className={cn('flex items-center gap-3', className)}>
@@ -186,8 +189,9 @@ export function DifficultyBadgeSimple({
   size?: 'sm' | 'md' | 'lg';
   className?: string;
 }) {
+  const { t } = useTranslation();
   const colors = difficultyColors[difficulty];
-  const diffName = difficultyNames[difficulty];
+  const diffName = t.difficulty[difficulty];
 
   const sizes = {
     sm: 'px-2 py-0.5 text-xs',

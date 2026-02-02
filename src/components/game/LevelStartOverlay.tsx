@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Difficulty, DIFFICULTY_CONFIG } from '@/types';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
 
 interface LevelStartOverlayProps {
   isVisible: boolean;
@@ -43,64 +44,22 @@ const DIFFICULTY_THEMES: Record<Difficulty, {
   },
 };
 
-// 포커 격언 및 레벨 정보
-const LEVEL_QUOTES: Record<Difficulty, string[]> = {
-  easy: [
-    "The journey of a thousand hands begins with a single bet.",
-    "In poker, patience is not just a virtue—it's a strategy.",
-    "Know when to hold 'em, know when to fold 'em.",
-    "Every pro was once a beginner.",
-  ],
-  normal: [
-    "Position is power in poker.",
-    "The cards don't know who's winning.",
-    "Play the player, not just the cards.",
-    "Discipline separates winners from losers.",
-  ],
-  hard: [
-    "The best hand doesn't always win—the best player does.",
-    "Poker is a game of decisions, not results.",
-    "Trust your reads, but verify with math.",
-    "Pressure reveals character at the table.",
-  ],
-  expert: [
-    "At this level, every percentage point matters.",
-    "The elite see patterns others miss.",
-    "Mastery is knowing what others don't know they don't know.",
-    "Precision is the difference between good and great.",
-  ],
-  god: [
-    "Welcome to the final test of poker mastery.",
-    "Only the chosen reach this realm.",
-    "1% tolerance. Zero room for error.",
-    "Become the god of probability.",
-  ],
-};
-
-// 레벨 정보
-const LEVEL_INFO: Record<Difficulty, string> = {
-  easy: "Choose who has the better hand",
-  normal: "Select the correct win rate range",
-  hard: "Predict within ±5% accuracy",
-  expert: "Predict within ±3% accuracy",
-  god: "Predict within ±1% accuracy",
-};
 
 export function LevelStartOverlay({
   isVisible,
   difficulty,
   onComplete,
 }: LevelStartOverlayProps) {
+  const { t } = useTranslation();
   const [phase, setPhase] = useState<'entering' | 'visible' | 'exiting' | 'hidden'>('hidden');
   const [quote, setQuote] = useState('');
 
-  const config = DIFFICULTY_CONFIG[difficulty];
   const theme = DIFFICULTY_THEMES[difficulty];
 
   useEffect(() => {
     if (isVisible) {
       // 랜덤 격언 선택
-      const quotes = LEVEL_QUOTES[difficulty];
+      const quotes = t.quotes[difficulty];
       setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
 
       // 애니메이션 시퀀스
@@ -175,7 +134,7 @@ export function LevelStartOverlay({
           'text-sm font-bold tracking-[0.3em] uppercase mb-4',
           theme.accent,
         )}>
-          Level {['easy', 'normal', 'hard', 'expert', 'god'].indexOf(difficulty) + 1}
+          {t.difficulty.level.replace('{number}', String(['easy', 'normal', 'hard', 'expert', 'god'].indexOf(difficulty) + 1))}
         </div>
 
         {/* 난이도 타이틀 */}
@@ -190,7 +149,7 @@ export function LevelStartOverlay({
             textShadow: '0 0 40px currentColor',
           }}
         >
-          {config.name.toUpperCase()}
+          {t.difficulty[difficulty].toUpperCase()}
         </h1>
 
         {/* 레벨 정보 */}
@@ -200,7 +159,7 @@ export function LevelStartOverlay({
             'bg-white/5 border border-white/10',
             'text-white/80 text-sm font-medium',
           )}>
-            {LEVEL_INFO[difficulty]}
+            {t.levelInfo[difficulty]}
           </div>
         </div>
 

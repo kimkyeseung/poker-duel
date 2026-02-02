@@ -146,3 +146,25 @@ export function getCurrentTitle(stats: GameStats): TitleDefinition {
 export function getTitleById(id: string): TitleDefinition | undefined {
   return TITLES.find((t) => t.id === id);
 }
+
+// 칭호 ID를 번역 키로 변환
+const TITLE_KEY_MAP: Record<string, string> = {
+  'beginner': 'beginner',
+  'learner': 'probabilityStudent',
+  'first-win': 'firstWinner',
+  'streak-3': 'consistentPlayer',
+  'streak-5': 'consistentPlayer',
+  'streak-10': 'master',
+  'easy-master': 'consistentPlayer',
+  'normal-master': 'expert',
+  'hard-master': 'expert',
+  'expert-clear': 'master',
+  'god-clear': 'godOfHoldem',
+  'calculator': 'expert',
+  'veteran': 'master',
+  'legend': 'legend',
+};
+
+export function getTitleKey(titleId: string): string {
+  return TITLE_KEY_MAP[titleId] || 'beginner';
+}

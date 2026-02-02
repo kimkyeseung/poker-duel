@@ -51,6 +51,7 @@ export const ja: TranslationKeys = {
     newBadge: "NEW",
     hotTables: "テーブルが熱い！",
     clickToStart: "どこかをクリックして開始",
+    soundEnabled: "サウンドが有効になります",
   },
 
   // Game
@@ -73,15 +74,22 @@ export const ja: TranslationKeys = {
       timeOut: "タイムアウト！",
       wrongAnswer: "不正解！",
     },
+    questions: {
+      whoHasBetterHand: "どちらが良いハンドを持っていますか？",
+      whoHasHigherWinRate: "どちらの勝率が高いですか？",
+      selectWinRate: "勝率の範囲を選択してください",
+      enterWinRate: "予想勝率を入力してください",
+      whatIsWinProbability: "あなたの勝率は？",
+    },
+    tolerance: "許容誤差: ±{tolerance}%",
+    validation: {
+      invalidRange: "0から100の間の値を入力してください",
+    },
     actions: {
       nextRound: "次のラウンド",
       nextLevel: "次のレベル",
       viewRiver: "リバーを見る",
-    },
-    questions: {
-      whoHasBetterHand: "どちらが良いハンドを持っていますか？",
-      selectWinRate: "勝率の範囲を選択してください",
-      enterWinRate: "予想勝率を入力してください",
+      submit: "送信",
     },
   },
 
@@ -174,6 +182,10 @@ export const ja: TranslationKeys = {
     finalScore: "最終スコア",
     tryAgain: "もう一度",
     goHome: "ホームへ",
+    reachedLevel: "到達レベル",
+    finalHandAnalysis: "最終ハンド分析",
+    encouragement: "諦めないで！練習が完璧を生む。",
+    nextDuel: "再挑戦 →",
   },
 
   // Settings
@@ -255,5 +267,37 @@ export const ja: TranslationKeys = {
     expert: "ポーカーエキスパート",
     master: "ポーカーマスター",
     legend: "生きる伝説",
+    godOfHoldem: "ホールデムの神",
+  },
+
+  // Mascot Messages
+  mascot: {
+    tips: [
+      "ポケットエース(AA)は\n169種類中1位!",
+      "スーテッドハンドはオフスートより\n約3%有利です",
+      "ポジションが遅いほど\nプレイできるハンドが増えます",
+      "フロップでペアになる確率は\n約32%です",
+      "ポケットペアがセットになる確率は\n約12%です",
+      "AKs vs QQは\nほぼコイントス!",
+    ],
+    events: [
+      "デイリーチャレンジでは全員が\n同じ問題を解きます!",
+      "練習モードでは\n時間制限なし!",
+      "5つの難易度を全クリアで\n殿堂入り!",
+    ],
+    challenges: {
+      firstGame: "初めてのゲームを\n始めますか? 🎮",
+      threeStreak: "3連勝に\n挑戦しよう!",
+      fiveStreak: "目標は\n5連勝!",
+      godChallenge: "ホールデムの神に\n挑戦する準備は? 👑",
+    },
+    status: {
+      onStreak: "{count}連勝中! すごい! 🔥",
+      winsAchieved: "{count}勝達成! おめでとう! 🎉",
+      tryPractice: "練習モードで\nウォームアップしませんか?",
+      proLevel: "勝率{rate}%! プロレベル! 👑",
+    },
+    luckyCard: "今日のラッキーカード: {card}",
+    hotTables: "テーブルが熱い!",
   },
 };

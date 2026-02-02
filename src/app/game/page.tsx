@@ -21,20 +21,15 @@ import { checkAnswer } from '@/lib/poker/calculator';
 import { evaluateStartingHand, compareStartingHands, StartingHandInfo } from '@/lib/poker/starting-hands';
 import { recordGameResult, updateStreak } from '@/lib/storage';
 import { useBGM, useSFX } from '@/lib/audio';
+import { useTranslation } from '@/lib/i18n';
 import { DIFFICULTY_CONFIG, WinRateResult, AnswerResult, GameRound } from '@/types';
 import { cn } from '@/lib/utils';
 
 const CARD_REVEAL_DURATION = 2000;
 
-const ROUND_NAMES: Record<GameRound, string> = {
-  preflop: 'PRE-FLOP',
-  flop: 'THE FLOP',
-  turn: 'THE TURN',
-  river: 'THE RIVER',
-};
-
 export default function GamePage() {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const {
     gameId,
@@ -353,7 +348,7 @@ export default function GamePage() {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            <span className="hidden sm:inline">Exit</span>
+            <span className="hidden sm:inline">{t.common.exit}</span>
           </button>
           <GameProgressCompact difficulty={difficulty} currentRound={currentRound} />
           <div className="flex items-center gap-2">
@@ -367,9 +362,9 @@ export default function GamePage() {
       <main className="flex-1 flex flex-col items-center justify-between p-3 pb-4 min-h-0">
         {/* Round Info with Timer */}
         <div className="text-center shrink-0 flex items-center justify-center gap-4">
-          <span className="badge badge-outline">{config.name}</span>
+          <span className="badge badge-outline">{t.difficulty[difficulty]}</span>
           <h2 className="text-2xl md:text-3xl font-black text-white">
-            {ROUND_NAMES[currentRound]}
+            {t.game.rounds[currentRound]}
           </h2>
           {status === 'answering' && (
             <Timer
@@ -387,7 +382,7 @@ export default function GamePage() {
         <PlayerArea
           cards={computerHand}
           isComputer
-          label="DEALER"
+          label={t.game.labels.dealer}
           handName={computerHand ? evaluateStartingHand(computerHand).name : undefined}
           handRank={showResult && currentRound === 'preflop' && computerHand ? evaluateStartingHand(computerHand).rank : undefined}
           isActive={status === 'answering'}
@@ -407,7 +402,7 @@ export default function GamePage() {
         {/* Player Area */}
         <PlayerArea
           cards={playerHand}
-          label="YOU"
+          label={t.game.labels.you}
           handName={playerHand ? evaluateStartingHand(playerHand).name : undefined}
           winRate={showResult && currentRound !== 'preflop' && currentWinRate ? currentWinRate.playerWinRate : undefined}
           handRank={showResult && currentRound === 'preflop' && playerHand ? evaluateStartingHand(playerHand).rank : undefined}
@@ -424,7 +419,7 @@ export default function GamePage() {
             <div className="text-center">
               <div className="text-4xl mb-2 animate-bounce">🃏</div>
               <p className="text-[#00d4ff] text-sm font-semibold animate-pulse">
-                Revealing cards...
+                {t.game.messages.revealingCards}
               </p>
             </div>
           )}
@@ -433,7 +428,7 @@ export default function GamePage() {
           {isCalculating && !isRevealingCards && !isRevealingPlayerCards && (
             <div className="text-center">
               <div className="animate-spin inline-block w-6 h-6 border-2 border-[#00d4ff] border-t-transparent rounded-full mb-2" />
-              <p className="text-[#64748b] text-sm">Calculating win rate...</p>
+              <p className="text-[#64748b] text-sm">{t.game.messages.calculatingWinRate}</p>
             </div>
           )}
 
@@ -450,7 +445,7 @@ export default function GamePage() {
           {/* Waiting for result */}
           {!showResult && status === 'playing' && !isRevealingCards && !isRevealingPlayerCards && !isCalculating && (
             <div className="text-center text-[#64748b]">
-              Preparing next round...
+              {t.game.messages.preparingNextRound}
             </div>
           )}
         </div>

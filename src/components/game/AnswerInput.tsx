@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { Difficulty, GameRound, DIFFICULTY_CONFIG } from '@/types';
 import { Button } from '@/components/ui';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
 
 interface AnswerInputProps {
   difficulty: Difficulty;
@@ -25,14 +26,14 @@ export function AnswerInput({
   // Preflop always uses choice input
   if (currentRound === 'preflop') {
     return (
-      <ChoiceInput onSubmit={onSubmit} disabled={disabled} className={className} />
+      <ChoiceInput onSubmit={onSubmit} disabled={disabled} className={className} isPreflop />
     );
   }
 
   switch (config.inputType) {
     case 'choice':
       return (
-        <ChoiceInput onSubmit={onSubmit} disabled={disabled} className={className} />
+        <ChoiceInput onSubmit={onSubmit} disabled={disabled} className={className} isPreflop={false} />
       );
     case 'range':
       return (
@@ -55,15 +56,18 @@ function ChoiceInput({
   onSubmit,
   disabled,
   className,
+  isPreflop = true,
 }: {
   onSubmit: (answer: string) => void;
   disabled?: boolean;
   className?: string;
+  isPreflop?: boolean;
 }) {
+  const { t } = useTranslation();
   return (
     <div className={cn('game-card p-6', className)} role="group" aria-label="Select winner">
       <p className="text-center text-white text-lg font-semibold mb-4">
-        Who has the better hand?
+        {isPreflop ? t.game.questions.whoHasBetterHand : t.game.questions.whoHasHigherWinRate}
       </p>
       <div className="flex gap-4 justify-center">
         <Button
@@ -73,7 +77,7 @@ function ChoiceInput({
           disabled={disabled}
           className="min-w-36"
         >
-          YOU
+          {t.game.labels.you}
         </Button>
         <Button
           variant="computer"
@@ -82,7 +86,7 @@ function ChoiceInput({
           disabled={disabled}
           className="min-w-36"
         >
-          DEALER
+          {t.game.labels.dealer}
         </Button>
       </div>
     </div>
@@ -99,6 +103,7 @@ function RangeInput({
   disabled?: boolean;
   className?: string;
 }) {
+  const { t } = useTranslation();
   const ranges = [
     { value: '0-20', label: '0-20%', gradient: 'from-[#ff4444] to-[#cc0000]' },
     { value: '20-40', label: '20-40%', gradient: 'from-[#ff4d94] to-[#ff0080]' },
@@ -110,7 +115,7 @@ function RangeInput({
   return (
     <div className={cn('game-card p-6', className)} role="radiogroup" aria-label="Select win rate range">
       <p className="text-center text-white text-lg font-semibold mb-4">
-        What's your win probability?
+        {t.game.questions.whatIsWinProbability}
       </p>
       <div className="grid grid-cols-5 gap-2">
         {ranges.map(({ value, label, gradient }) => (
@@ -151,6 +156,7 @@ function NumberInput({
   disabled?: boolean;
   className?: string;
 }) {
+  const { t } = useTranslation();
   const [value, setValue] = useState('');
   const [isInvalid, setIsInvalid] = useState(false);
 
@@ -184,10 +190,10 @@ function NumberInput({
   return (
     <div className={cn('game-card p-6', className)}>
       <p className="text-center text-white text-lg font-semibold mb-2">
-        Enter your win probability
+        {t.game.questions.enterWinRate}
       </p>
       <p className="text-center text-[#64748b] text-sm mb-4">
-        Tolerance: ±{tolerance}%
+        {t.game.tolerance.replace('{tolerance}', String(tolerance))}
       </p>
 
       <div className="flex flex-col items-center gap-4">
@@ -228,7 +234,7 @@ function NumberInput({
         {/* Error message */}
         {isInvalid && (
           <p className="text-[#ff4444] text-sm">
-            Please enter a value between 0 and 100
+            {t.game.validation.invalidRange}
           </p>
         )}
 
@@ -240,7 +246,7 @@ function NumberInput({
           disabled={disabled || !isValidNumber}
           className="w-full max-w-xs"
         >
-          SUBMIT
+          {t.game.actions.submit}
         </Button>
       </div>
     </div>
