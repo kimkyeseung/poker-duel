@@ -14,17 +14,17 @@ export function Dialog({ isOpen, onClose, children, className }: DialogProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-[#0a0e1a]/90 backdrop-blur-md"
+        className="fixed inset-0 bg-[#0a0e1a]/90 backdrop-blur-md"
         onClick={onClose}
       />
 
       {/* Content */}
       <div
         className={cn(
-          'relative z-10 w-full max-w-md',
+          'relative z-[10000] w-full max-w-md',
           'bg-[#0f1424] rounded-2xl',
           'shadow-2xl shadow-black/50',
           'border border-white/5',
