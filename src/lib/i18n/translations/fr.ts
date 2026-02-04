@@ -54,6 +54,15 @@ export const fr: TranslationKeys = {
     soundEnabled: "Le son sera activé",
   },
 
+  // Practice Mode
+  practice: {
+    title: "MODE ENTRAÎNEMENT",
+    description: "Entraînez-vous sans limite de temps",
+    selectDifficulty: "Sélectionner la Difficulté",
+    startPractice: "COMMENCER L'ENTRAÎNEMENT",
+    modeRestriction: "* Les modes Expert et Dieu ne sont disponibles que dans le jeu principal",
+  },
+
   // Game
   game: {
     rounds: {
@@ -86,6 +95,7 @@ export const fr: TranslationKeys = {
       invalidRange: "Entrez une valeur entre 0 et 100",
     },
     actions: {
+      newGame: "Nouvelle Partie",
       nextRound: "Tour Suivant",
       nextLevel: "Niveau Suivant",
       viewRiver: "Voir River",

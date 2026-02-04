@@ -54,6 +54,15 @@ export const ja: TranslationKeys = {
     soundEnabled: "サウンドが有効になります",
   },
 
+  // Practice Mode
+  practice: {
+    title: "練習モード",
+    description: "時間制限なしで練習",
+    selectDifficulty: "難易度を選択",
+    startPractice: "練習開始",
+    modeRestriction: "* エキスパートと神モードはメインゲームでのみ利用可能",
+  },
+
   // Game
   game: {
     rounds: {
@@ -86,6 +95,7 @@ export const ja: TranslationKeys = {
       invalidRange: "0から100の間の値を入力してください",
     },
     actions: {
+      newGame: "新しいゲーム",
       nextRound: "次のラウンド",
       nextLevel: "次のレベル",
       viewRiver: "リバーを見る",

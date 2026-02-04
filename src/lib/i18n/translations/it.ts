@@ -54,6 +54,15 @@ export const it: TranslationKeys = {
     soundEnabled: "Il suono verrà attivato",
   },
 
+  // Practice Mode
+  practice: {
+    title: "MODALITÀ PRATICA",
+    description: "Pratica senza limiti di tempo",
+    selectDifficulty: "Seleziona Difficoltà",
+    startPractice: "INIZIA PRATICA",
+    modeRestriction: "* Le modalità Esperto e Dio sono disponibili solo nel gioco principale",
+  },
+
   // Game
   game: {
     rounds: {
@@ -86,6 +95,7 @@ export const it: TranslationKeys = {
       invalidRange: "Inserisci un valore tra 0 e 100",
     },
     actions: {
+      newGame: "Nuova Partita",
       nextRound: "Prossimo Turno",
       nextLevel: "Prossimo Livello",
       viewRiver: "Vedi River",

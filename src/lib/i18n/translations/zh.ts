@@ -54,6 +54,15 @@ export const zh: TranslationKeys = {
     soundEnabled: "将启用声音",
   },
 
+  // Practice Mode
+  practice: {
+    title: "练习模式",
+    description: "无时间限制练习",
+    selectDifficulty: "选择难度",
+    startPractice: "开始练习",
+    modeRestriction: "* 专家和神模式仅在主游戏中可用",
+  },
+
   // Game
   game: {
     rounds: {
@@ -86,6 +95,7 @@ export const zh: TranslationKeys = {
       invalidRange: "请输入0到100之间的值",
     },
     actions: {
+      newGame: "新游戏",
       nextRound: "下一轮",
       nextLevel: "下一级",
       viewRiver: "查看河牌",

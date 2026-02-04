@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, AudioToggle } from '@/components/ui';
+import { Button, AudioToggle, LanguageSelector } from '@/components/ui';
 import {
   Card,
   Table,
@@ -219,7 +219,10 @@ export default function PracticePage() {
             <span>{t.common.exit}</span>
           </button>
           <div className="text-[#00d4ff] font-bold text-lg">{t.practice.title}</div>
-          <AudioToggle />
+          <div className="flex items-center gap-2">
+            <LanguageSelector />
+            <AudioToggle />
+          </div>
         </div>
       </header>
 
