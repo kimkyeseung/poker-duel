@@ -78,6 +78,20 @@ export default function PracticePage() {
       if (currentRound !== 'preflop') {
         calculate(playerHand, computerHand, communityCards).then(result => {
           setCurrentWinRate(result);
+
+          // 리버에서는 자동으로 결과 표시 (입력 없이 결과만 확인)
+          if (currentRound === 'river') {
+            const playerWins = result.playerWinRate > result.computerWinRate;
+            const isTie = result.playerWinRate === result.computerWinRate;
+            setLastAnswer({
+              round: 'river',
+              playerAnswer: playerWins ? 'player' : 'computer',
+              correctAnswer: playerWins ? 'player' : isTie ? 'tie' : 'computer',
+              isCorrect: true, // 리버는 결과 확인만이므로 항상 정답 처리
+              winRateResult: result,
+            });
+            setShowResult(true);
+          }
         });
       }
     }
@@ -291,8 +305,8 @@ export default function PracticePage() {
                 </div>
               )}
 
-              {/* 답변 입력 */}
-              {!showResult && !isCalculating && (
+              {/* 답변 입력 (리버에서는 입력 없이 자동으로 결과 표시) */}
+              {!showResult && !isCalculating && currentRound !== 'river' && (
                 <AnswerInput
                   difficulty={difficulty}
                   currentRound={currentRound}
@@ -309,20 +323,34 @@ export default function PracticePage() {
                     compact
                   />
                   <div className="flex gap-2">
-                    <Button
-                      variant="secondary"
-                      onClick={startNewGame}
-                      className="flex-1"
-                    >
-                      New Game
-                    </Button>
-                    <Button
-                      variant="primary"
-                      onClick={handleNextRound}
-                      className="flex-1"
-                    >
-                      {currentRound === 'river' ? 'New Game' : 'Next Round'}
-                    </Button>
+                    {currentRound === 'river' ? (
+                      // 리버에서는 New Game 버튼 하나만 표시
+                      <Button
+                        variant="primary"
+                        onClick={startNewGame}
+                        className="flex-1"
+                      >
+                        New Game
+                      </Button>
+                    ) : (
+                      // 다른 라운드에서는 New Game + Next Round
+                      <>
+                        <Button
+                          variant="secondary"
+                          onClick={startNewGame}
+                          className="flex-1"
+                        >
+                          New Game
+                        </Button>
+                        <Button
+                          variant="primary"
+                          onClick={handleNextRound}
+                          className="flex-1"
+                        >
+                          Next Round
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               )}
