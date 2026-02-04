@@ -52,6 +52,15 @@ export const en = {
     soundEnabled: "Sound will be enabled",
   },
 
+  // Practice Mode
+  practice: {
+    title: "PRACTICE MODE",
+    description: "Practice without time limit",
+    selectDifficulty: "Select Difficulty",
+    startPractice: "START PRACTICE",
+    modeRestriction: "* Expert & God mode only available in main game",
+  },
+
   // Game
   game: {
     rounds: {
@@ -84,6 +93,7 @@ export const en = {
       invalidRange: "Please enter a value between 0 and 100",
     },
     actions: {
+      newGame: "New Game",
       nextRound: "Next Round",
       nextLevel: "Next Level",
       viewRiver: "View River",

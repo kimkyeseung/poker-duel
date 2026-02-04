@@ -16,6 +16,7 @@ import { createDeck, shuffleDeck } from '@/lib/poker';
 import { evaluateStartingHand, compareStartingHands, StartingHandInfo } from '@/lib/poker/starting-hands';
 import { checkAnswer } from '@/lib/poker/calculator';
 import { useAudio, useBGM, useSFX } from '@/lib/audio';
+import { useTranslation } from '@/lib/i18n';
 import {
   Card as CardType,
   Difficulty,
@@ -34,6 +35,7 @@ export default function PracticePage() {
   const { calculate, isCalculating } = usePokerCalculator();
   const { initAudio } = useAudio();
   const { playSFX } = useSFX();
+  const { t } = useTranslation();
 
   // Play game BGM for practice
   useBGM('game');
@@ -214,9 +216,9 @@ export default function PracticePage() {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            <span>Exit</span>
+            <span>{t.common.exit}</span>
           </button>
-          <div className="text-[#00d4ff] font-bold text-lg">PRACTICE MODE</div>
+          <div className="text-[#00d4ff] font-bold text-lg">{t.practice.title}</div>
           <AudioToggle />
         </div>
       </header>
@@ -229,15 +231,15 @@ export default function PracticePage() {
               <div className="text-6xl">
                 <span className="inline-block bg-gradient-to-br from-[#00d4ff] to-[#0066ff] text-transparent bg-clip-text">P</span>
               </div>
-              <h1 className="text-2xl font-black text-white">PRACTICE MODE</h1>
+              <h1 className="text-2xl font-black text-white">{t.practice.title}</h1>
               <p className="text-[#64748b]">
-                Practice without time limit
+                {t.practice.description}
               </p>
             </div>
 
             {/* 난이도 선택 */}
             <div className="game-card p-6">
-              <div className="text-sm text-[#64748b] mb-3">Select Difficulty</div>
+              <div className="text-sm text-[#64748b] mb-3">{t.practice.selectDifficulty}</div>
               <div className="flex gap-2 justify-center">
                 {PRACTICE_DIFFICULTIES.map((d) => (
                   <button
@@ -250,12 +252,12 @@ export default function PracticePage() {
                         : 'bg-[#1a1f35] text-[#64748b] hover:bg-[#1a1f35]/80'
                     )}
                   >
-                    {DIFFICULTY_CONFIG[d].nameKo}
+                    {t.difficulty[d]}
                   </button>
                 ))}
               </div>
               <p className="text-xs text-[#475569] mt-3">
-                * Expert & God mode only available in main game
+                {t.practice.modeRestriction}
               </p>
             </div>
 
@@ -265,7 +267,7 @@ export default function PracticePage() {
               onClick={startNewGame}
               fullWidth
             >
-              START PRACTICE
+              {t.practice.startPractice}
             </Button>
           </div>
         ) : (
@@ -301,7 +303,7 @@ export default function PracticePage() {
               {isCalculating && (
                 <div className="text-center text-[#64748b]">
                   <div className="animate-spin inline-block w-6 h-6 border-2 border-[#00d4ff] border-t-transparent rounded-full mb-2" />
-                  <p className="text-sm">Calculating win rate...</p>
+                  <p className="text-sm">{t.game.messages.calculatingWinRate}</p>
                 </div>
               )}
 
@@ -330,7 +332,7 @@ export default function PracticePage() {
                         onClick={startNewGame}
                         className="flex-1"
                       >
-                        New Game
+                        {t.game.actions.newGame}
                       </Button>
                     ) : (
                       // 다른 라운드에서는 New Game + Next Round
@@ -340,14 +342,14 @@ export default function PracticePage() {
                           onClick={startNewGame}
                           className="flex-1"
                         >
-                          New Game
+                          {t.game.actions.newGame}
                         </Button>
                         <Button
                           variant="primary"
                           onClick={handleNextRound}
                           className="flex-1"
                         >
-                          Next Round
+                          {t.game.actions.nextRound}
                         </Button>
                       </>
                     )}

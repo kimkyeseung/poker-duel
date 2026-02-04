@@ -54,6 +54,15 @@ export const ko: TranslationKeys = {
     soundEnabled: "사운드가 활성화됩니다",
   },
 
+  // Practice Mode
+  practice: {
+    title: "연습 모드",
+    description: "시간 제한 없이 연습하세요",
+    selectDifficulty: "난이도 선택",
+    startPractice: "연습 시작",
+    modeRestriction: "* 전문가 & 홀덤의 신 모드는 메인 게임에서만 가능합니다",
+  },
+
   // Game
   game: {
     rounds: {
@@ -86,6 +95,7 @@ export const ko: TranslationKeys = {
       invalidRange: "0에서 100 사이의 값을 입력하세요",
     },
     actions: {
+      newGame: "새 게임",
       nextRound: "다음 라운드",
       nextLevel: "다음 레벨",
       viewRiver: "리버 보기",
