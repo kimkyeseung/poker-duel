@@ -69,6 +69,7 @@ export default function GamePage() {
   const [hasPlayerCardsRevealed, setHasPlayerCardsRevealed] = useState(false);
   const [showLevelOverlay, setShowLevelOverlay] = useState(true);
   const [isViewingRiver, setIsViewingRiver] = useState(false);
+  const [isAnswerPanelOpen, setIsAnswerPanelOpen] = useState(false);
 
   const hasSubmittedRef = useRef(false);
 
@@ -165,6 +166,13 @@ export default function GamePage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, currentRound, communityCards.length, showLevelOverlay]);
+
+  // Auto-open answer panel when entering answering state
+  useEffect(() => {
+    if (status === 'answering' && !isCalculating && !showResult) {
+      setIsAnswerPanelOpen(true);
+    }
+  }, [status, isCalculating, showResult]);
 
   const handleTimeout = useCallback(() => {
     if (hasSubmittedRef.current) return;
@@ -341,20 +349,20 @@ export default function GamePage() {
   return (
     <div className="h-screen bg-[#0a0e1a] flex flex-col overflow-hidden">
       {/* Header */}
-      <header className="p-3 border-b border-white/5 glass shrink-0">
+      <header className="p-2 sm:p-3 border-b border-white/5 glass shrink-0">
         <div className="max-w-4xl mx-auto flex justify-between items-center">
           <button
             onClick={handleGoHome}
-            className="text-[#64748b] hover:text-white transition-colors flex items-center gap-2"
+            className="text-[#64748b] hover:text-white transition-colors flex items-center gap-1 sm:gap-2"
             aria-label="Exit game"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             <span className="hidden sm:inline">{t.common.exit}</span>
           </button>
           <GameProgressCompact difficulty={difficulty} currentRound={currentRound} />
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             <LanguageSelector />
             <AudioToggle />
           </div>
@@ -362,11 +370,11 @@ export default function GamePage() {
       </header>
 
       {/* Game Area */}
-      <main className="flex-1 flex flex-col items-center justify-between p-3 pb-4 min-h-0">
+      <main className="flex-1 flex flex-col items-center justify-between p-2 sm:p-3 pb-3 sm:pb-4 min-h-0">
         {/* Round Info with Timer */}
-        <div className="text-center shrink-0 flex items-center justify-center gap-4">
-          <span className="badge badge-outline">{t.difficulty[difficulty]}</span>
-          <h2 className="text-2xl md:text-3xl font-black text-white">
+        <div className="text-center shrink-0 flex items-center justify-center gap-2 sm:gap-4">
+          <span className="badge badge-outline text-[10px] sm:text-xs">{t.difficulty[difficulty]}</span>
+          <h2 className="text-lg sm:text-2xl md:text-3xl font-black text-white">
             {t.game.rounds[currentRound]}
           </h2>
           {status === 'answering' && (
@@ -420,8 +428,8 @@ export default function GamePage() {
           {/* Card Reveal Animation */}
           {(isRevealingCards || isRevealingPlayerCards) && (
             <div className="text-center">
-              <div className="text-4xl mb-2 animate-bounce">🃏</div>
-              <p className="text-[#00d4ff] text-sm font-semibold animate-pulse">
+              <div className="text-2xl sm:text-4xl mb-1 sm:mb-2 animate-bounce">🃏</div>
+              <p className="text-[#00d4ff] text-xs sm:text-sm font-semibold animate-pulse">
                 {t.game.messages.revealingCards}
               </p>
             </div>
@@ -430,24 +438,56 @@ export default function GamePage() {
           {/* Calculating */}
           {isCalculating && !isRevealingCards && !isRevealingPlayerCards && (
             <div className="text-center">
-              <div className="animate-spin inline-block w-6 h-6 border-2 border-[#00d4ff] border-t-transparent rounded-full mb-2" />
-              <p className="text-[#64748b] text-sm">{t.game.messages.calculatingWinRate}</p>
+              <div className="animate-spin inline-block w-5 h-5 sm:w-6 sm:h-6 border-2 border-[#00d4ff] border-t-transparent rounded-full mb-1 sm:mb-2" />
+              <p className="text-[#64748b] text-xs sm:text-sm">{t.game.messages.calculatingWinRate}</p>
             </div>
           )}
 
-          {/* Answer Input */}
+          {/* Answer Input - Mobile Toggle */}
           {status === 'answering' && !isCalculating && !showResult && (
-            <AnswerInput
-              difficulty={difficulty}
-              currentRound={currentRound}
-              onSubmit={handleSubmitAnswer}
-              disabled={!isTimerRunning}
-            />
+            <div className="relative">
+              {/* Mobile Toggle Button */}
+              <button
+                onClick={() => setIsAnswerPanelOpen(!isAnswerPanelOpen)}
+                className={cn(
+                  'sm:hidden w-full flex items-center justify-center gap-2 py-2 rounded-xl transition-all duration-300',
+                  'border backdrop-blur-sm',
+                  isAnswerPanelOpen
+                    ? 'bg-[#1a1f35]/50 border-[#00d4ff]/30 text-[#00d4ff]'
+                    : 'bg-gradient-to-r from-[#00d4ff] to-[#0066ff] border-transparent text-white animate-pulse'
+                )}
+              >
+                {/* Eye Icon */}
+                {isAnswerPanelOpen ? (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" />
+                  </svg>
+                ) : (
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                  </svg>
+                )}
+                <span className="text-sm font-semibold">
+                  {isAnswerPanelOpen ? t.game.actions.hideAnswer : t.game.actions.showAnswer}
+                </span>
+              </button>
+
+              {/* Answer Panel - Desktop (Always Visible) */}
+              <div className="hidden sm:block">
+                <AnswerInput
+                  difficulty={difficulty}
+                  currentRound={currentRound}
+                  onSubmit={handleSubmitAnswer}
+                  disabled={!isTimerRunning}
+                />
+              </div>
+            </div>
           )}
 
           {/* Waiting for result */}
           {!showResult && status === 'playing' && !isRevealingCards && !isRevealingPlayerCards && !isCalculating && (
-            <div className="text-center text-[#64748b]">
+            <div className="text-center text-[#64748b] text-xs sm:text-sm">
               {t.game.messages.preparingNextRound}
             </div>
           )}
@@ -496,6 +536,54 @@ export default function GamePage() {
         difficulty={difficulty}
         onComplete={handleLevelOverlayComplete}
       />
+
+      {/* Mobile Answer Panel Popup */}
+      {status === 'answering' && !isCalculating && !showResult && (
+        <div
+          className={cn(
+            'sm:hidden fixed inset-0 z-50 transition-all duration-300',
+            isAnswerPanelOpen ? 'pointer-events-auto' : 'pointer-events-none'
+          )}
+        >
+          {/* Backdrop */}
+          <div
+            className={cn(
+              'absolute inset-0 bg-black/30 transition-opacity duration-300',
+              isAnswerPanelOpen ? 'opacity-100' : 'opacity-0'
+            )}
+            onClick={() => setIsAnswerPanelOpen(false)}
+          />
+
+          {/* Panel */}
+          <div
+            className={cn(
+              'absolute bottom-0 left-0 right-0 p-3 pb-6 transition-transform duration-300 ease-out',
+              'bg-gradient-to-t from-[#0a0e1a] via-[#0a0e1a] to-[#0a0e1a]/95',
+              'border-t border-[#00d4ff]/20',
+              'rounded-t-3xl shadow-[0_-10px_40px_rgba(0,212,255,0.15)]',
+              isAnswerPanelOpen ? 'translate-y-0' : 'translate-y-full'
+            )}
+          >
+            {/* Handle Bar */}
+            <div className="flex justify-center mb-3">
+              <div
+                className="w-12 h-1 bg-[#64748b]/50 rounded-full cursor-pointer"
+                onClick={() => setIsAnswerPanelOpen(false)}
+              />
+            </div>
+
+            <AnswerInput
+              difficulty={difficulty}
+              currentRound={currentRound}
+              onSubmit={(answer) => {
+                handleSubmitAnswer(answer);
+                setIsAnswerPanelOpen(false);
+              }}
+              disabled={!isTimerRunning}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 }

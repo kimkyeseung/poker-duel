@@ -65,17 +65,17 @@ function ChoiceInput({
 }) {
   const { t } = useTranslation();
   return (
-    <div className={cn('game-card p-6', className)} role="group" aria-label="Select winner">
-      <p className="text-center text-white text-lg font-semibold mb-4">
+    <div className={cn('game-card p-3 sm:p-6', className)} role="group" aria-label="Select winner">
+      <p className="text-center text-white text-sm sm:text-lg font-semibold mb-2 sm:mb-4">
         {isPreflop ? t.game.questions.whoHasBetterHand : t.game.questions.whoHasHigherWinRate}
       </p>
-      <div className="flex gap-4 justify-center">
+      <div className="flex gap-2 sm:gap-4 justify-center">
         <Button
           variant="player"
           size="lg"
           onClick={() => onSubmit('player')}
           disabled={disabled}
-          className="min-w-36"
+          className="min-w-24 sm:min-w-36"
         >
           {t.game.labels.you}
         </Button>
@@ -84,7 +84,7 @@ function ChoiceInput({
           size="lg"
           onClick={() => onSubmit('computer')}
           disabled={disabled}
-          className="min-w-36"
+          className="min-w-24 sm:min-w-36"
         >
           {t.game.labels.dealer}
         </Button>
@@ -113,11 +113,11 @@ function RangeInput({
   ];
 
   return (
-    <div className={cn('game-card p-6', className)} role="radiogroup" aria-label="Select win rate range">
-      <p className="text-center text-white text-lg font-semibold mb-4">
+    <div className={cn('game-card p-3 sm:p-6', className)} role="radiogroup" aria-label="Select win rate range">
+      <p className="text-center text-white text-sm sm:text-lg font-semibold mb-2 sm:mb-4">
         {t.game.questions.whatIsWinProbability}
       </p>
-      <div className="grid grid-cols-5 gap-2">
+      <div className="grid grid-cols-5 gap-1 sm:gap-2">
         {ranges.map(({ value, label, gradient }) => (
           <button
             key={value}
@@ -126,7 +126,7 @@ function RangeInput({
             role="radio"
             aria-checked={false}
             className={cn(
-              'py-3 px-2 rounded-xl font-bold text-white text-sm',
+              'py-2 sm:py-3 px-1 sm:px-2 rounded-lg sm:rounded-xl font-bold text-white text-[10px] sm:text-sm',
               'bg-gradient-to-b',
               'transition-all duration-200',
               'hover:scale-105 hover:-translate-y-1',
@@ -188,15 +188,15 @@ function NumberInput({
   const isValidNumber = value !== '' && !isNaN(parseFloat(value)) && parseFloat(value) >= 0 && parseFloat(value) <= 100;
 
   return (
-    <div className={cn('game-card p-6', className)}>
-      <p className="text-center text-white text-lg font-semibold mb-2">
+    <div className={cn('game-card p-3 sm:p-6', className)}>
+      <p className="text-center text-white text-sm sm:text-lg font-semibold mb-1 sm:mb-2">
         {t.game.questions.enterWinRate}
       </p>
-      <p className="text-center text-[#64748b] text-sm mb-4">
+      <p className="text-center text-[#64748b] text-xs sm:text-sm mb-2 sm:mb-4">
         {t.game.tolerance.replace('{tolerance}', String(tolerance))}
       </p>
 
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-2 sm:gap-4">
         {/* Input area */}
         <div className="flex items-center gap-3">
           <div className="relative">
@@ -213,7 +213,7 @@ function NumberInput({
               aria-label="Win probability"
               aria-invalid={isInvalid}
               className={cn(
-                'w-32 px-4 py-4 text-center text-2xl font-bold',
+                'w-28 sm:w-32 px-3 sm:px-4 py-3 sm:py-4 text-center text-xl sm:text-2xl font-bold',
                 'bg-[#1a1f35] border-2 rounded-xl',
                 'text-white placeholder:text-[#64748b]',
                 'transition-all duration-200',
@@ -225,7 +225,7 @@ function NumberInput({
                   : 'border-[#1a1f35] focus:border-[#00d4ff] focus:shadow-[0_0_20px_rgba(0,212,255,0.2)]'
               )}
             />
-            <span className="absolute right-3 top-1/2 -translate-y-1/2 text-[#64748b] text-xl font-bold">
+            <span className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 text-[#64748b] text-lg sm:text-xl font-bold">
               %
             </span>
           </div>
@@ -233,7 +233,7 @@ function NumberInput({
 
         {/* Error message */}
         {isInvalid && (
-          <p className="text-[#ff4444] text-sm">
+          <p className="text-[#ff4444] text-xs sm:text-sm">
             {t.game.validation.invalidRange}
           </p>
         )}

@@ -90,6 +90,8 @@ export const ja: TranslationKeys = {
       nextLevel: "次のレベル",
       viewRiver: "リバーを見る",
       submit: "送信",
+      showAnswer: "回答する",
+      hideAnswer: "隠す",
     },
   },
 

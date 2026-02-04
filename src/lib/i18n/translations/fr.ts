@@ -90,6 +90,8 @@ export const fr: TranslationKeys = {
       nextLevel: "Niveau Suivant",
       viewRiver: "Voir River",
       submit: "VALIDER",
+      showAnswer: "Répondre",
+      hideAnswer: "Cacher",
     },
   },
 

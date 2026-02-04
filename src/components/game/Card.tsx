@@ -9,7 +9,7 @@ interface CardProps {
   card?: CardType;
   isHidden?: boolean;
   isHighlighted?: boolean;
-  size?: 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   className?: string;
   animationDelay?: number;
   isFlipping?: boolean;
@@ -28,6 +28,15 @@ const SUIT_CONFIG: Record<Suit, { symbol: string; color: string; bgColor: string
 
 // Size configuration
 const SIZE_CONFIG = {
+  xs: {
+    card: 'w-11 h-16',
+    rank: 'text-sm',
+    suit: 'text-xl',
+    cornerRank: 'text-[10px]',
+    cornerSuit: 'text-[10px]',
+    corner: 'top-0.5 left-0.5',
+    cornerBottom: 'bottom-0.5 right-0.5',
+  },
   sm: {
     card: 'w-14 h-20',
     rank: 'text-base',
@@ -268,7 +277,7 @@ export function Card({
 }
 
 // Empty card slot
-export function CardSlot({ size = 'md', className }: { size?: 'sm' | 'md' | 'lg' | 'xl'; className?: string }) {
+export function CardSlot({ size = 'md', className }: { size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'; className?: string }) {
   const sizeConfig = SIZE_CONFIG[size];
 
   return (
@@ -281,7 +290,7 @@ export function CardSlot({ size = 'md', className }: { size?: 'sm' | 'md' | 'lg'
         className
       )}
     >
-      <span className="text-[#1a1f35] text-3xl">?</span>
+      <span className={cn('text-[#1a1f35]', size === 'xs' ? 'text-xl' : 'text-3xl')}>?</span>
     </div>
   );
 }

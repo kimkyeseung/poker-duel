@@ -131,11 +131,11 @@ export function GameProgressCompact({ difficulty, currentRound, className }: Gam
   const roundName = t.game.rounds[currentRound];
 
   return (
-    <div className={cn('flex items-center gap-3', className)}>
+    <div className={cn('flex items-center gap-1.5 sm:gap-3', className)}>
       {/* 난이도 뱃지 */}
       <span
         className={cn(
-          'px-3 py-1 rounded-full text-sm font-bold',
+          'px-2 sm:px-3 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-sm font-bold',
           colors.bgSubtle,
           colors.text,
           colors.border,
@@ -146,15 +146,15 @@ export function GameProgressCompact({ difficulty, currentRound, className }: Gam
       </span>
 
       {/* 구분선 */}
-      <span className="text-[#1a1f35]">|</span>
+      <span className="text-[#1a1f35] hidden sm:inline">|</span>
 
       {/* 라운드 */}
-      <span className="text-white/80 text-sm font-medium">
+      <span className="text-white/80 text-[10px] sm:text-sm font-medium hidden sm:inline">
         {roundName}
       </span>
 
       {/* 라운드 도트 인디케이터 */}
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1 sm:gap-1.5">
         {ROUNDS.map((round, index) => {
           const currentIndex = ROUNDS.indexOf(currentRound);
           const isActive = index === currentIndex;
@@ -164,7 +164,7 @@ export function GameProgressCompact({ difficulty, currentRound, className }: Gam
             <div
               key={round}
               className={cn(
-                'w-2 h-2 rounded-full transition-all duration-300',
+                'w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-300',
                 isActive
                   ? 'bg-[#00d4ff] shadow-[0_0_8px_rgba(0,212,255,0.5)]'
                   : isCompleted

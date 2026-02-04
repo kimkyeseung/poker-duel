@@ -90,6 +90,8 @@ export const ko: TranslationKeys = {
       nextLevel: "다음 레벨",
       viewRiver: "리버 보기",
       submit: "제출",
+      showAnswer: "정답 입력",
+      hideAnswer: "숨기기",
     },
   },
 

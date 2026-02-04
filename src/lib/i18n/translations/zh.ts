@@ -90,6 +90,8 @@ export const zh: TranslationKeys = {
       nextLevel: "下一级",
       viewRiver: "查看河牌",
       submit: "提交",
+      showAnswer: "回答",
+      hideAnswer: "隐藏",
     },
   },
 

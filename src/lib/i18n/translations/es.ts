@@ -90,6 +90,8 @@ export const es: TranslationKeys = {
       nextLevel: "Siguiente Nivel",
       viewRiver: "Ver River",
       submit: "ENVIAR",
+      showAnswer: "Responder",
+      hideAnswer: "Ocultar",
     },
   },
 

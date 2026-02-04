@@ -88,6 +88,8 @@ export const en = {
       nextLevel: "Next Level",
       viewRiver: "View River",
       submit: "SUBMIT",
+      showAnswer: "Answer",
+      hideAnswer: "Hide",
     },
   },
 

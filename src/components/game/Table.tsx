@@ -4,6 +4,8 @@ import { Card as CardType } from '@/types';
 import { Card, CardSlot } from './Card';
 import { cn } from '@/lib/utils';
 
+type CardSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
 interface TableProps {
   communityCards: CardType[];
   className?: string;
@@ -11,6 +13,7 @@ interface TableProps {
   newCardsCount?: number;
   onRevealComplete?: () => void;
   compact?: boolean;
+  cardSize?: CardSize;
 }
 
 export function Table({
@@ -20,8 +23,9 @@ export function Table({
   newCardsCount = 0,
   onRevealComplete,
   compact = false,
+  cardSize: propCardSize,
 }: TableProps) {
-  const cardSize = compact ? 'md' : 'lg';
+  const cardSize = propCardSize ?? (compact ? 'sm' : 'lg');
   const slots = Array(5).fill(null);
   const previousCardCount = communityCards.length - newCardsCount;
 
@@ -54,9 +58,9 @@ export function Table({
       {/* Community cards area */}
       <div className={cn(
         'relative z-10 flex items-center justify-center',
-        compact ? 'py-5 px-4' : 'py-10 px-6'
+        compact ? 'py-3 sm:py-5 px-2 sm:px-4' : 'py-10 px-6'
       )}>
-        <div className={cn('flex', compact ? 'gap-2' : 'gap-3 md:gap-4')}>
+        <div className={cn('flex', compact ? 'gap-1 sm:gap-2' : 'gap-3 md:gap-4')}>
           {slots.map((_, index) => {
             const card = communityCards[index];
             const isNewCard = isRevealing && index >= previousCardCount && index < communityCards.length;

@@ -90,6 +90,8 @@ export const it: TranslationKeys = {
       nextLevel: "Prossimo Livello",
       viewRiver: "Vedi River",
       submit: "INVIA",
+      showAnswer: "Rispondi",
+      hideAnswer: "Nascondi",
     },
   },
 
