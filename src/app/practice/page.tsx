@@ -293,7 +293,7 @@ export default function PracticePage() {
               cards={playerHand}
               label="YOU"
               handName={playerHand ? evaluateStartingHand(playerHand).name : undefined}
-              winRate={showResult && currentWinRate ? currentWinRate.playerWinRate : undefined}
+              winRate={showResult && currentWinRate && currentRound !== 'preflop' ? currentWinRate.playerWinRate : undefined}
               compact
             />
 
