@@ -107,6 +107,11 @@ export default function Home() {
     setStats(getGameStats());
   }, []);
 
+  // Handle hover with SFX
+  const handleButtonHover = useCallback(() => {
+    playSFX('button-hover');
+  }, [playSFX]);
+
   // Handle click with SFX
   const handleButtonClick = useCallback((callback: () => void) => {
     initAudio();
@@ -182,7 +187,8 @@ export default function Home() {
           <div className="flex items-center gap-4">
             {currentTitle && (
               <button
-                onClick={() => router.push('/stats')}
+                onClick={() => { playSFX('button-click'); router.push('/stats'); }}
+                onMouseEnter={handleButtonHover}
                 className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1f35] hover:bg-[#252b45] transition-colors"
               >
                 <span className="text-lg">{currentTitle.icon}</span>
@@ -192,7 +198,8 @@ export default function Home() {
             <LanguageSelector />
             <AudioToggle />
             <button
-              onClick={() => router.push('/settings')}
+              onClick={() => { playSFX('button-click'); router.push('/settings'); }}
+              onMouseEnter={handleButtonHover}
               className="w-10 h-10 rounded-full bg-[#1a1f35] flex items-center justify-center text-[#64748b] hover:text-white hover:bg-[#252b45] transition-all"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -289,6 +296,7 @@ export default function Home() {
             <div className="space-y-3 max-w-xs mx-auto pt-4">
               <button
                 onClick={handleStartGame}
+                onMouseEnter={handleButtonHover}
                 className="w-full py-4 px-8 rounded-full bg-gradient-to-r from-[#00d4ff] to-[#0066ff] text-white text-lg font-bold shadow-lg shadow-[#0066ff]/30 hover:shadow-xl hover:shadow-[#0066ff]/40 hover:-translate-y-0.5 transition-all flex items-center justify-center gap-3"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -300,12 +308,14 @@ export default function Home() {
               <div className="flex gap-3">
                 <button
                   onClick={handlePractice}
+                  onMouseEnter={handleButtonHover}
                   className="flex-1 py-3 px-4 rounded-full bg-[#1a1f35] text-white font-semibold border border-white/10 hover:bg-[#252b45] hover:border-white/20 transition-all"
                 >
                   {t.home.practice}
                 </button>
                 <button
                   onClick={handleDailyChallenge}
+                  onMouseEnter={handleButtonHover}
                   className="flex-1 py-3 px-4 rounded-full bg-[#1a1f35] text-white font-semibold border border-white/10 hover:bg-[#252b45] hover:border-white/20 transition-all"
                 >
                   {t.home.dailyRun}
@@ -313,7 +323,8 @@ export default function Home() {
               </div>
 
               <button
-                onClick={() => setShowTutorial(true)}
+                onClick={() => { playSFX('button-click'); setShowTutorial(true); }}
+                onMouseEnter={handleButtonHover}
                 className="text-[#64748b] hover:text-[#00d4ff] transition-colors text-sm"
               >
                 {t.home.viewCollection}
@@ -369,7 +380,8 @@ export default function Home() {
       {stats && stats.totalGames > 0 && (
         <div className="relative z-10 lg:hidden px-4 pb-4">
           <button
-            onClick={() => router.push('/stats')}
+            onClick={() => { playSFX('button-click'); router.push('/stats'); }}
+            onMouseEnter={handleButtonHover}
             className="w-full bg-[#1a1f35] rounded-2xl p-4 flex justify-around border border-white/5"
           >
             <div className="text-center">
@@ -394,17 +406,22 @@ export default function Home() {
       <footer className="relative z-10 p-4 border-t border-white/5 bg-black/10 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex gap-6">
-            <button className="text-white text-sm font-medium hover:text-[#00d4ff] transition-colors">
+            <button
+              onMouseEnter={handleButtonHover}
+              className="text-white text-sm font-medium hover:text-[#00d4ff] transition-colors"
+            >
               {t.nav.home}
             </button>
             <button
               onClick={handlePractice}
+              onMouseEnter={handleButtonHover}
               className="text-[#64748b] text-sm hover:text-white transition-colors"
             >
               {t.nav.practice}
             </button>
             <button
-              onClick={() => router.push('/comments')}
+              onClick={() => { playSFX('button-click'); router.push('/comments'); }}
+              onMouseEnter={handleButtonHover}
               className="text-[#64748b] text-sm hover:text-white transition-colors"
             >
               {t.nav.credits}
@@ -419,7 +436,8 @@ export default function Home() {
           </div>
 
           <button
-            onClick={() => router.push('/stats')}
+            onClick={() => { playSFX('button-click'); router.push('/stats'); }}
+            onMouseEnter={handleButtonHover}
             className="text-[#64748b] text-sm hover:text-white transition-colors"
           >
             {t.nav.hiScore}

@@ -125,12 +125,12 @@ export class SynthSoundManager {
     this.playNoise(0.03, 0.05);
   }
 
-  /** 버튼 호버 - 아주 부드럽고 미묘한 소리 */
+  /** 버튼 호버 - 부드러운 틱 소리 */
   buttonHover(): void {
     this.playTone({
       frequency: 1200,
-      duration: 0.05,
-      volume: 0.05,
+      duration: 0.08,
+      volume: 0.15,
       type: 'sine',
     });
   }
