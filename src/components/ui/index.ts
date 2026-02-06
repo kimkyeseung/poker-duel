@@ -4,3 +4,4 @@ export * from './Timer';
 export * from './AudioToggle';
 export * from './ClickToStart';
 export * from './LanguageSelector';
+export * from './ProfileAvatar';
