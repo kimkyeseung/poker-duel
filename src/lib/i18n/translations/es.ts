@@ -167,6 +167,7 @@ export const es: TranslationKeys = {
     viewAllCombinations: "Ver todas las combinaciones",
     others: "Otros",
     matchups: "enfrentamientos",
+    all: "Todos",
   },
 
   // Difficulty

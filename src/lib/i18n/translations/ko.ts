@@ -167,6 +167,7 @@ export const ko: TranslationKeys = {
     viewAllCombinations: "전체 경우의 수 보기",
     others: "기타",
     matchups: "매치업",
+    all: "전체",
   },
 
   // Difficulty

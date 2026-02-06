@@ -165,6 +165,7 @@ export const en = {
     viewAllCombinations: "View all combinations",
     others: "Others",
     matchups: "matchups",
+    all: "All",
   },
 
   // Difficulty

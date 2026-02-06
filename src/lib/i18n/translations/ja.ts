@@ -167,6 +167,7 @@ export const ja: TranslationKeys = {
     viewAllCombinations: "全組み合わせを見る",
     others: "その他",
     matchups: "マッチアップ",
+    all: "すべて",
   },
 
   // Difficulty

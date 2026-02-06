@@ -167,6 +167,7 @@ export const fr: TranslationKeys = {
     viewAllCombinations: "Voir toutes les combinaisons",
     others: "Autres",
     matchups: "confrontations",
+    all: "Tout",
   },
 
   // Difficulty

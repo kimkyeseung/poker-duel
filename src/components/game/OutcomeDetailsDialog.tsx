@@ -63,7 +63,7 @@ function TableContextSection({
   t: ReturnType<typeof useTranslation>['t'];
 }) {
   return (
-    <div className="bg-[#1a1f35] rounded-xl p-4 mb-4">
+    <div className="bg-[#1a1f35] rounded-xl p-4">
       <h3 className="text-sm font-semibold text-[#64748b] uppercase tracking-wider mb-3">
         {t.outcomeAnalysis.tableContext}
       </h3>
@@ -384,223 +384,6 @@ function MatchupDetailDialog({
   );
 }
 
-// Others Detail Dialog - shows all cards for "Others" category
-function OthersDetailDialog({
-  isOpen,
-  onClose,
-  outcomes,
-  summary,
-  matchupCount,
-  playerHand,
-  computerHand,
-  communityCards,
-  t,
-}: {
-  isOpen: boolean;
-  onClose: () => void;
-  outcomes: OutcomeCard[];
-  summary: { wins: number; ties: number; losses: number; total: number };
-  matchupCount: number;
-  playerHand?: [CardType, CardType];
-  computerHand?: [CardType, CardType];
-  communityCards?: CardType[];
-  t: ReturnType<typeof useTranslation>['t'];
-}) {
-  const [activeTab, setActiveTab] = useState<'win' | 'tie' | 'loss'>('win');
-
-  const neededCards = communityCards ? 5 - communityCards.length : 2;
-
-  if (!isOpen) return null;
-
-  const winOutcomes = outcomes.filter((o) => o.outcome === 'win');
-  const tieOutcomes = outcomes.filter((o) => o.outcome === 'tie');
-  const lossOutcomes = outcomes.filter((o) => o.outcome === 'loss');
-
-  const defaultTab = winOutcomes.length > 0 ? 'win' : lossOutcomes.length > 0 ? 'loss' : 'tie';
-  const currentTab = activeTab === 'win' && winOutcomes.length === 0
-    ? (lossOutcomes.length > 0 ? 'loss' : 'tie')
-    : activeTab === 'loss' && lossOutcomes.length === 0
-    ? (winOutcomes.length > 0 ? 'win' : 'tie')
-    : activeTab === 'tie' && tieOutcomes.length === 0
-    ? defaultTab
-    : activeTab;
-
-  const currentOutcomes = currentTab === 'win' ? winOutcomes : currentTab === 'tie' ? tieOutcomes : lossOutcomes;
-
-  const tabs = [
-    { key: 'win' as const, label: t.outcomeAnalysis.winningCards || '이기는 카드', count: winOutcomes.length, color: 'text-[#00d4ff]', bg: 'bg-[#00d4ff]' },
-    { key: 'tie' as const, label: t.outcomeAnalysis.tieCards || '무승부 카드', count: tieOutcomes.length, color: 'text-[#64748b]', bg: 'bg-[#64748b]' },
-    { key: 'loss' as const, label: t.outcomeAnalysis.losingCards || '지는 카드', count: lossOutcomes.length, color: 'text-[#ff4d94]', bg: 'bg-[#ff4d94]' },
-  ].filter(tab => tab.count > 0);
-
-  return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center">
-      <div
-        className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-        onClick={onClose}
-      />
-      <div className="relative w-full max-w-2xl max-h-[80vh] m-4 bg-[#0a0e1a] rounded-2xl border border-white/10 flex flex-col overflow-hidden animate-in zoom-in-95 fade-in duration-200">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
-          <div>
-            <h2 className="text-lg font-bold text-white">
-              {t.outcomeAnalysis.others || '기타'}
-              <span className="text-[#64748b] text-sm font-normal ml-2">
-                ({matchupCount} {t.outcomeAnalysis.matchups || '매치업'})
-              </span>
-            </h2>
-            <div className="text-xs text-[#64748b] mt-1">
-              {t.outcomeAnalysis.allCombinations || '전체 경우의 수'}: {summary.total}
-            </div>
-          </div>
-          <button
-            onClick={onClose}
-            className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
-            aria-label="Close"
-          >
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-
-        <div className="flex border-b border-white/10">
-          {tabs.map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={cn(
-                'flex-1 px-4 py-3 text-sm font-medium transition-colors relative',
-                currentTab === tab.key ? tab.color : 'text-[#64748b] hover:text-white'
-              )}
-            >
-              {tab.label} ({tab.count})
-              {currentTab === tab.key && (
-                <div className={cn('absolute bottom-0 left-0 right-0 h-0.5', tab.bg)} />
-              )}
-            </button>
-          ))}
-        </div>
-
-        <div className="px-4 pt-4 pb-2 border-b border-white/10">
-          <TableContextSection
-            playerHand={playerHand}
-            computerHand={computerHand}
-            communityCards={communityCards}
-            neededCards={neededCards}
-            t={t}
-          />
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-4">
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-2">
-            {currentOutcomes.map((outcome, idx) => (
-              <div
-                key={idx}
-                className={cn(
-                  'flex gap-0.5 p-2 rounded-lg justify-center',
-                  currentTab === 'win' && 'bg-[#00d4ff]/10',
-                  currentTab === 'tie' && 'bg-[#64748b]/10',
-                  currentTab === 'loss' && 'bg-[#ff4d94]/10'
-                )}
-              >
-                {outcome.cards.map((card, cardIdx) => (
-                  <CardComponent key={cardIdx} card={card} size="xs" skipEntryAnimation />
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Others Card Display - shows sample cards for "Others" category
-function OthersCardDisplay({
-  outcomes,
-  playerHand,
-  computerHand,
-  communityCards,
-  onViewAll,
-  t,
-}: {
-  outcomes: OutcomeCard[];
-  playerHand?: [CardType, CardType];
-  computerHand?: [CardType, CardType];
-  communityCards?: CardType[];
-  onViewAll: () => void;
-  t: ReturnType<typeof useTranslation>['t'];
-}) {
-  const winOutcomes = outcomes.filter((o) => o.outcome === 'win');
-  const tieOutcomes = outcomes.filter((o) => o.outcome === 'tie');
-  const lossOutcomes = outcomes.filter((o) => o.outcome === 'loss');
-
-  const maxSamples = 6;
-
-  const renderCardSamples = (
-    items: OutcomeCard[],
-    label: string,
-    colorClass: string,
-    bgClass: string
-  ) => {
-    if (items.length === 0) return null;
-    const samples = items.slice(0, maxSamples);
-    const remaining = items.length - maxSamples;
-
-    return (
-      <div className="mb-3 last:mb-0">
-        <div className={cn('text-xs font-medium mb-2', colorClass)}>
-          {label} ({items.length})
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {samples.map((outcome, idx) => (
-            <div key={idx} className={cn('flex gap-0.5 p-1.5 rounded-lg', bgClass)}>
-              {outcome.cards.map((card, cardIdx) => (
-                <CardComponent key={cardIdx} card={card} size="xs" skipEntryAnimation />
-              ))}
-            </div>
-          ))}
-          {remaining > 0 && (
-            <button
-              onClick={onViewAll}
-              className={cn(
-                'flex items-center px-3 py-1.5 rounded-lg text-xs font-medium transition-colors',
-                'bg-white/5 hover:bg-white/10',
-                colorClass
-              )}
-            >
-              +{remaining} {t.outcomeAnalysis.viewAll || '전체 보기'}
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  };
-
-  return (
-    <div className="bg-[#0f1424] rounded-lg p-3 mt-2">
-      {renderCardSamples(
-        winOutcomes,
-        t.outcomeAnalysis.winningCards || '이기는 카드',
-        'text-[#00d4ff]',
-        'bg-[#00d4ff]/10'
-      )}
-      {renderCardSamples(
-        tieOutcomes,
-        t.outcomeAnalysis.tieCards || '무승부 카드',
-        'text-[#64748b]',
-        'bg-[#64748b]/10'
-      )}
-      {renderCardSamples(
-        lossOutcomes,
-        t.outcomeAnalysis.losingCards || '지는 카드',
-        'text-[#ff4d94]',
-        'bg-[#ff4d94]/10'
-      )}
-    </div>
-  );
-}
-
 // Matchup Card Display - shows actual cards for a matchup
 function MatchupCardDisplay({
   outcomes,
@@ -743,46 +526,68 @@ function MatchupBreakdownTable({
 }) {
   const [showAll, setShowAll] = useState(false);
   const [expandedRow, setExpandedRow] = useState<number | null>(null);
-  const [othersExpanded, setOthersExpanded] = useState(false);
-  const [othersDetailOpen, setOthersDetailOpen] = useState(false);
-
-  // Filter outcomes for "Others" (insignificant matchups)
-  const othersOutcomes = outcomes.filter((o) =>
-    insignificantMatchups.some(
-      (m) => o.playerHandRank === m.playerRank && o.computerHandRank === m.computerRank
-    )
-  );
+  const [activeTab, setActiveTab] = useState<'all' | 'win' | 'loss' | 'tie'>('all');
 
   if (!matchups || matchups.length === 0) return null;
 
-  // Filter out insignificant matchups and sort by total
-  const significantMatchups = matchups.filter((m) => (m.total / total) * 100 >= 0.5);
-  const insignificantMatchups = matchups.filter((m) => (m.total / total) * 100 < 0.5);
+  // Calculate totals for each category
+  const totalWins = matchups.reduce((sum, m) => sum + m.wins, 0);
+  const totalLosses = matchups.reduce((sum, m) => sum + m.losses, 0);
+  const totalTies = matchups.reduce((sum, m) => sum + m.ties, 0);
 
-  // Calculate "Others" summary
-  const othersSummary = insignificantMatchups.reduce(
-    (acc, m) => ({
-      wins: acc.wins + m.wins,
-      ties: acc.ties + m.ties,
-      losses: acc.losses + m.losses,
-      total: acc.total + m.total,
-    }),
-    { wins: 0, ties: 0, losses: 0, total: 0 }
-  );
+  // Filter matchups based on active tab
+  const filteredMatchups = matchups.filter((m) => {
+    if (activeTab === 'all') return true;
+    if (activeTab === 'win') return m.wins > 0;
+    if (activeTab === 'loss') return m.losses > 0;
+    if (activeTab === 'tie') return m.ties > 0;
+    return true;
+  });
 
-  const displayMatchups = showAll
-    ? significantMatchups
-    : significantMatchups.slice(0, 10);
+  const displayMatchups = showAll ? filteredMatchups : filteredMatchups.slice(0, 10);
 
   const handleRowClick = (index: number) => {
     setExpandedRow(expandedRow === index ? null : index);
   };
+
+  const handleTabChange = (tab: 'all' | 'win' | 'loss' | 'tie') => {
+    setActiveTab(tab);
+    setExpandedRow(null);
+    setShowAll(false);
+  };
+
+  // Build tabs array
+  const tabs = [
+    { key: 'all' as const, label: t.outcomeAnalysis.all || '전체', count: matchups.length, color: 'text-white', bg: 'bg-white' },
+    { key: 'win' as const, label: t.results.win || '승', count: matchups.filter(m => m.wins > 0).length, color: 'text-[#00d4ff]', bg: 'bg-[#00d4ff]' },
+    { key: 'loss' as const, label: t.results.loss || '패', count: matchups.filter(m => m.losses > 0).length, color: 'text-[#ff4d94]', bg: 'bg-[#ff4d94]' },
+    ...(totalTies > 0 ? [{ key: 'tie' as const, label: t.results.ties || '무', count: matchups.filter(m => m.ties > 0).length, color: 'text-[#64748b]', bg: 'bg-[#64748b]' }] : []),
+  ];
 
   return (
     <div className="bg-[#1a1f35] rounded-xl p-4">
       <h3 className="text-sm font-semibold text-[#64748b] uppercase tracking-wider mb-3">
         {t.outcomeAnalysis.matchupAnalysis}
       </h3>
+
+      {/* Tabs */}
+      <div className="flex gap-1 mb-3 p-1 bg-[#0f1424] rounded-lg">
+        {tabs.map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => handleTabChange(tab.key)}
+            className={cn(
+              'flex-1 px-3 py-2 text-xs font-medium rounded-md transition-all',
+              activeTab === tab.key
+                ? `${tab.bg} text-[#0a0e1a]`
+                : 'text-[#64748b] hover:text-white hover:bg-white/5'
+            )}
+          >
+            {tab.label} ({tab.count})
+          </button>
+        ))}
+      </div>
+
       <div className="text-xs text-[#64748b] mb-3">
         {t.outcomeAnalysis.clickToSeeCards || '클릭하여 카드 조합 보기'}
       </div>
@@ -858,94 +663,16 @@ function MatchupBreakdownTable({
           );
         })}
 
-        {/* Others row for insignificant matchups */}
-        {othersSummary.total > 0 && (
-          <div className="mt-1">
-            <button
-              onClick={() => setOthersExpanded(!othersExpanded)}
-              className={cn(
-                'w-full flex items-center justify-between p-3 rounded-lg transition-colors text-left',
-                othersExpanded
-                  ? 'bg-[#252b45]'
-                  : 'bg-[#0f1424]/50 hover:bg-[#1a1f35]'
-              )}
-            >
-              <div className="flex items-center gap-2 flex-1 min-w-0">
-                <span className="text-[#64748b] text-sm font-medium">
-                  {t.outcomeAnalysis.others || '기타'}
-                </span>
-                <span className="text-[#64748b]/60 text-xs">
-                  ({insignificantMatchups.length} {t.outcomeAnalysis.matchups || '매치업'})
-                </span>
-              </div>
-              <div className="flex items-center gap-3 shrink-0">
-                <div className="text-xs text-[#64748b] tabular-nums">
-                  {othersSummary.total}회 ({((othersSummary.total / total) * 100).toFixed(1)}%)
-                </div>
-                <div className="flex items-center gap-1 text-xs">
-                  {othersSummary.wins > 0 && (
-                    <span className="text-[#00d4ff]">{othersSummary.wins}W</span>
-                  )}
-                  {othersSummary.ties > 0 && (
-                    <span className="text-[#64748b]">{othersSummary.ties}T</span>
-                  )}
-                  {othersSummary.losses > 0 && (
-                    <span className="text-[#ff4d94]">{othersSummary.losses}L</span>
-                  )}
-                </div>
-                <svg
-                  className={cn(
-                    'w-4 h-4 text-[#64748b] transition-transform',
-                    othersExpanded && 'rotate-180'
-                  )}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 9l-7 7-7-7"
-                  />
-                </svg>
-              </div>
-            </button>
-            {othersExpanded && (
-              <OthersCardDisplay
-                outcomes={othersOutcomes}
-                playerHand={playerHand}
-                computerHand={computerHand}
-                communityCards={communityCards}
-                onViewAll={() => setOthersDetailOpen(true)}
-                t={t}
-              />
-            )}
-          </div>
-        )}
-
-        {/* Others Detail Dialog */}
-        <OthersDetailDialog
-          isOpen={othersDetailOpen}
-          onClose={() => setOthersDetailOpen(false)}
-          outcomes={othersOutcomes}
-          summary={othersSummary}
-          matchupCount={insignificantMatchups.length}
-          playerHand={playerHand}
-          computerHand={computerHand}
-          communityCards={communityCards}
-          t={t}
-        />
       </div>
 
       {/* Show More / Show Less */}
-      {significantMatchups.length > 10 && (
+      {filteredMatchups.length > 10 && (
         <div className="mt-3 text-center">
           <button
             onClick={() => setShowAll(!showAll)}
             className="text-xs text-[#64748b] hover:text-white transition-colors"
           >
-            {showAll ? t.outcomeAnalysis.showLess : t.outcomeAnalysis.showMore} ({significantMatchups.length})
+            {showAll ? t.outcomeAnalysis.showLess : t.outcomeAnalysis.showMore} ({filteredMatchups.length})
           </button>
         </div>
       )}
@@ -1035,9 +762,8 @@ export function OutcomeDetailsDialog({
           </div>
         </div>
 
-        {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6">
-          {/* Table Context */}
+        {/* Table Context - Fixed at top */}
+        <div className="px-6 pt-4 pb-2 border-b border-white/10">
           <TableContextSection
             playerHand={playerHand}
             computerHand={computerHand}
@@ -1045,7 +771,10 @@ export function OutcomeDetailsDialog({
             neededCards={neededCards}
             t={t}
           />
+        </div>
 
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto p-6">
           {/* Hand Distribution */}
           <HandDistributionChart
             playerDist={playerHandDistribution}
