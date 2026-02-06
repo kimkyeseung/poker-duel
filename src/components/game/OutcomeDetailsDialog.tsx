@@ -531,6 +531,19 @@ function MatchupBreakdownTable({
 
   // Filter out insignificant matchups and sort by total
   const significantMatchups = matchups.filter((m) => (m.total / total) * 100 >= 0.5);
+  const insignificantMatchups = matchups.filter((m) => (m.total / total) * 100 < 0.5);
+
+  // Calculate "Others" summary
+  const othersSummary = insignificantMatchups.reduce(
+    (acc, m) => ({
+      wins: acc.wins + m.wins,
+      ties: acc.ties + m.ties,
+      losses: acc.losses + m.losses,
+      total: acc.total + m.total,
+    }),
+    { wins: 0, ties: 0, losses: 0, total: 0 }
+  );
+
   const displayMatchups = showAll
     ? significantMatchups
     : significantMatchups.slice(0, 10);
@@ -618,6 +631,38 @@ function MatchupBreakdownTable({
             </div>
           );
         })}
+
+        {/* Others row for insignificant matchups */}
+        {othersSummary.total > 0 && (
+          <div className="mt-1">
+            <div className="w-full flex items-center justify-between p-3 rounded-lg bg-[#0f1424]/50">
+              <div className="flex items-center gap-2 flex-1 min-w-0">
+                <span className="text-[#64748b] text-sm font-medium">
+                  {t.outcomeAnalysis.others || '기타'}
+                </span>
+                <span className="text-[#64748b]/60 text-xs">
+                  ({insignificantMatchups.length} {t.outcomeAnalysis.matchups || '매치업'})
+                </span>
+              </div>
+              <div className="flex items-center gap-3 shrink-0">
+                <div className="text-xs text-[#64748b] tabular-nums">
+                  {othersSummary.total}회 ({((othersSummary.total / total) * 100).toFixed(1)}%)
+                </div>
+                <div className="flex items-center gap-1 text-xs">
+                  {othersSummary.wins > 0 && (
+                    <span className="text-[#00d4ff]">{othersSummary.wins}W</span>
+                  )}
+                  {othersSummary.ties > 0 && (
+                    <span className="text-[#64748b]">{othersSummary.ties}T</span>
+                  )}
+                  {othersSummary.losses > 0 && (
+                    <span className="text-[#ff4d94]">{othersSummary.losses}L</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Show More / Show Less */}

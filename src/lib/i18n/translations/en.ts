@@ -163,6 +163,8 @@ export const en = {
     allCombinations: "Total combinations",
     viewAll: "View all",
     viewAllCombinations: "View all combinations",
+    others: "Others",
+    matchups: "matchups",
   },
 
   // Difficulty

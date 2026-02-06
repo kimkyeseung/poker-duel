@@ -165,6 +165,8 @@ export const zh: TranslationKeys = {
     allCombinations: "全部组合",
     viewAll: "查看全部",
     viewAllCombinations: "查看所有组合",
+    others: "其他",
+    matchups: "对局",
   },
 
   // Difficulty
