@@ -74,8 +74,17 @@ export const ja: TranslationKeys = {
     labels: {
       you: "あなた",
       dealer: "ディーラー",
+      opponent1: "対戦相手1",
+      opponent2: "対戦相手2",
+      smallBlind: "スモールブラインド",
+      bigBlind: "ビッグブラインド",
       vs: "VS",
       yourAnswer: "あなたの回答",
+    },
+    opponents: {
+      defeated: "相手を撃破！",
+      nextOpponent: "次の相手",
+      preparing: "次の相手を準備中...",
     },
     messages: {
       revealingCards: "カードを公開中...",

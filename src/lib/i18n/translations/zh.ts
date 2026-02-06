@@ -74,8 +74,17 @@ export const zh: TranslationKeys = {
     labels: {
       you: "你",
       dealer: "庄家",
+      opponent1: "对手1",
+      opponent2: "对手2",
+      smallBlind: "小盲注",
+      bigBlind: "大盲注",
       vs: "VS",
       yourAnswer: "你的答案",
+    },
+    opponents: {
+      defeated: "击败对手！",
+      nextOpponent: "下一个对手",
+      preparing: "准备下一个对手...",
     },
     messages: {
       revealingCards: "正在揭示牌...",

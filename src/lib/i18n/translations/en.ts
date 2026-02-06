@@ -72,8 +72,17 @@ export const en = {
     labels: {
       you: "YOU",
       dealer: "DEALER",
+      opponent1: "Opponent 1",
+      opponent2: "Opponent 2",
+      smallBlind: "Small Blind",
+      bigBlind: "Big Blind",
       vs: "VS",
       yourAnswer: "Your Answer",
+    },
+    opponents: {
+      defeated: "Opponent Defeated!",
+      nextOpponent: "Next Opponent",
+      preparing: "Preparing next opponent...",
     },
     messages: {
       revealingCards: "Revealing cards...",

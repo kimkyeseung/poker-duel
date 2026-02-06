@@ -74,8 +74,17 @@ export const es: TranslationKeys = {
     labels: {
       you: "TÚ",
       dealer: "CRUPIER",
+      opponent1: "Oponente 1",
+      opponent2: "Oponente 2",
+      smallBlind: "Ciega Pequeña",
+      bigBlind: "Ciega Grande",
       vs: "VS",
       yourAnswer: "Tu respuesta",
+    },
+    opponents: {
+      defeated: "¡Oponente Derrotado!",
+      nextOpponent: "Siguiente Oponente",
+      preparing: "Preparando siguiente oponente...",
     },
     messages: {
       revealingCards: "Revelando cartas...",

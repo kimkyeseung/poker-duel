@@ -74,8 +74,17 @@ export const ko: TranslationKeys = {
     labels: {
       you: "나",
       dealer: "딜러",
+      opponent1: "상대1",
+      opponent2: "상대2",
+      smallBlind: "스몰 블라인드",
+      bigBlind: "빅 블라인드",
       vs: "VS",
       yourAnswer: "정답 입력",
+    },
+    opponents: {
+      defeated: "상대 격파!",
+      nextOpponent: "다음 상대",
+      preparing: "다음 상대 준비 중...",
     },
     messages: {
       revealingCards: "카드 공개 중...",

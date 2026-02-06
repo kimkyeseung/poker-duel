@@ -74,8 +74,17 @@ export const it: TranslationKeys = {
     labels: {
       you: "TU",
       dealer: "DEALER",
+      opponent1: "Avversario 1",
+      opponent2: "Avversario 2",
+      smallBlind: "Small Blind",
+      bigBlind: "Big Blind",
       vs: "VS",
       yourAnswer: "La tua risposta",
+    },
+    opponents: {
+      defeated: "Avversario Sconfitto!",
+      nextOpponent: "Prossimo Avversario",
+      preparing: "Preparazione prossimo avversario...",
     },
     messages: {
       revealingCards: "Rivelazione carte...",
