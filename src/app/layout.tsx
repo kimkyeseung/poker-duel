@@ -17,10 +17,16 @@ export const metadata: Metadata = {
   description: "텍사스 홀덤의 승률을 맞추는 퀴즈 게임. 5단계 난이도를 클리어하고 홀덤의 신이 되어보세요!",
   keywords: ["포커", "홀덤", "텍사스 홀덤", "카드 게임", "확률", "게임", "에퀴티"],
   authors: [{ name: "Hol'Damn It!" }],
+  icons: {
+    icon: "/symbol.png",
+    shortcut: "/symbol.png",
+    apple: "/symbol.png",
+  },
   openGraph: {
     title: "Hol'Damn It! - The Ultimate Equity Challenge",
     description: "텍사스 홀덤의 승률을 맞추는 퀴즈 게임",
     type: "website",
+    images: ["/symbol.png"],
   },
 };
 

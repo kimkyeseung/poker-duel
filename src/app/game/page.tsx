@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useGameStore } from '@/stores/gameStore';
 import { usePokerCalculator } from '@/hooks/usePokerCalculator';
 import { Timer, AudioToggle, LanguageSelector } from '@/components/ui';
@@ -54,7 +55,7 @@ export default function GamePage() {
     shouldSkipPreflop,
   } = useGameStore();
 
-  const { calculate, isCalculating } = usePokerCalculator();
+  const { calculate, isCalculating, calculateWithDetails, isCalculatingDetails, detailsResult, clearDetailsResult } = usePokerCalculator();
   const { playSFX } = useSFX();
   const [currentWinRate, setCurrentWinRate] = useState<WinRateResult | null>(null);
   const [lastAnswer, setLastAnswer] = useState<AnswerResult | null>(null);
@@ -294,6 +295,7 @@ export default function GamePage() {
     setLastAnswer(null);
     setCurrentWinRate(null);
     setIsViewingRiver(false);
+    clearDetailsResult();
 
     if (currentRound === 'river' || currentRound === 'turn') {
       recordGameResult(difficulty, true);
@@ -318,6 +320,7 @@ export default function GamePage() {
     setLastAnswer(null);
     setCurrentWinRate(null);
     setIsViewingRiver(true);
+    clearDetailsResult();
     nextRound();
   };
 
@@ -329,6 +332,7 @@ export default function GamePage() {
     setCurrentWinRate(null);
     setHasPlayerCardsRevealed(false);
     setShowLevelOverlay(true);
+    clearDetailsResult();
   };
 
   const handleLevelOverlayComplete = useCallback(() => {
@@ -339,6 +343,11 @@ export default function GamePage() {
     resetGame();
     router.push('/');
   };
+
+  const handleRequestDetails = useCallback(() => {
+    if (!playerHand || !computerHand) return;
+    calculateWithDetails(playerHand, computerHand, communityCards);
+  }, [playerHand, computerHand, communityCards, calculateWithDetails]);
 
   const handleWriteComment = () => {
     router.push('/comments');
@@ -356,7 +365,17 @@ export default function GamePage() {
             className="text-[#64748b] hover:text-white transition-colors flex items-center gap-1 sm:gap-2"
             aria-label="Exit game"
           >
-            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {/* Mobile: Symbol Image */}
+            <div className="relative w-7 h-7 sm:hidden">
+              <Image
+                src="/symbol.png"
+                alt="Home"
+                fill
+                className="object-contain"
+              />
+            </div>
+            {/* Desktop: Arrow Icon */}
+            <svg className="w-5 h-5 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
             <span className="hidden sm:inline">{t.common.exit}</span>
@@ -507,6 +526,15 @@ export default function GamePage() {
           onGoHome={handleGoHome}
           isViewingRiver={isViewingRiver}
           difficulty={difficulty}
+          outcomes={detailsResult?.outcomes}
+          isCalculatingDetails={isCalculatingDetails}
+          onRequestDetails={handleRequestDetails}
+          playerHand={playerHand as [import('@/types').Card, import('@/types').Card] | undefined}
+          computerHand={computerHand as [import('@/types').Card, import('@/types').Card] | undefined}
+          communityCards={communityCards}
+          playerHandDistribution={detailsResult?.playerHandDistribution}
+          computerHandDistribution={detailsResult?.computerHandDistribution}
+          matchupBreakdowns={detailsResult?.matchupBreakdowns}
         />
       )}
 

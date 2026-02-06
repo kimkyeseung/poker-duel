@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { Button, AudioToggle, ClickToStart, LanguageSelector } from '@/components/ui';
 import { TutorialDialog } from '@/components/TutorialDialog';
 import { getGameStats } from '@/lib/storage';
@@ -164,10 +165,16 @@ export default function Home() {
       <header className="relative z-10 p-4 border-b border-white/5 bg-black/20 backdrop-blur-md">
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#ffd700] to-[#ff8c00] flex items-center justify-center text-[#0a0e1a] font-black text-lg shadow-lg shadow-[#ffd700]/30">
-              H
+            <div className="relative w-10 h-10 shrink-0">
+              <Image
+                src="/symbol.png"
+                alt="Hol'Damn It!"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
-            <div>
+            <div className="hidden sm:block">
               <span className="text-white font-bold text-lg">HOL&apos;DAMN IT!</span>
               <span className="text-[#64748b] text-xs ml-2">Alpha 0.1</span>
             </div>
@@ -253,14 +260,28 @@ export default function Home() {
           </div>
 
           {/* Center - Main Content */}
-          <div className="text-center space-y-6">
-            {/* Title */}
-            <div>
-              <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none">
-                <span className="block text-gradient-secondary">HOL&apos;DAMN</span>
-                <span className="block text-gradient-primary">IT!</span>
-              </h1>
-              <p className="text-slate-400 text-sm mt-2 tracking-widest">{t.common.tagline}</p>
+          <div className="text-center">
+            {/* Symbol Image + Title Container */}
+            <div className="relative flex flex-col items-center">
+              {/* Symbol Image */}
+              <div className="relative w-36 h-36 sm:w-48 sm:h-48 lg:w-56 lg:h-56 -mb-8 sm:-mb-12 lg:-mb-14 z-0">
+                <Image
+                  src="/symbol.png"
+                  alt="Hol'Damn It! Mascot"
+                  fill
+                  className="object-contain drop-shadow-[0_0_40px_rgba(0,212,255,0.5)]"
+                  priority
+                />
+              </div>
+
+              {/* Title */}
+              <div className="relative z-10">
+                <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none">
+                  <span className="block text-gradient-secondary drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">HOL&apos;DAMN</span>
+                  <span className="block text-gradient-primary drop-shadow-[0_2px_10px_rgba(0,0,0,0.8)]">IT!</span>
+                </h1>
+                <p className="text-slate-400 text-sm mt-2 tracking-widest">{t.common.tagline}</p>
+              </div>
             </div>
 
 

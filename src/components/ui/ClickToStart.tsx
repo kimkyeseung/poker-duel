@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { audioManager } from '@/lib/audio/AudioManager';
 import { useTranslation } from '@/lib/i18n';
 
@@ -56,10 +57,23 @@ export function ClickToStart({ onStart }: ClickToStartProps) {
       </div>
 
       {/* Content */}
-      <div className="relative text-center space-y-8">
+      <div className="relative text-center space-y-6">
+        {/* Symbol Image */}
+        <div className="flex justify-center">
+          <div className="relative w-32 h-32 md:w-40 md:h-40 animate-bounce" style={{ animationDuration: '2s' }}>
+            <Image
+              src="/symbol.png"
+              alt="Hol'Damn It! Mascot"
+              fill
+              className="object-contain drop-shadow-[0_0_30px_rgba(0,212,255,0.5)]"
+              priority
+            />
+          </div>
+        </div>
+
         {/* Logo */}
         <div className="space-y-2">
-          <h1 className="text-5xl md:text-7xl font-black tracking-tight">
+          <h1 className="text-4xl md:text-6xl font-black tracking-tight">
             <span className="block text-gradient-secondary">HOL&apos;DAMN</span>
             <span className="block text-gradient-primary">IT!</span>
           </h1>
