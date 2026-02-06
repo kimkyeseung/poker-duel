@@ -66,7 +66,7 @@ function ChoiceInput({
 }) {
   const { t } = useTranslation();
   return (
-    <div className={cn('game-card p-3 sm:p-6 lg:p-4 lg:pt-2', className)} role="group" aria-label="Select winner">
+    <div className={cn('game-card p-3 sm:p-6 lg:!bg-transparent lg:!border-none lg:!shadow-none lg:!p-0', className)} role="group" aria-label="Select winner">
       {/* Symbol Image - Desktop only */}
       <div className="hidden lg:flex justify-center mb-4">
         <div className="relative w-48 h-48">
@@ -127,7 +127,7 @@ function RangeInput({
   ];
 
   return (
-    <div className={cn('game-card p-3 sm:p-6 lg:p-4 lg:pt-2', className)} role="radiogroup" aria-label="Select win rate range">
+    <div className={cn('game-card p-3 sm:p-6 lg:!bg-transparent lg:!border-none lg:!shadow-none lg:!p-0', className)} role="radiogroup" aria-label="Select win rate range">
       {/* Symbol Image - Desktop only (smaller for 5-choice) */}
       <div className="hidden lg:flex justify-center mb-2">
         <div className="relative w-20 h-20">
@@ -216,7 +216,7 @@ function NumberInput({
   const isValidNumber = value !== '' && !isNaN(parseFloat(value)) && parseFloat(value) >= 0 && parseFloat(value) <= 100;
 
   return (
-    <div className={cn('game-card p-3 sm:p-6 lg:p-4 lg:pt-2', className)}>
+    <div className={cn('game-card p-3 sm:p-6 lg:!bg-transparent lg:!border-none lg:!shadow-none lg:!p-0', className)}>
       {/* Symbol Image - Desktop only */}
       <div className="hidden lg:flex justify-center mb-4">
         <div className="relative w-48 h-48">
