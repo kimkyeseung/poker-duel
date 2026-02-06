@@ -156,6 +156,13 @@ export const en = {
     vsDealer: "vs Dealer",
     showMore: "Show More",
     showLess: "Show Less",
+    clickToSeeCards: "Click to see card combinations",
+    winningCards: "Winning Cards",
+    tieCards: "Tie Cards",
+    losingCards: "Losing Cards",
+    allCombinations: "Total combinations",
+    viewAll: "View all",
+    viewAllCombinations: "View all combinations",
   },
 
   // Difficulty

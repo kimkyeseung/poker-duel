@@ -158,6 +158,13 @@ export const ja: TranslationKeys = {
     vsDealer: "vs ディーラー",
     showMore: "もっと見る",
     showLess: "閉じる",
+    clickToSeeCards: "クリックしてカードの組み合わせを見る",
+    winningCards: "勝ちカード",
+    tieCards: "引き分けカード",
+    losingCards: "負けカード",
+    allCombinations: "全組み合わせ",
+    viewAll: "すべて見る",
+    viewAllCombinations: "全組み合わせを見る",
   },
 
   // Difficulty

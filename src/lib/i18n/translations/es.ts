@@ -158,6 +158,13 @@ export const es: TranslationKeys = {
     vsDealer: "vs Crupier",
     showMore: "Ver Más",
     showLess: "Ver Menos",
+    clickToSeeCards: "Clic para ver combinaciones de cartas",
+    winningCards: "Cartas Ganadoras",
+    tieCards: "Cartas de Empate",
+    losingCards: "Cartas Perdedoras",
+    allCombinations: "Combinaciones totales",
+    viewAll: "Ver todo",
+    viewAllCombinations: "Ver todas las combinaciones",
   },
 
   // Difficulty

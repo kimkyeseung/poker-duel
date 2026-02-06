@@ -158,6 +158,13 @@ export const it: TranslationKeys = {
     vsDealer: "vs Dealer",
     showMore: "Mostra Altro",
     showLess: "Mostra Meno",
+    clickToSeeCards: "Clicca per vedere le combinazioni di carte",
+    winningCards: "Carte Vincenti",
+    tieCards: "Carte di Pareggio",
+    losingCards: "Carte Perdenti",
+    allCombinations: "Combinazioni totali",
+    viewAll: "Vedi tutto",
+    viewAllCombinations: "Vedi tutte le combinazioni",
   },
 
   // Difficulty

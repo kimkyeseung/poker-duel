@@ -158,6 +158,13 @@ export const zh: TranslationKeys = {
     vsDealer: "vs 庄家",
     showMore: "显示更多",
     showLess: "收起",
+    clickToSeeCards: "点击查看牌组合",
+    winningCards: "获胜牌",
+    tieCards: "平局牌",
+    losingCards: "失败牌",
+    allCombinations: "全部组合",
+    viewAll: "查看全部",
+    viewAllCombinations: "查看所有组合",
   },
 
   // Difficulty

@@ -158,6 +158,13 @@ export const ko: TranslationKeys = {
     vsDealer: "vs 딜러",
     showMore: "더 보기",
     showLess: "접기",
+    clickToSeeCards: "클릭하여 카드 조합 보기",
+    winningCards: "이기는 카드",
+    tieCards: "무승부 카드",
+    losingCards: "지는 카드",
+    allCombinations: "전체 경우의 수",
+    viewAll: "전체 보기",
+    viewAllCombinations: "전체 경우의 수 보기",
   },
 
   // Difficulty

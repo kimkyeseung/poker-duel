@@ -158,6 +158,13 @@ export const fr: TranslationKeys = {
     vsDealer: "vs Croupier",
     showMore: "Voir Plus",
     showLess: "Voir Moins",
+    clickToSeeCards: "Cliquez pour voir les combinaisons de cartes",
+    winningCards: "Cartes Gagnantes",
+    tieCards: "Cartes d'Égalité",
+    losingCards: "Cartes Perdantes",
+    allCombinations: "Combinaisons totales",
+    viewAll: "Voir tout",
+    viewAllCombinations: "Voir toutes les combinaisons",
   },
 
   // Difficulty
