@@ -75,6 +75,7 @@ export const ja: TranslationKeys = {
       you: "あなた",
       dealer: "ディーラー",
       vs: "VS",
+      yourAnswer: "あなたの回答",
     },
     messages: {
       revealingCards: "カードを公開中...",

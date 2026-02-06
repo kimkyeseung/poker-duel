@@ -75,6 +75,7 @@ export const zh: TranslationKeys = {
       you: "你",
       dealer: "庄家",
       vs: "VS",
+      yourAnswer: "你的答案",
     },
     messages: {
       revealingCards: "正在揭示牌...",

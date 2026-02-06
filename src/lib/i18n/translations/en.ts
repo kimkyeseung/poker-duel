@@ -73,6 +73,7 @@ export const en = {
       you: "YOU",
       dealer: "DEALER",
       vs: "VS",
+      yourAnswer: "Your Answer",
     },
     messages: {
       revealingCards: "Revealing cards...",

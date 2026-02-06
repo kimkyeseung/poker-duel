@@ -75,6 +75,7 @@ export const es: TranslationKeys = {
       you: "TÚ",
       dealer: "CRUPIER",
       vs: "VS",
+      yourAnswer: "Tu respuesta",
     },
     messages: {
       revealingCards: "Revelando cartas...",

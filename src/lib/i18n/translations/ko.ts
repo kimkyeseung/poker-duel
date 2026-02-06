@@ -75,6 +75,7 @@ export const ko: TranslationKeys = {
       you: "나",
       dealer: "딜러",
       vs: "VS",
+      yourAnswer: "정답 입력",
     },
     messages: {
       revealingCards: "카드 공개 중...",
