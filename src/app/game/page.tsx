@@ -17,6 +17,7 @@ import {
   GameProgressCompact,
   DevAnswerOverlay,
   LevelStartOverlay,
+  OpponentProgress,
 } from '@/components/game';
 import { checkAnswer } from '@/lib/poker/calculator';
 import { evaluateStartingHand, compareStartingHands, StartingHandInfo } from '@/lib/poker/starting-hands';
@@ -42,6 +43,8 @@ export default function GamePage() {
     communityCards,
     timeRemaining,
     isTimerRunning,
+    currentOpponentIndex,
+    opponentsDefeated,
     initGame,
     startRound,
     decrementTimer,
@@ -49,10 +52,14 @@ export default function GamePage() {
     gameOver,
     nextRound,
     nextDifficulty,
+    nextOpponent,
+    defeatCurrentOpponent,
     victory,
     resetGame,
     getTimeLimit,
     shouldSkipPreflop,
+    getCurrentOpponent,
+    isLastOpponent,
   } = useGameStore();
 
   const { calculate, isCalculating, calculateWithDetails, isCalculatingDetails, detailsResult, clearDetailsResult } = usePokerCalculator();
@@ -69,6 +76,7 @@ export default function GamePage() {
   const [newCardsCount, setNewCardsCount] = useState(0);
   const [hasPlayerCardsRevealed, setHasPlayerCardsRevealed] = useState(false);
   const [showLevelOverlay, setShowLevelOverlay] = useState(true);
+  const [showOpponentOverlay, setShowOpponentOverlay] = useState(false);
   const [isViewingRiver, setIsViewingRiver] = useState(false);
   const [isAnswerPanelOpen, setIsAnswerPanelOpen] = useState(false);
 
@@ -174,6 +182,16 @@ export default function GamePage() {
       setIsAnswerPanelOpen(true);
     }
   }, [status, isCalculating, showResult]);
+
+  // Handle opponent transition overlay
+  useEffect(() => {
+    if (showOpponentOverlay) {
+      const timer = setTimeout(() => {
+        setShowOpponentOverlay(false);
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [showOpponentOverlay]);
 
   const handleTimeout = useCallback(() => {
     if (hasSubmittedRef.current) return;
@@ -298,17 +316,29 @@ export default function GamePage() {
     clearDetailsResult();
 
     if (currentRound === 'river' || currentRound === 'turn') {
-      recordGameResult(difficulty, true);
-      updateStreak(true);
-      setHasPlayerCardsRevealed(false);
+      // 현재 상대 패배 처리
+      defeatCurrentOpponent();
 
-      if (difficulty === 'god') {
-        playSFX('victory');
-        victory();
+      if (isLastOpponent()) {
+        // 딜러(마지막 상대)를 이겼을 때 → 다음 난이도
+        recordGameResult(difficulty, true);
+        updateStreak(true);
+        setHasPlayerCardsRevealed(false);
+
+        if (difficulty === 'god') {
+          playSFX('victory');
+          victory();
+        } else {
+          playSFX('level-up');
+          setShowLevelOverlay(true);
+          nextDifficulty();
+        }
       } else {
-        playSFX('level-up');
-        setShowLevelOverlay(true);
-        nextDifficulty();
+        // 다음 상대로 전환
+        playSFX('correct');
+        setHasPlayerCardsRevealed(false);
+        setShowOpponentOverlay(true);
+        nextOpponent();
       }
     } else {
       nextRound();
@@ -380,7 +410,13 @@ export default function GamePage() {
             </svg>
             <span className="hidden sm:inline">{t.common.exit}</span>
           </button>
-          <GameProgressCompact difficulty={difficulty} currentRound={currentRound} />
+          <div className="flex flex-col items-center gap-1">
+            <GameProgressCompact difficulty={difficulty} currentRound={currentRound} />
+            <OpponentProgress
+              currentOpponentIndex={currentOpponentIndex}
+              opponentsDefeated={opponentsDefeated}
+            />
+          </div>
           <div className="flex items-center gap-1 sm:gap-2">
             <LanguageSelector />
             <AudioToggle />
@@ -416,7 +452,7 @@ export default function GamePage() {
           <PlayerArea
             cards={computerHand}
             isComputer
-            label={t.game.labels.dealer}
+            label={getCurrentOpponent()?.label || t.game.labels.dealer}
             handName={computerHand ? evaluateStartingHand(computerHand).name : undefined}
             handRank={showResult && currentRound === 'preflop' && computerHand ? evaluateStartingHand(computerHand).rank : undefined}
             isActive={status === 'answering'}
@@ -621,6 +657,21 @@ export default function GamePage() {
         difficulty={difficulty}
         onComplete={handleLevelOverlayComplete}
       />
+
+      {/* Opponent Transition Overlay */}
+      {showOpponentOverlay && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80">
+          <div className="text-center animate-bounce-in">
+            <div className="text-6xl mb-4">🎯</div>
+            <h2 className="text-2xl sm:text-3xl font-black text-white mb-2">
+              Opponent Defeated!
+            </h2>
+            <p className="text-[#00d4ff] text-lg">
+              Next: {getCurrentOpponent()?.label || 'Opponent'}
+            </p>
+          </div>
+        </div>
+      )}
 
       {/* Mobile Answer Panel Popup */}
       {status === 'answering' && !isCalculating && !showResult && (
