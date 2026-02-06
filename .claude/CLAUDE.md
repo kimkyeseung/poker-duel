@@ -6,9 +6,22 @@
 
 ### 핵심 게임 규칙
 - **5단계 난이도**: 쉬움 → 보통 → 어려움 → 전문가 → 홀덤의 신
+- **5명의 상대 순차 대결**: 상대1 → 상대2 → 스몰블라인드 → 빅블라인드 → 딜러
 - **4라운드 진행**: 프리플랍(5초) → 플랍(60초) → 턴(60초) → 리버(확인)
-- **한 번 틀리면 게임 오버**, 쉬움 난이도부터 재시작
+- **한 번 틀리면 게임 오버**, 쉬움 난이도 + 상대1부터 재시작
+- **딜러까지 격파해야 다음 난이도로** 진행
 - **모든 난이도 클리어 시 승리** (코멘트 작성 가능)
+
+### 상대별 핸드 매칭 규칙
+| 상대 | 핸드 매칭 | 눈에 띄는 차이 필터링 |
+|------|----------|---------------------|
+| 상대1 | 완전 랜덤 | ❌ |
+| 상대2 | 완전 랜덤 | ❌ |
+| 스몰 블라인드 | 플레이어 핸드 랭킹 ±30 범위 | ❌ |
+| 빅 블라인드 | 플레이어 핸드 랭킹 ±15 범위 | ✅ |
+| 딜러 | 플레이어 핸드 랭킹 ±5 범위 | ✅ |
+
+**"눈에 띄는 차이" 필터링**: 시각적으로 명백한 차이 제외 (예: AA vs AKs, K9s vs T9s)
 
 ## 기술 스택
 
@@ -56,6 +69,7 @@ holdamnit/
 │   │   │   ├── HintButton.tsx         # 힌트 버튼
 │   │   │   ├── LevelStartOverlay.tsx  # 레벨 시작 오버레이 (전환 화면)
 │   │   │   ├── DevAnswerOverlay.tsx   # 개발용 정답 오버레이
+│   │   │   ├── OpponentProgress.tsx   # 상대 진행 상태 표시
 │   │   │   └── index.ts               # 컴포넌트 exports
 │   │   │
 │   │   ├── ui/                        # 공통 UI 컴포넌트
@@ -66,6 +80,7 @@ holdamnit/
 │   │   │   ├── AudioToggle.tsx        # 음소거 토글 버튼
 │   │   │   ├── ClickToStart.tsx       # 시작 오버레이 (오디오 활성화)
 │   │   │   ├── LanguageSelector.tsx   # 언어 선택기
+│   │   │   ├── ProfileAvatar.tsx      # 프로필 아바타 (상대 표시용)
 │   │   │   └── index.ts               # UI exports
 │   │   │
 │   │   └── TutorialDialog.tsx         # 튜토리얼 다이얼로그
@@ -77,6 +92,8 @@ holdamnit/
 │   │   │   ├── calculator.ts          # 승률 계산 (완전탐색)
 │   │   │   ├── starting-hands.ts      # 169개 프리플랍 핸드랭킹
 │   │   │   ├── starting-hands.test.ts # 핸드랭킹 테스트
+│   │   │   ├── hand-matcher.ts        # 상대 핸드 매칭 로직
+│   │   │   ├── hand-matcher.test.ts   # 핸드 매칭 테스트 (20개)
 │   │   │   └── index.ts               # 포커 exports
 │   │   │
 │   │   ├── audio/                     # 오디오 시스템
@@ -136,12 +153,30 @@ holdamnit/
 │   │       ├── result-win.mp3         # 승리 BGM
 │   │       └── result-lose.mp3        # 패배 BGM
 │   │
+│   ├── profiles/                      # 프로필 이미지
+│   │   ├── README.md                  # 이미지 가이드
+│   │   ├── player.png                 # 플레이어 (불독 심볼)
+│   │   ├── opponent1.png              # 상대1
+│   │   ├── opponent2.png              # 상대2
+│   │   ├── small-blind.png            # 스몰 블라인드
+│   │   ├── big-blind.png              # 빅 블라인드
+│   │   └── dealer.png                 # 딜러
+│   │
 │   └── workers/
 │       └── poker-calculator.js        # 승률 계산 Web Worker
 │
 ├── tests/                             # E2E 테스트
 │   └── e2e/
 │       └── *.spec.ts                  # Playwright 테스트 파일
+│
+├── src-tauri/                         # Tauri 데스크톱 앱
+│   ├── Cargo.toml                     # Rust 의존성
+│   ├── tauri.conf.json                # Tauri 설정
+│   ├── src/                           # Rust 소스
+│   │   ├── main.rs
+│   │   └── lib.rs
+│   ├── icons/                         # 앱 아이콘
+│   └── capabilities/                  # 권한 설정
 │
 └── 설정 파일
     ├── package.json                   # 의존성 및 스크립트
@@ -175,6 +210,27 @@ holdamnit/
 - **턴**: 44개 조합 완전탐색 (리버)
 - **리버**: 결과 확인만 (승패 확정)
 - Web Worker에서 비동기 계산
+
+### 핸드 매칭 시스템 (`lib/poker/hand-matcher.ts`)
+상대별 핸드 생성 로직:
+```tsx
+import { generateOpponentHand } from '@/lib/poker/hand-matcher';
+
+// 상대 타입에 따라 적절한 핸드 생성
+const opponentHand = generateOpponentHand(
+  opponentType,      // 'opponent1' | 'opponent2' | 'smallBlind' | 'bigBlind' | 'dealer'
+  playerHand,        // [Card, Card] - 플레이어 핸드
+  availableCards     // Card[] - 사용 가능한 카드 (덱에서 플레이어 핸드 제외)
+);
+```
+
+주요 함수:
+- `getRandomHandName()` - 랜덤 핸드명 반환
+- `getMatchedHandName(rank, range)` - 범위 내 핸드명 반환
+- `isVisuallyObvious(hand1, hand2)` - 눈에 띄는 차이 여부 판단
+- `getFilteredMatchedHandName(...)` - 필터링 적용된 핸드명
+- `findCardsForHandName(...)` - 핸드명에 해당하는 카드 찾기
+- `generateOpponentHand(...)` - 상대 핸드 생성 (메인 함수)
 
 ## 주요 기능
 
@@ -242,6 +298,8 @@ function LanguageSwitcher() {
 번역 파일은 중첩 객체 구조로 구성됩니다:
 - `common` - 공통 UI 텍스트
 - `game` - 게임 관련 텍스트
+  - `game.labels` - 라벨 (you, dealer, opponent1, opponent2, smallBlind, bigBlind)
+  - `game.opponents` - 상대 관련 (defeated, nextOpponent, preparing)
 - `difficulty` - 난이도 이름 및 설명
 - `round` - 라운드 이름
 - `result` - 결과 메시지
@@ -387,7 +445,20 @@ npm run test:run
 
 # E2E 테스트
 npm run test:e2e
+
+# Tauri 데스크톱 앱 (개발)
+npm run tauri:dev
+
+# Tauri 데스크톱 앱 (빌드)
+npm run tauri:build
 ```
+
+## 테스트 현황
+- **유닛 테스트**: 83개 (4개 파일)
+  - `starting-hands.test.ts` - 핸드랭킹 테스트 (26개)
+  - `hand-matcher.test.ts` - 핸드 매칭 테스트 (20개)
+  - `LevelStartOverlay.test.tsx` - 레벨 시작 오버레이 (20개)
+  - `OutcomeDetailsDialog.test.tsx` - 결과 상세 다이얼로그 (17개)
 
 ## 코딩 컨벤션
 
@@ -426,6 +497,19 @@ export function Component({ ...props }: ComponentProps) {
 - 로컬 상태: React useState
 - 영구 저장: localStorage (`lib/storage`)
 
+### gameStore 상대 관련 상태
+```tsx
+// 상태
+currentOpponentIndex: number;     // 0~4 (현재 상대 인덱스)
+opponentsDefeated: boolean[];     // [false, false, false, false, false]
+
+// 액션
+nextOpponent(): void;             // 다음 상대로 전환
+defeatCurrentOpponent(): void;    // 현재 상대 격파 표시
+getCurrentOpponent(): OpponentConfig | null;  // 현재 상대 정보
+isLastOpponent(): boolean;        // 딜러인지 확인
+```
+
 ## 주의사항
 
 ### 프리플랍 로직
@@ -436,6 +520,23 @@ export function Component({ ...props }: ComponentProps) {
 ### 타입 안전성
 - `AnswerResult.correctAnswer`는 `string | number` (프리플랍: 'player'/'computer')
 - `WinRateResult`의 모든 필드 필수 (totalCombinations, playerWins, computerWins, ties)
+
+### 상대 시스템 타입 (`types/game.ts`)
+```tsx
+type OpponentType = 'opponent1' | 'opponent2' | 'smallBlind' | 'bigBlind' | 'dealer';
+type HandMatchingRule = 'random' | 'range30' | 'range15' | 'range5';
+
+interface OpponentConfig {
+  type: OpponentType;
+  label: string;
+  labelKey: string;          // i18n 키 (예: 'game.labels.opponent1')
+  profileImage: string;      // 이미지 경로 (예: '/profiles/opponent1.png')
+  handMatchingRule: HandMatchingRule;
+  filterVisuallyObvious: boolean;
+}
+
+// 5명의 상대 설정 (OPPONENT_CONFIGS 배열로 export)
+```
 
 ### useEffect 의존성
 - `initGame` 같은 store 함수는 의존성 배열에서 제외 (무한 루프 방지)
@@ -482,7 +583,13 @@ export function Component({ ...props }: ComponentProps) {
     "typescript": "^5",
     "@types/react": "^19",
     "@playwright/test": "^1.57.0",
-    "vitest": "^4.0.18"
+    "vitest": "^4.0.18",
+    "@tauri-apps/cli": "^2.9.6"
   }
 }
 ```
+
+## 배포 옵션
+- **웹**: Next.js 정적/서버 배포 (Vercel, Netlify 등)
+- **데스크톱**: Tauri로 Windows/macOS/Linux 빌드 가능
+- **스팀**: Tauri 빌드 + Steamworks SDK 통합 필요
