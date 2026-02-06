@@ -7,12 +7,13 @@ import {
   Difficulty,
   GameRound,
   GameState,
-  GameStatus,
   WinRateResult,
   AnswerResult,
   DIFFICULTY_CONFIG,
   PREFLOP_TIME_LIMIT,
   initialGameState,
+  OPPONENT_CONFIGS,
+  OpponentType,
 } from '@/types';
 import {
   createDeck,
@@ -21,6 +22,7 @@ import {
   getDailySeed,
 } from '@/lib/poker';
 import { isSameStrength } from '@/lib/poker/starting-hands';
+import { generateOpponentHand } from '@/lib/poker/hand-matcher';
 
 interface GameStore extends GameState {
   // 액션
@@ -29,6 +31,8 @@ interface GameStore extends GameState {
   submitAnswer: (answer: string | number, winRateResult: WinRateResult) => void;
   nextRound: () => void;
   nextDifficulty: () => void;
+  nextOpponent: () => void;  // 다음 상대로 전환
+  defeatCurrentOpponent: () => void;  // 현재 상대 패배 처리
   gameOver: (message: string) => void;
   victory: () => void;
   resetGame: () => void;
@@ -51,6 +55,8 @@ interface GameStore extends GameState {
   // 유틸
   getTimeLimit: () => number;
   shouldSkipPreflop: () => boolean;
+  getCurrentOpponent: () => typeof OPPONENT_CONFIGS[number] | null;
+  isLastOpponent: () => boolean;
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -70,10 +76,23 @@ export const useGameStore = create<GameStore>((set, get) => ({
       deck = shuffleDeck(createDeck());
     }
 
-    // 카드 배분
+    // 플레이어 카드 배분
     const playerHand: [Card, Card] = [deck[0], deck[1]];
-    const computerHand: [Card, Card] = [deck[2], deck[3]];
-    const remainingDeck = deck.slice(4);
+    const remainingAfterPlayer = deck.slice(2);
+
+    // 첫 번째 상대 (opponent1) 핸드 생성
+    const firstOpponentType: OpponentType = OPPONENT_CONFIGS[0].type;
+    const computerHand = generateOpponentHand(
+      firstOpponentType,
+      playerHand,
+      remainingAfterPlayer
+    ) || [remainingAfterPlayer[0], remainingAfterPlayer[1]];
+
+    // 상대 카드 제외한 덱
+    const remainingDeck = remainingAfterPlayer.filter(
+      (card) =>
+        !computerHand.some((c) => c.suit === card.suit && c.rank === card.rank)
+    );
 
     set({
       ...initialGameState,
@@ -85,6 +104,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
       computerHand,
       deck: remainingDeck,
       communityCards: [],
+      currentOpponentIndex: 0,
+      opponentsDefeated: [false, false, false, false, false],
       timeRemaining: PREFLOP_TIME_LIMIT,
     });
   },
@@ -168,12 +189,67 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const currentIndex = difficulties.indexOf(state.difficulty);
 
     if (currentIndex < difficulties.length - 1) {
-      const nextDifficulty = difficulties[currentIndex + 1];
-      get().initGame(nextDifficulty);
+      const nextDifficultyLevel = difficulties[currentIndex + 1];
+      get().initGame(nextDifficultyLevel);
     } else {
       // 모든 난이도 클리어
       get().victory();
     }
+  },
+
+  // 다음 상대로 전환
+  nextOpponent: () => {
+    const state = get();
+    const { currentOpponentIndex, playerHand, deck } = state;
+
+    const nextIndex = currentOpponentIndex + 1;
+
+    // 마지막 상대 (딜러)를 이겼으면 다음 난이도로
+    if (nextIndex >= OPPONENT_CONFIGS.length) {
+      get().nextDifficulty();
+      return;
+    }
+
+    if (!playerHand) return;
+
+    // 다음 상대 핸드 생성
+    const nextOpponentType = OPPONENT_CONFIGS[nextIndex].type;
+    const newOpponentHand = generateOpponentHand(
+      nextOpponentType,
+      playerHand,
+      deck
+    ) || [deck[0], deck[1]];
+
+    // 상대 카드 제외한 덱
+    const newDeck = deck.filter(
+      (card) =>
+        !newOpponentHand.some((c) => c.suit === card.suit && c.rank === card.rank)
+    );
+
+    set({
+      currentOpponentIndex: nextIndex,
+      computerHand: newOpponentHand,
+      deck: newDeck,
+      currentRound: 'preflop',
+      communityCards: [],
+      status: 'playing',
+      winRateResult: null,
+      answers: [],
+      timeRemaining: PREFLOP_TIME_LIMIT,
+    });
+  },
+
+  // 현재 상대 패배 처리
+  defeatCurrentOpponent: () => {
+    const state = get();
+    const { currentOpponentIndex, opponentsDefeated } = state;
+
+    const newOpponentsDefeated = [...opponentsDefeated];
+    newOpponentsDefeated[currentOpponentIndex] = true;
+
+    set({
+      opponentsDefeated: newOpponentsDefeated,
+    });
   },
 
   // 게임 오버
@@ -277,5 +353,17 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const state = get();
     if (!state.playerHand || !state.computerHand) return false;
     return isSameStrength(state.playerHand, state.computerHand);
+  },
+
+  // 현재 상대 정보 반환
+  getCurrentOpponent: () => {
+    const state = get();
+    return OPPONENT_CONFIGS[state.currentOpponentIndex] || null;
+  },
+
+  // 마지막 상대(딜러)인지 확인
+  isLastOpponent: () => {
+    const state = get();
+    return state.currentOpponentIndex === OPPONENT_CONFIGS.length - 1;
   },
 }));

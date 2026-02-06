@@ -4,6 +4,9 @@
  * 상대별 핸드 생성 및 "눈에 띄는 차이" 필터링
  */
 
+import { Card, Rank, Suit, HandMatchingRule, OPPONENT_CONFIGS, OpponentType } from '@/types';
+import { evaluateStartingHand } from './starting-hands';
+
 // 169개 핸드 랭킹 리스트 (1위 AA ~ 169위 72o)
 export const HAND_RANKING_LIST: string[] = [
   // 1-10위
@@ -226,4 +229,155 @@ export function getFilteredMatchedHandName(
 
   // 최대 시도 후에도 못 찾으면 범위 내 랜덤 반환 (폴백)
   return getMatchedHandName(playerRank, range);
+}
+
+// ============================================
+// 실제 카드 생성 관련 함수
+// ============================================
+
+const SUITS: Suit[] = ['hearts', 'diamonds', 'clubs', 'spades'];
+
+/**
+ * 핸드 이름의 랭크 문자를 실제 Rank 타입으로 변환
+ */
+function handRankCharToRank(char: string): Rank {
+  if (char === 'T') return '10';
+  return char as Rank;
+}
+
+/**
+ * 핸드 이름에 맞는 카드 2장을 덱에서 찾아 반환
+ * @param handName 핸드 이름 (예: 'AKs', '77', 'QJo')
+ * @param availableCards 사용 가능한 카드들
+ * @param excludeCards 제외할 카드들
+ * @returns 카드 2장 또는 null (찾지 못한 경우)
+ */
+export function findCardsForHandName(
+  handName: string,
+  availableCards: Card[],
+  excludeCards: Card[] = []
+): [Card, Card] | null {
+  const parsed = parseHandName(handName);
+  const rank1 = handRankCharToRank(parsed.highCard);
+  const rank2 = handRankCharToRank(parsed.lowCard);
+
+  // 제외된 카드를 필터링
+  const filteredCards = availableCards.filter(
+    (card) => !excludeCards.some((ex) => ex.suit === card.suit && ex.rank === card.rank)
+  );
+
+  if (parsed.isPair) {
+    // 페어: 같은 랭크의 다른 수트 2장
+    const pairCards = filteredCards.filter((card) => card.rank === rank1);
+    if (pairCards.length >= 2) {
+      // 랜덤하게 2장 선택
+      const shuffled = [...pairCards].sort(() => Math.random() - 0.5);
+      return [shuffled[0], shuffled[1]];
+    }
+  } else if (parsed.isSuited) {
+    // 수딧: 같은 수트의 두 랭크
+    for (const suit of SUITS.sort(() => Math.random() - 0.5)) {
+      const card1 = filteredCards.find((card) => card.rank === rank1 && card.suit === suit);
+      const card2 = filteredCards.find((card) => card.rank === rank2 && card.suit === suit);
+      if (card1 && card2) {
+        return [card1, card2];
+      }
+    }
+  } else {
+    // 오프수딧: 다른 수트의 두 랭크
+    const shuffledSuits = [...SUITS].sort(() => Math.random() - 0.5);
+    for (let i = 0; i < shuffledSuits.length; i++) {
+      for (let j = 0; j < shuffledSuits.length; j++) {
+        if (i === j) continue;
+        const card1 = filteredCards.find(
+          (card) => card.rank === rank1 && card.suit === shuffledSuits[i]
+        );
+        const card2 = filteredCards.find(
+          (card) => card.rank === rank2 && card.suit === shuffledSuits[j]
+        );
+        if (card1 && card2) {
+          return [card1, card2];
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
+/**
+ * 상대 타입에 따른 핸드 이름 결정
+ */
+export function getOpponentHandName(
+  opponentType: OpponentType,
+  playerHandName: string,
+  playerRank: number
+): string {
+  const config = OPPONENT_CONFIGS.find((c) => c.type === opponentType);
+  if (!config) {
+    return getRandomHandName();
+  }
+
+  const rule = config.handMatchingRule;
+  const filter = config.filterVisuallyObvious;
+
+  if (rule === 'random') {
+    return getRandomHandName();
+  }
+
+  const range = rule === 'range30' ? 30 : rule === 'range15' ? 15 : 5;
+
+  if (filter) {
+    return getFilteredMatchedHandName(playerHandName, playerRank, range);
+  } else {
+    return getMatchedHandName(playerRank, range);
+  }
+}
+
+/**
+ * 상대 핸드 생성 (실제 카드 반환)
+ * @param opponentType 상대 타입
+ * @param playerHand 플레이어 핸드 (카드 2장)
+ * @param availableCards 사용 가능한 카드들 (덱)
+ * @returns 상대 핸드 카드 2장 또는 null
+ */
+export function generateOpponentHand(
+  opponentType: OpponentType,
+  playerHand: [Card, Card],
+  availableCards: Card[]
+): [Card, Card] | null {
+  const playerHandInfo = evaluateStartingHand(playerHand);
+  const opponentHandName = getOpponentHandName(
+    opponentType,
+    playerHandInfo.name,
+    playerHandInfo.rank
+  );
+
+  // 핸드 이름에 맞는 카드 찾기 (플레이어 카드 제외)
+  const cards = findCardsForHandName(opponentHandName, availableCards, playerHand);
+
+  if (cards) {
+    return cards;
+  }
+
+  // 찾지 못하면 랜덤 핸드로 재시도 (최대 10회)
+  for (let i = 0; i < 10; i++) {
+    const fallbackHandName = getRandomHandName();
+    const fallbackCards = findCardsForHandName(fallbackHandName, availableCards, playerHand);
+    if (fallbackCards) {
+      return fallbackCards;
+    }
+  }
+
+  // 그래도 못 찾으면 덱에서 아무 카드나 2장
+  const filtered = availableCards.filter(
+    (card) =>
+      !playerHand.some((p) => p.suit === card.suit && p.rank === card.rank)
+  );
+  if (filtered.length >= 2) {
+    const shuffled = [...filtered].sort(() => Math.random() - 0.5);
+    return [shuffled[0], shuffled[1]];
+  }
+
+  return null;
 }
