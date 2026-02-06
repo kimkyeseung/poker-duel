@@ -3,6 +3,66 @@ import { Card, Difficulty, GameRound, WinRateResult } from './poker';
 // 게임 상태
 export type GameStatus = 'waiting' | 'playing' | 'answering' | 'result' | 'gameover' | 'victory';
 
+// 상대 타입 (5명의 상대)
+export type OpponentType = 'opponent1' | 'opponent2' | 'smallBlind' | 'bigBlind' | 'dealer';
+
+// 핸드 매칭 규칙
+export type HandMatchingRule = 'random' | 'range30' | 'range15' | 'range5';
+
+// 상대 설정
+export interface OpponentConfig {
+  type: OpponentType;
+  label: string;
+  labelKey: string;  // i18n key
+  profileImage: string;
+  handMatchingRule: HandMatchingRule;
+  filterVisuallyObvious: boolean;  // 눈에 띄는 차이 필터링 여부
+}
+
+// 상대 설정 배열 (순서대로)
+export const OPPONENT_CONFIGS: OpponentConfig[] = [
+  {
+    type: 'opponent1',
+    label: 'Opponent 1',
+    labelKey: 'game.opponents.opponent1',
+    profileImage: '/profiles/opponent1.png',
+    handMatchingRule: 'random',
+    filterVisuallyObvious: false,
+  },
+  {
+    type: 'opponent2',
+    label: 'Opponent 2',
+    labelKey: 'game.opponents.opponent2',
+    profileImage: '/profiles/opponent2.png',
+    handMatchingRule: 'random',
+    filterVisuallyObvious: false,
+  },
+  {
+    type: 'smallBlind',
+    label: 'Small Blind',
+    labelKey: 'game.opponents.smallBlind',
+    profileImage: '/profiles/small-blind.png',
+    handMatchingRule: 'range30',
+    filterVisuallyObvious: false,
+  },
+  {
+    type: 'bigBlind',
+    label: 'Big Blind',
+    labelKey: 'game.opponents.bigBlind',
+    profileImage: '/profiles/big-blind.png',
+    handMatchingRule: 'range15',
+    filterVisuallyObvious: true,
+  },
+  {
+    type: 'dealer',
+    label: 'Dealer',
+    labelKey: 'game.opponents.dealer',
+    profileImage: '/profiles/dealer.png',
+    handMatchingRule: 'range5',
+    filterVisuallyObvious: true,
+  },
+];
+
 // 핸드 순위 정보 (프리플랍용)
 export interface HandRankInfo {
   name: string;
@@ -36,9 +96,13 @@ export interface GameState {
 
   // 카드
   playerHand: [Card, Card] | null;
-  computerHand: [Card, Card] | null;
+  computerHand: [Card, Card] | null;  // 현재 상대의 핸드 (하위 호환성 유지)
   communityCards: Card[];
   deck: Card[];
+
+  // 다중 상대 시스템
+  currentOpponentIndex: number;  // 0~4 (5명의 상대)
+  opponentsDefeated: boolean[];  // 각 상대 패배 여부
 
   // 결과
   winRateResult: WinRateResult | null;
@@ -130,6 +194,8 @@ export const initialGameState: GameState = {
   computerHand: null,
   communityCards: [],
   deck: [],
+  currentOpponentIndex: 0,
+  opponentsDefeated: [false, false, false, false, false],
   winRateResult: null,
   answers: [],
   timeRemaining: 10,
