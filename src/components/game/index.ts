@@ -11,3 +11,4 @@ export * from './GameProgress';
 export * from './DevAnswerOverlay';
 export * from './ResultDialog';
 export * from './LevelStartOverlay';
+export * from './OutcomeDetailsDialog';

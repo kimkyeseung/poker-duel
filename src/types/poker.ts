@@ -46,6 +46,44 @@ export interface WinRateResult {
   ties: number;
 }
 
+// 각 경우의 카드 조합 (상세 보기용)
+export type OutcomeType = 'win' | 'tie' | 'loss';
+
+export interface OutcomeCard {
+  cards: Card[]; // 추가된 커뮤니티 카드들 (턴: 1장, 플랍: 2장)
+  outcome: OutcomeType;
+  playerHandRank: HandRank; // 플레이어의 최종 핸드 랭크
+  computerHandRank: HandRank; // 컴퓨터의 최종 핸드 랭크
+}
+
+// 핸드 분포 (각 핸드 타입별 발생 횟수)
+export interface HandDistribution {
+  [key: number]: number; // HandRank -> count
+}
+
+// 매치업 분석 (특정 핸드 조합의 승패)
+export interface MatchupBreakdown {
+  playerRank: HandRank;
+  computerRank: HandRank;
+  wins: number;
+  ties: number;
+  losses: number;
+  total: number;
+}
+
+// 상세 정보가 포함된 승률 계산 결과
+export interface WinRateResultWithDetails extends WinRateResult {
+  outcomes: OutcomeCard[];
+}
+
+// 분석 데이터 포함 결과
+export interface WinRateResultWithAnalytics extends WinRateResult {
+  outcomes: OutcomeCard[];
+  playerHandDistribution: HandDistribution;
+  computerHandDistribution: HandDistribution;
+  matchupBreakdowns: MatchupBreakdown[];
+}
+
 // 게임 라운드
 export type GameRound = 'preflop' | 'flop' | 'turn' | 'river';
 

@@ -123,6 +123,40 @@ export const es: TranslationKeys = {
     win: "Gan.",
     ties: "Emp.",
     loss: "Perd.",
+    details: "Detalles",
+    outcomeDetails: "Detalles de Resultados",
+    addedCards: "Cartas Añadidas",
+    totalCombinations: "Combinaciones Totales",
+    noOutcomes: "Sin resultados en esta categoría",
+  },
+
+  // Hand Ranks
+  handRanks: {
+    royalFlush: "Escalera Real",
+    straightFlush: "Escalera de Color",
+    fourOfAKind: "Póker",
+    fullHouse: "Full House",
+    flush: "Color",
+    straight: "Escalera",
+    threeOfAKind: "Trío",
+    twoPair: "Doble Par",
+    onePair: "Par",
+    highCard: "Carta Alta",
+  },
+
+  // Outcome Analysis
+  outcomeAnalysis: {
+    title: "Análisis de Resultados",
+    tableContext: "Contexto de Mesa",
+    handDistribution: "Distribución de Manos",
+    matchupAnalysis: "Análisis de Enfrentamiento",
+    yourHand: "Tu Mano",
+    dealerHand: "Mano del Crupier",
+    communityCards: "Cartas Comunitarias",
+    remaining: "restantes",
+    vsDealer: "vs Crupier",
+    showMore: "Ver Más",
+    showLess: "Ver Menos",
   },
 
   // Difficulty

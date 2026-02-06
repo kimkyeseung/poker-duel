@@ -121,6 +121,40 @@ export const en = {
     win: "Win",
     ties: "Ties",
     loss: "Loss",
+    details: "Details",
+    outcomeDetails: "Outcome Details",
+    addedCards: "Added Cards",
+    totalCombinations: "Total Combinations",
+    noOutcomes: "No outcomes in this category",
+  },
+
+  // Hand Ranks
+  handRanks: {
+    royalFlush: "Royal Flush",
+    straightFlush: "Straight Flush",
+    fourOfAKind: "Four of a Kind",
+    fullHouse: "Full House",
+    flush: "Flush",
+    straight: "Straight",
+    threeOfAKind: "Three of a Kind",
+    twoPair: "Two Pair",
+    onePair: "One Pair",
+    highCard: "High Card",
+  },
+
+  // Outcome Analysis
+  outcomeAnalysis: {
+    title: "Result Analysis",
+    tableContext: "Table Context",
+    handDistribution: "Hand Distribution",
+    matchupAnalysis: "Matchup Analysis",
+    yourHand: "Your Hand",
+    dealerHand: "Dealer Hand",
+    communityCards: "Community Cards",
+    remaining: "remaining",
+    vsDealer: "vs Dealer",
+    showMore: "Show More",
+    showLess: "Show Less",
   },
 
   // Difficulty

@@ -123,6 +123,40 @@ export const zh: TranslationKeys = {
     win: "胜",
     ties: "平",
     loss: "负",
+    details: "详情",
+    outcomeDetails: "结果详情",
+    addedCards: "添加的牌",
+    totalCombinations: "总组合数",
+    noOutcomes: "此类别无结果",
+  },
+
+  // Hand Ranks
+  handRanks: {
+    royalFlush: "皇家同花顺",
+    straightFlush: "同花顺",
+    fourOfAKind: "四条",
+    fullHouse: "葫芦",
+    flush: "同花",
+    straight: "顺子",
+    threeOfAKind: "三条",
+    twoPair: "两对",
+    onePair: "一对",
+    highCard: "高牌",
+  },
+
+  // Outcome Analysis
+  outcomeAnalysis: {
+    title: "结果分析",
+    tableContext: "牌桌情况",
+    handDistribution: "牌型分布",
+    matchupAnalysis: "对局分析",
+    yourHand: "你的手牌",
+    dealerHand: "庄家手牌",
+    communityCards: "公共牌",
+    remaining: "剩余",
+    vsDealer: "vs 庄家",
+    showMore: "显示更多",
+    showLess: "收起",
   },
 
   // Difficulty

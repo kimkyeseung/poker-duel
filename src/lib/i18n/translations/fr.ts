@@ -123,6 +123,40 @@ export const fr: TranslationKeys = {
     win: "Vic.",
     ties: "Nul",
     loss: "Déf.",
+    details: "Détails",
+    outcomeDetails: "Détails des Résultats",
+    addedCards: "Cartes Ajoutées",
+    totalCombinations: "Combinaisons Totales",
+    noOutcomes: "Aucun résultat dans cette catégorie",
+  },
+
+  // Hand Ranks
+  handRanks: {
+    royalFlush: "Quinte Flush Royale",
+    straightFlush: "Quinte Flush",
+    fourOfAKind: "Carré",
+    fullHouse: "Full",
+    flush: "Couleur",
+    straight: "Suite",
+    threeOfAKind: "Brelan",
+    twoPair: "Double Paire",
+    onePair: "Paire",
+    highCard: "Carte Haute",
+  },
+
+  // Outcome Analysis
+  outcomeAnalysis: {
+    title: "Analyse des Résultats",
+    tableContext: "Contexte de Table",
+    handDistribution: "Distribution des Mains",
+    matchupAnalysis: "Analyse des Confrontations",
+    yourHand: "Votre Main",
+    dealerHand: "Main du Croupier",
+    communityCards: "Cartes Communes",
+    remaining: "restantes",
+    vsDealer: "vs Croupier",
+    showMore: "Voir Plus",
+    showLess: "Voir Moins",
   },
 
   // Difficulty

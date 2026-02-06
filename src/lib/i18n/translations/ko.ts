@@ -123,6 +123,40 @@ export const ko: TranslationKeys = {
     win: "승",
     ties: "무",
     loss: "패",
+    details: "자세히",
+    outcomeDetails: "경우의 수 상세",
+    addedCards: "추가 카드",
+    totalCombinations: "총 경우의 수",
+    noOutcomes: "해당 카테고리에 경우의 수 없음",
+  },
+
+  // Hand Ranks
+  handRanks: {
+    royalFlush: "로열 플러시",
+    straightFlush: "스트레이트 플러시",
+    fourOfAKind: "포카드",
+    fullHouse: "풀하우스",
+    flush: "플러시",
+    straight: "스트레이트",
+    threeOfAKind: "트리플",
+    twoPair: "투페어",
+    onePair: "원페어",
+    highCard: "하이카드",
+  },
+
+  // Outcome Analysis
+  outcomeAnalysis: {
+    title: "결과 분석",
+    tableContext: "테이블 현황",
+    handDistribution: "핸드 분포",
+    matchupAnalysis: "매치업 분석",
+    yourHand: "내 핸드",
+    dealerHand: "딜러 핸드",
+    communityCards: "커뮤니티 카드",
+    remaining: "남음",
+    vsDealer: "vs 딜러",
+    showMore: "더 보기",
+    showLess: "접기",
   },
 
   // Difficulty

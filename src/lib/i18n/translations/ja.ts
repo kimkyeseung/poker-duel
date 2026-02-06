@@ -123,6 +123,40 @@ export const ja: TranslationKeys = {
     win: "勝",
     ties: "分",
     loss: "敗",
+    details: "詳細",
+    outcomeDetails: "結果の詳細",
+    addedCards: "追加カード",
+    totalCombinations: "総組み合わせ",
+    noOutcomes: "このカテゴリに結果なし",
+  },
+
+  // Hand Ranks
+  handRanks: {
+    royalFlush: "ロイヤルフラッシュ",
+    straightFlush: "ストレートフラッシュ",
+    fourOfAKind: "フォーカード",
+    fullHouse: "フルハウス",
+    flush: "フラッシュ",
+    straight: "ストレート",
+    threeOfAKind: "スリーカード",
+    twoPair: "ツーペア",
+    onePair: "ワンペア",
+    highCard: "ハイカード",
+  },
+
+  // Outcome Analysis
+  outcomeAnalysis: {
+    title: "結果分析",
+    tableContext: "テーブル状況",
+    handDistribution: "ハンド分布",
+    matchupAnalysis: "マッチアップ分析",
+    yourHand: "あなたのハンド",
+    dealerHand: "ディーラーハンド",
+    communityCards: "コミュニティカード",
+    remaining: "残り",
+    vsDealer: "vs ディーラー",
+    showMore: "もっと見る",
+    showLess: "閉じる",
   },
 
   // Difficulty

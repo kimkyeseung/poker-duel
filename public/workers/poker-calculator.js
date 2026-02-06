@@ -222,8 +222,56 @@ function evaluateBestHand(cards) {
   return bestHand;
 }
 
+// 분석 데이터 집계
+function calculateAnalytics(outcomes) {
+  const playerDist = {};
+  const computerDist = {};
+  const matchups = {};
+
+  // 초기화 (HandRank 1~10)
+  for (let i = 1; i <= 10; i++) {
+    playerDist[i] = 0;
+    computerDist[i] = 0;
+  }
+
+  // 집계
+  for (const o of outcomes) {
+    playerDist[o.playerHandRank]++;
+    computerDist[o.computerHandRank]++;
+
+    const key = `${o.playerHandRank}-${o.computerHandRank}`;
+    if (!matchups[key]) {
+      matchups[key] = {
+        playerRank: o.playerHandRank,
+        computerRank: o.computerHandRank,
+        wins: 0,
+        ties: 0,
+        losses: 0,
+        total: 0,
+      };
+    }
+    matchups[key].total++;
+    if (o.outcome === 'win') {
+      matchups[key].wins++;
+    } else if (o.outcome === 'tie') {
+      matchups[key].ties++;
+    } else {
+      matchups[key].losses++;
+    }
+  }
+
+  // 매치업을 total 기준 내림차순 정렬
+  const matchupBreakdowns = Object.values(matchups).sort((a, b) => b.total - a.total);
+
+  return {
+    playerHandDistribution: playerDist,
+    computerHandDistribution: computerDist,
+    matchupBreakdowns,
+  };
+}
+
 // 완전 탐색으로 승률 계산
-function calculateWinRate(playerHand, computerHand, communityCards) {
+function calculateWinRate(playerHand, computerHand, communityCards, includeDetails = false) {
   const usedCards = [...playerHand, ...computerHand, ...communityCards];
   const remainingDeck = excludeCards(createDeck(), usedCards);
 
@@ -234,6 +282,9 @@ function calculateWinRate(playerHand, computerHand, communityCards) {
   let ties = 0;
   let totalCombinations = 0;
 
+  // 상세 모드: 각 경우의 카드 조합 저장
+  const outcomes = includeDetails ? [] : null;
+
   for (const combo of combinations(remainingDeck, neededCards)) {
     const fullCommunity = [...communityCards, ...combo];
 
@@ -243,12 +294,26 @@ function calculateWinRate(playerHand, computerHand, communityCards) {
     const playerEval = evaluateBestHand(playerCards);
     const computerEval = evaluateBestHand(computerCards);
 
+    let outcome;
     if (playerEval.score > computerEval.score) {
       playerWins++;
+      outcome = 'win';
     } else if (playerEval.score < computerEval.score) {
       computerWins++;
+      outcome = 'loss';
     } else {
       ties++;
+      outcome = 'tie';
+    }
+
+    // 상세 모드에서 카드 조합 + 핸드 랭크 저장
+    if (includeDetails) {
+      outcomes.push({
+        cards: combo, // 추가된 커뮤니티 카드들
+        outcome,
+        playerHandRank: playerEval.rank,
+        computerHandRank: computerEval.rank,
+      });
     }
 
     totalCombinations++;
@@ -258,7 +323,7 @@ function calculateWinRate(playerHand, computerHand, communityCards) {
   const computerWinRate = (computerWins / totalCombinations) * 100;
   const tieRate = (ties / totalCombinations) * 100;
 
-  return {
+  const result = {
     playerWinRate,
     computerWinRate,
     tieRate,
@@ -267,16 +332,30 @@ function calculateWinRate(playerHand, computerHand, communityCards) {
     computerWins,
     ties,
   };
+
+  if (includeDetails) {
+    result.outcomes = outcomes;
+    // 분석 데이터 추가
+    const analytics = calculateAnalytics(outcomes);
+    result.playerHandDistribution = analytics.playerHandDistribution;
+    result.computerHandDistribution = analytics.computerHandDistribution;
+    result.matchupBreakdowns = analytics.matchupBreakdowns;
+  }
+
+  return result;
 }
 
 // 메시지 핸들러
 self.onmessage = function(e) {
-  const { type, playerHand, computerHand, communityCards } = e.data;
+  const { type, playerHand, computerHand, communityCards, includeDetails } = e.data;
 
   try {
     if (type === 'calculate') {
-      const result = calculateWinRate(playerHand, computerHand, communityCards || []);
+      const result = calculateWinRate(playerHand, computerHand, communityCards || [], false);
       self.postMessage({ type: 'result', data: result });
+    } else if (type === 'calculateWithDetails') {
+      const result = calculateWinRate(playerHand, computerHand, communityCards || [], true);
+      self.postMessage({ type: 'resultWithDetails', data: result });
     }
   } catch (error) {
     self.postMessage({ type: 'error', error: error.message });
