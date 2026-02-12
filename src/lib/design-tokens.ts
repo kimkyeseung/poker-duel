@@ -219,7 +219,7 @@ export const difficultyColors = {
     border: 'border-[#ff4d94]/50',
     gradient: 'from-[#ff4d94] to-[#ff0080]',
   },
-  master: {
+  king: {
     bg: 'bg-[#ff4444]',
     bgSubtle: 'bg-[#ff4444]/20',
     text: 'text-[#ff4444]',

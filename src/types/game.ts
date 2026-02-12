@@ -216,6 +216,7 @@ export const initialGameStats: GameStats = {
     normal: { played: 0, cleared: 0 },
     hard: { played: 0, cleared: 0 },
     expert: { played: 0, cleared: 0 },
+    king: { played: 0, cleared: 0 },
     god: { played: 0, cleared: 0 },
   },
   achievements: [],

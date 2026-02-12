@@ -27,7 +27,7 @@ export function GameOverDialog({
   const config = DIFFICULTY_CONFIG[difficulty];
 
   // Calculate difficulty progress
-  const difficulties: Difficulty[] = ['easy', 'normal', 'hard', 'expert', 'god'];
+  const difficulties: Difficulty[] = ['easy', 'normal', 'hard', 'expert', 'king', 'god'];
   const currentIndex = difficulties.indexOf(difficulty);
   const progress = ((currentIndex) / difficulties.length) * 100;
 

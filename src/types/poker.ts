@@ -88,13 +88,13 @@ export interface WinRateResultWithAnalytics extends WinRateResult {
 export type GameRound = 'preflop' | 'flop' | 'turn' | 'river';
 
 // 난이도
-export type Difficulty = 'easy' | 'normal' | 'hard' | 'expert' | 'god';
+export type Difficulty = 'easy' | 'normal' | 'hard' | 'expert' | 'king' | 'god';
 
 // 난이도별 설정
 export interface DifficultyConfig {
   name: string;
   nameKo: string;
-  inputType: 'choice' | 'range' | 'input';
+  inputType: 'choice' | 'choice3' | 'range' | 'input';
   tolerance?: number; // 오차 허용 범위 (%)
   timeLimit: number; // 초
 }
@@ -109,19 +109,25 @@ export const DIFFICULTY_CONFIG: Record<Difficulty, DifficultyConfig> = {
   normal: {
     name: 'Normal',
     nameKo: '보통',
-    inputType: 'range',
+    inputType: 'choice3',
     timeLimit: 60,
   },
   hard: {
     name: 'Hard',
     nameKo: '어려움',
-    inputType: 'input',
-    tolerance: 5,
+    inputType: 'range',
     timeLimit: 60,
   },
   expert: {
     name: 'Expert',
     nameKo: '전문가',
+    inputType: 'input',
+    tolerance: 5,
+    timeLimit: 60,
+  },
+  king: {
+    name: 'King of Holdem',
+    nameKo: '홀덤왕',
     inputType: 'input',
     tolerance: 3,
     timeLimit: 60,

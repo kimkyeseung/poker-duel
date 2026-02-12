@@ -15,6 +15,7 @@ const DIFFICULTY_COLORS: Record<Difficulty, string> = {
   normal: 'from-[#00d4ff] to-[#0066ff]',
   hard: 'from-[#ffd700] to-[#ffb800]',
   expert: 'from-[#ff4d94] to-[#ff0080]',
+  king: 'from-[#ff4444] to-[#cc0000]',
   god: 'from-[#ffd700] via-[#ff4d94] to-[#ff0080]',
 };
 
@@ -23,7 +24,8 @@ const DIFFICULTY_ICONS: Record<Difficulty, string> = {
   normal: '2',
   hard: '3',
   expert: '4',
-  god: '5',
+  king: '5',
+  god: '6',
 };
 
 export function DifficultyBadge({
@@ -67,7 +69,7 @@ export function DifficultyProgress({
   currentDifficulty: Difficulty;
   className?: string;
 }) {
-  const difficulties: Difficulty[] = ['easy', 'normal', 'hard', 'expert', 'god'];
+  const difficulties: Difficulty[] = ['easy', 'normal', 'hard', 'expert', 'king', 'god'];
   const currentIndex = difficulties.indexOf(currentDifficulty);
 
   return (

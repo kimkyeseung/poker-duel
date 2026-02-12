@@ -253,7 +253,7 @@ export default function DailyChallengePage() {
 
   // 다음 난이도
   const handleNextDifficulty = useCallback(() => {
-    const difficulties: Difficulty[] = ['easy', 'normal', 'hard', 'expert', 'god'];
+    const difficulties: Difficulty[] = ['easy', 'normal', 'hard', 'expert', 'king', 'god'];
     const currentIndex = difficulties.indexOf(difficulty);
 
     if (currentIndex < difficulties.length - 1) {

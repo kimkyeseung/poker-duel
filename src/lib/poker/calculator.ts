@@ -1,4 +1,4 @@
-import { Card, WinRateResult } from '@/types';
+import { Card, WinRateResult, Difficulty } from '@/types';
 import { createDeck, excludeCards } from './deck';
 import { evaluateBestHand, compareHands } from './evaluator';
 
@@ -143,7 +143,7 @@ export function calculateWinRateRiver(
 
 // 정답 검증
 export function checkAnswer(
-  difficulty: 'easy' | 'normal' | 'hard' | 'expert' | 'god',
+  difficulty: Difficulty,
   playerAnswer: string | number,
   winRateResult: WinRateResult
 ): boolean {
@@ -160,15 +160,20 @@ export function checkAnswer(
       return false;
 
     case 'normal':
-      // 5지선다 (자신의 승률 구간)
-      const correctRange = getRangeForWinRate(playerWinRate);
-      return playerAnswer === correctRange;
+      // 3지선다 (0-35, 35-70, 70-100)
+      const correctRange3 = getRange3ForWinRate(playerWinRate);
+      return playerAnswer === correctRange3;
 
     case 'hard':
+      // 5지선다 (자신의 승률 구간)
+      const correctRange5 = getRange5ForWinRate(playerWinRate);
+      return playerAnswer === correctRange5;
+
+    case 'expert':
       // 직접 입력, ±5% 오차
       return Math.abs(Number(playerAnswer) - playerWinRate) <= 5;
 
-    case 'expert':
+    case 'king':
       // 직접 입력, ±3% 오차
       return Math.abs(Number(playerAnswer) - playerWinRate) <= 3;
 
@@ -181,8 +186,15 @@ export function checkAnswer(
   }
 }
 
-// 승률에 해당하는 구간 반환
-function getRangeForWinRate(winRate: number): string {
+// 승률에 해당하는 3지선다 구간 반환 (normal)
+function getRange3ForWinRate(winRate: number): string {
+  if (winRate < 35) return '0-35';
+  if (winRate < 70) return '35-70';
+  return '70-100';
+}
+
+// 승률에 해당하는 5지선다 구간 반환 (hard)
+function getRange5ForWinRate(winRate: number): string {
   if (winRate < 20) return '0-20';
   if (winRate < 40) return '20-40';
   if (winRate < 60) return '40-60';

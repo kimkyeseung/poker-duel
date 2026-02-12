@@ -101,6 +101,11 @@ export const ja: TranslationKeys = {
       whatIsWinProbability: "あなたの勝率は？",
     },
     tolerance: "許容誤差: ±{tolerance}%",
+    choice3: {
+      low: "低",
+      medium: "中",
+      high: "高",
+    },
     validation: {
       invalidRange: "0から100の間の値を入力してください",
     },
@@ -185,6 +190,7 @@ export const ja: TranslationKeys = {
     normal: "ノーマル",
     hard: "ハード",
     expert: "エキスパート",
+    king: "ホールデム王",
     god: "ホールデムの神",
     level: "レベル {number}",
   },
@@ -192,9 +198,10 @@ export const ja: TranslationKeys = {
   // Level Info
   levelInfo: {
     easy: "より良いハンドを持っている方を選んでください",
-    normal: "正しい勝率の範囲を選択してください",
-    hard: "±5%の精度で予測してください",
-    expert: "±3%の精度で予測してください",
+    normal: "3つの勝率範囲から選んでください",
+    hard: "5つの勝率範囲から選んでください",
+    expert: "±5%の精度で予測してください",
+    king: "±3%の精度で予測してください",
     god: "±1%の精度で予測してください",
   },
 
@@ -223,6 +230,12 @@ export const ja: TranslationKeys = {
       "エリートは他者が見逃すパターンを見る。",
       "熟達とは他者が知らないことを知ること。",
       "精度が良いと素晴らしいの違いを生む。",
+    ],
+    king: [
+      "王の玉座に挑戦するとは！",
+      "ここで生き残れば、真の王だ。",
+      "3%以内に入れ。集中しろ。",
+      "王冠は最も正確な者に与えられる。",
     ],
     god: [
       "ポーカーマスタリーの最終テストへようこそ。",

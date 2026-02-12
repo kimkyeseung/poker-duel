@@ -37,6 +37,11 @@ const DIFFICULTY_THEMES: Record<Difficulty, {
     glow: 'shadow-[0_0_60px_rgba(139,92,246,0.5)]',
     accent: 'text-purple-400',
   },
+  king: {
+    gradient: 'from-red-500 to-rose-600',
+    glow: 'shadow-[0_0_60px_rgba(239,68,68,0.5)]',
+    accent: 'text-red-400',
+  },
   god: {
     gradient: 'from-rose-500 to-pink-600',
     glow: 'shadow-[0_0_60px_rgba(244,63,94,0.5)]',
@@ -134,7 +139,7 @@ export function LevelStartOverlay({
           'text-sm font-bold tracking-[0.3em] uppercase mb-4',
           theme.accent,
         )}>
-          {t.difficulty.level.replace('{number}', String(['easy', 'normal', 'hard', 'expert', 'god'].indexOf(difficulty) + 1))}
+          {t.difficulty.level.replace('{number}', String(['easy', 'normal', 'hard', 'expert', 'king', 'god'].indexOf(difficulty) + 1))}
         </div>
 
         {/* 난이도 타이틀 */}

@@ -99,6 +99,11 @@ export const en = {
       whatIsWinProbability: "What's your win probability?",
     },
     tolerance: "Tolerance: ±{tolerance}%",
+    choice3: {
+      low: "Low",
+      medium: "Medium",
+      high: "High",
+    },
     validation: {
       invalidRange: "Please enter a value between 0 and 100",
     },
@@ -183,6 +188,7 @@ export const en = {
     normal: "Normal",
     hard: "Hard",
     expert: "Expert",
+    king: "King of Holdem",
     god: "God of Holdem",
     level: "Level {number}",
   },
@@ -190,9 +196,10 @@ export const en = {
   // Level Info
   levelInfo: {
     easy: "Choose who has the better hand",
-    normal: "Select the correct win rate range",
-    hard: "Predict within ±5% accuracy",
-    expert: "Predict within ±3% accuracy",
+    normal: "Select from 3 win rate ranges",
+    hard: "Select from 5 win rate ranges",
+    expert: "Predict within ±5% accuracy",
+    king: "Predict within ±3% accuracy",
     god: "Predict within ±1% accuracy",
   },
 
@@ -221,6 +228,12 @@ export const en = {
       "The elite see patterns others miss.",
       "Mastery is knowing what others don't know they don't know.",
       "Precision is the difference between good and great.",
+    ],
+    king: [
+      "You dare challenge for the King's throne!",
+      "Survive here, and you're a true king.",
+      "Within 3%. Stay focused.",
+      "The crown belongs to the most precise.",
     ],
     god: [
       "Welcome to the final test of poker mastery.",

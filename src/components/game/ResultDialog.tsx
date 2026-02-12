@@ -89,7 +89,7 @@ export function ResultDialog({
   // Get next difficulty
   const getNextDifficulty = (): Difficulty | null => {
     if (!difficulty) return null;
-    const difficulties: Difficulty[] = ['easy', 'normal', 'hard', 'expert', 'god'];
+    const difficulties: Difficulty[] = ['easy', 'normal', 'hard', 'expert', 'king', 'god'];
     const currentIndex = difficulties.indexOf(difficulty);
     if (currentIndex < difficulties.length - 1) {
       return difficulties[currentIndex + 1];

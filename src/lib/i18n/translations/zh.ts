@@ -101,6 +101,11 @@ export const zh: TranslationKeys = {
       whatIsWinProbability: "你的胜率是多少？",
     },
     tolerance: "容差: ±{tolerance}%",
+    choice3: {
+      low: "低",
+      medium: "中",
+      high: "高",
+    },
     validation: {
       invalidRange: "请输入0到100之间的值",
     },
@@ -185,6 +190,7 @@ export const zh: TranslationKeys = {
     normal: "普通",
     hard: "困难",
     expert: "专家",
+    king: "德州之王",
     god: "德州之神",
     level: "等级 {number}",
   },
@@ -192,9 +198,10 @@ export const zh: TranslationKeys = {
   // Level Info
   levelInfo: {
     easy: "选择谁有更好的牌",
-    normal: "选择正确的胜率范围",
-    hard: "预测精度在±5%以内",
-    expert: "预测精度在±3%以内",
+    normal: "从3个胜率范围中选择",
+    hard: "从5个胜率范围中选择",
+    expert: "预测精度在±5%以内",
+    king: "预测精度在±3%以内",
     god: "预测精度在±1%以内",
   },
 
@@ -223,6 +230,12 @@ export const zh: TranslationKeys = {
       "精英能看到别人看不到的模式。",
       "精通是知道别人不知道自己不知道的事。",
       "精确是好与卓越的区别。",
+    ],
+    king: [
+      "你敢挑战王位！",
+      "在这里生存下来，你就是真正的王。",
+      "3%以内。保持专注。",
+      "王冠属于最精准的人。",
     ],
     god: [
       "欢迎来到扑克精通的最终考验。",

@@ -101,6 +101,11 @@ export const es: TranslationKeys = {
       whatIsWinProbability: "¿Cuál es tu probabilidad de ganar?",
     },
     tolerance: "Tolerancia: ±{tolerance}%",
+    choice3: {
+      low: "Bajo",
+      medium: "Medio",
+      high: "Alto",
+    },
     validation: {
       invalidRange: "Ingresa un valor entre 0 y 100",
     },
@@ -185,6 +190,7 @@ export const es: TranslationKeys = {
     normal: "Normal",
     hard: "Difícil",
     expert: "Experto",
+    king: "Rey del Holdem",
     god: "Dios del Holdem",
     level: "Nivel {number}",
   },
@@ -192,9 +198,10 @@ export const es: TranslationKeys = {
   // Level Info
   levelInfo: {
     easy: "Elige quién tiene la mejor mano",
-    normal: "Selecciona el rango correcto de probabilidad",
-    hard: "Predice con ±5% de precisión",
-    expert: "Predice con ±3% de precisión",
+    normal: "Selecciona entre 3 rangos de probabilidad",
+    hard: "Selecciona entre 5 rangos de probabilidad",
+    expert: "Predice con ±5% de precisión",
+    king: "Predice con ±3% de precisión",
     god: "Predice con ±1% de precisión",
   },
 
@@ -223,6 +230,12 @@ export const es: TranslationKeys = {
       "La élite ve patrones que otros no ven.",
       "La maestría es saber lo que otros no saben.",
       "La precisión marca la diferencia entre bueno y excelente.",
+    ],
+    king: [
+      "¡Te atreves a desafiar el trono del Rey!",
+      "Sobrevive aquí y serás un verdadero rey.",
+      "Dentro del 3%. Mantén la concentración.",
+      "La corona pertenece al más preciso.",
     ],
     god: [
       "Bienvenido a la prueba final de maestría en póker.",

@@ -36,6 +36,10 @@ export function AnswerInput({
       return (
         <ChoiceInput onSubmit={onSubmit} disabled={disabled} className={className} isPreflop={false} />
       );
+    case 'choice3':
+      return (
+        <Choice3Input onSubmit={onSubmit} disabled={disabled} className={className} />
+      );
     case 'range':
       return (
         <RangeInput onSubmit={onSubmit} disabled={disabled} className={className} />
@@ -107,7 +111,71 @@ function ChoiceInput({
   );
 }
 
-// Range input (Normal mode)
+// 3-Choice input (Normal mode - 0~35%, 35~70%, 70~100%)
+function Choice3Input({
+  onSubmit,
+  disabled,
+  className,
+}: {
+  onSubmit: (answer: string) => void;
+  disabled?: boolean;
+  className?: string;
+}) {
+  const { t } = useTranslation();
+  const ranges = [
+    { value: '0-35', label: '0-35%', subLabel: t.game.choice3?.low || '낮음', gradient: 'from-[#ff4444] to-[#ff6666]' },
+    { value: '35-70', label: '35-70%', subLabel: t.game.choice3?.medium || '중간', gradient: 'from-[#ffd700] to-[#ffb800]' },
+    { value: '70-100', label: '70-100%', subLabel: t.game.choice3?.high || '높음', gradient: 'from-[#00ff88] to-[#00cc66]' },
+  ];
+
+  return (
+    <div className={cn('game-card p-3 sm:p-6 lg:!bg-transparent lg:!border-none lg:!shadow-none lg:!p-0', className)} role="radiogroup" aria-label="Select win rate range">
+      {/* Symbol Image - Desktop only */}
+      <div className="hidden lg:flex justify-center mb-3">
+        <div className="relative w-32 h-32">
+          <Image
+            src="/symbol.png"
+            alt="Mascot"
+            fill
+            className="object-contain drop-shadow-[0_0_25px_rgba(0,212,255,0.4)]"
+          />
+        </div>
+      </div>
+
+      <p className="text-center text-white text-sm sm:text-lg lg:text-base font-semibold mb-2 sm:mb-4 lg:mb-3">
+        {t.game.questions.whatIsWinProbability}
+      </p>
+      {/* Mobile/Tablet: Horizontal, Desktop: Vertical */}
+      <div className="grid grid-cols-3 lg:grid-cols-1 gap-2 sm:gap-3 lg:gap-3">
+        {ranges.map(({ value, label, subLabel, gradient }) => (
+          <button
+            key={value}
+            onClick={() => onSubmit(value)}
+            disabled={disabled}
+            role="radio"
+            aria-checked={false}
+            className={cn(
+              'py-3 sm:py-4 lg:py-4 px-2 sm:px-4 lg:px-6 rounded-xl font-bold text-white',
+              'flex flex-col items-center justify-center gap-0.5',
+              'bg-gradient-to-b lg:bg-gradient-to-r',
+              'transition-all duration-200',
+              'hover:scale-105 lg:hover:scale-[1.02] hover:-translate-y-1 lg:hover:translate-y-0 lg:hover:translate-x-1',
+              'active:scale-95',
+              'focus:outline-none focus:ring-2 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-[#0a0e1a]',
+              'disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 disabled:hover:translate-y-0 disabled:hover:translate-x-0',
+              gradient
+            )}
+          >
+            <span className="text-xs sm:text-sm lg:text-base opacity-80">{subLabel}</span>
+            <span className="text-sm sm:text-lg lg:text-xl">{label}</span>
+          </button>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Range input (Hard mode - 5 choices)
 function RangeInput({
   onSubmit,
   disabled,

@@ -138,7 +138,7 @@ describe('LevelStartOverlay', () => {
   });
 
   describe('레벨 번호 계산', () => {
-    const difficulties = ['easy', 'normal', 'hard', 'expert', 'god'];
+    const difficulties = ['easy', 'normal', 'hard', 'expert', 'king', 'god'];
 
     it('easy는 Level 1이다', () => {
       expect(difficulties.indexOf('easy') + 1).toBe(1);
@@ -156,8 +156,12 @@ describe('LevelStartOverlay', () => {
       expect(difficulties.indexOf('expert') + 1).toBe(4);
     });
 
-    it('god는 Level 5이다', () => {
-      expect(difficulties.indexOf('god') + 1).toBe(5);
+    it('king은 Level 5이다', () => {
+      expect(difficulties.indexOf('king') + 1).toBe(5);
+    });
+
+    it('god는 Level 6이다', () => {
+      expect(difficulties.indexOf('god') + 1).toBe(6);
     });
   });
 });

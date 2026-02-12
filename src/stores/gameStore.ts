@@ -185,7 +185,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   // 다음 난이도
   nextDifficulty: () => {
     const state = get();
-    const difficulties: Difficulty[] = ['easy', 'normal', 'hard', 'expert', 'god'];
+    const difficulties: Difficulty[] = ['easy', 'normal', 'hard', 'expert', 'king', 'god'];
     const currentIndex = difficulties.indexOf(state.difficulty);
 
     if (currentIndex < difficulties.length - 1) {

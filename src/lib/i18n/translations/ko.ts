@@ -101,6 +101,11 @@ export const ko: TranslationKeys = {
       whatIsWinProbability: "당신의 승률은?",
     },
     tolerance: "허용 오차: ±{tolerance}%",
+    choice3: {
+      low: "낮음",
+      medium: "중간",
+      high: "높음",
+    },
     validation: {
       invalidRange: "0에서 100 사이의 값을 입력하세요",
     },
@@ -185,6 +190,7 @@ export const ko: TranslationKeys = {
     normal: "보통",
     hard: "어려움",
     expert: "전문가",
+    king: "홀덤왕",
     god: "홀덤의 신",
     level: "레벨 {number}",
   },
@@ -192,9 +198,10 @@ export const ko: TranslationKeys = {
   // Level Info
   levelInfo: {
     easy: "더 좋은 패를 가진 사람을 선택하세요",
-    normal: "올바른 승률 범위를 선택하세요",
-    hard: "±5% 오차 내로 예측하세요",
-    expert: "±3% 오차 내로 예측하세요",
+    normal: "3개의 승률 범위 중 선택하세요",
+    hard: "5개의 승률 범위 중 선택하세요",
+    expert: "±5% 오차 내로 예측하세요",
+    king: "±3% 오차 내로 예측하세요",
     god: "±1% 오차 내로 예측하세요",
   },
 
@@ -223,6 +230,12 @@ export const ko: TranslationKeys = {
       "엘리트는 다른 사람이 놓치는 패턴을 봅니다.",
       "숙달은 다른 사람이 모르는 것을 아는 것입니다.",
       "정밀함이 좋음과 위대함의 차이입니다.",
+    ],
+    king: [
+      "홀덤왕의 자리에 도전하는군요!",
+      "이곳에서 살아남으면 진정한 왕입니다.",
+      "3% 안에 들어야 합니다. 집중하세요.",
+      "왕좌는 가장 정확한 자에게 돌아갑니다.",
     ],
     god: [
       "포커 마스터리의 최종 테스트에 오신 것을 환영합니다.",
