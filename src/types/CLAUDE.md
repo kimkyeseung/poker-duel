@@ -31,7 +31,7 @@ interface Card {
 ### 게임 상태
 ```tsx
 type Round = 'preflop' | 'flop' | 'turn' | 'river';
-type Difficulty = 'easy' | 'normal' | 'hard' | 'expert' | 'master';
+type Difficulty = 'easy' | 'normal' | 'hard' | 'expert' | 'king' | 'god';
 type GamePhase = 'betting' | 'result' | 'gameover' | 'victory';
 ```
 
