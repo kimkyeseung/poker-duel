@@ -8,24 +8,29 @@ type CardSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 interface TableProps {
   communityCards: CardType[];
+  burnCards?: CardType[];
   className?: string;
   isRevealing?: boolean;
   newCardsCount?: number;
   onRevealComplete?: () => void;
   compact?: boolean;
   cardSize?: CardSize;
+  showBurnCards?: boolean;
 }
 
 export function Table({
   communityCards,
+  burnCards = [],
   className,
   isRevealing = false,
   newCardsCount = 0,
   onRevealComplete,
   compact = false,
   cardSize: propCardSize,
+  showBurnCards = true,
 }: TableProps) {
   const cardSize = propCardSize ?? (compact ? 'sm' : 'lg');
+  const burnCardSize = compact ? 'xs' : 'sm';
   const slots = Array(5).fill(null);
   const previousCardCount = communityCards.length - newCardsCount;
 
@@ -60,6 +65,49 @@ export function Table({
         'relative z-10 flex items-center justify-center',
         compact ? 'py-3 sm:py-5 px-2 sm:px-4' : 'py-10 px-6'
       )}>
+        {/* Burn cards pile (left side) */}
+        {showBurnCards && burnCards.length > 0 && (
+          <div className={cn(
+            'absolute flex flex-col items-center',
+            compact ? 'left-2 sm:left-4' : 'left-6'
+          )}>
+            <div className="relative">
+              {burnCards.map((_, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    'absolute transition-all duration-300',
+                    index === burnCards.length - 1 && 'animate-in slide-in-from-right-4 fade-in'
+                  )}
+                  style={{
+                    transform: `rotate(${-5 + index * 3}deg) translateX(${index * 2}px) translateY(${index * 2}px)`,
+                  }}
+                >
+                  <Card isHidden size={burnCardSize} />
+                </div>
+              ))}
+              {/* Top visible burn card */}
+              <div
+                className="relative"
+                style={{
+                  transform: `rotate(${-5 + (burnCards.length - 1) * 3}deg)`,
+                  marginLeft: `${(burnCards.length - 1) * 2}px`,
+                  marginTop: `${(burnCards.length - 1) * 2}px`,
+                }}
+              >
+                <Card isHidden size={burnCardSize} />
+              </div>
+            </div>
+            <span className={cn(
+              'text-[#64748b] font-medium mt-1',
+              compact ? 'text-[8px]' : 'text-[10px]'
+            )}>
+              BURN
+            </span>
+          </div>
+        )}
+
+        {/* Community cards */}
         <div className={cn('flex', compact ? 'gap-1 sm:gap-2' : 'gap-3 md:gap-4')}>
           {slots.map((_, index) => {
             const card = communityCards[index];

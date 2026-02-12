@@ -98,6 +98,7 @@ export interface GameState {
   playerHand: [Card, Card] | null;
   computerHand: [Card, Card] | null;  // 현재 상대의 핸드 (하위 호환성 유지)
   communityCards: Card[];
+  burnCards: Card[];  // 번 카드 (플랍/턴/리버 전에 버려진 카드)
   deck: Card[];
 
   // 다중 상대 시스템
@@ -197,6 +198,7 @@ export const initialGameState: GameState = {
   playerHand: null,
   computerHand: null,
   communityCards: [],
+  burnCards: [],
   deck: [],
   currentOpponentIndex: 0,
   opponentsDefeated: [false, false, false, false, false],

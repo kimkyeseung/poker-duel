@@ -151,7 +151,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   // 다음 라운드
   nextRound: () => {
     const state = get();
-    const { currentRound, deck, communityCards } = state;
+    const { currentRound, deck, communityCards, burnCards } = state;
 
     const roundOrder: GameRound[] = ['preflop', 'flop', 'turn', 'river'];
     const currentIndex = roundOrder.indexOf(currentRound);
@@ -161,18 +161,22 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
       // 커뮤니티 카드 추가
       let newCommunityCards = [...communityCards];
+      let newBurnCards = [...burnCards];
       let newDeck = [...deck];
 
       if (nextRound === 'flop') {
         // 번 카드 1장 + 플랍 3장
+        newBurnCards = [deck[0]];
         newCommunityCards = [deck[1], deck[2], deck[3]];
         newDeck = deck.slice(4);
       } else if (nextRound === 'turn') {
         // 번 카드 1장 + 턴 1장
+        newBurnCards = [...burnCards, deck[0]];
         newCommunityCards = [...communityCards, deck[1]];
         newDeck = deck.slice(2);
       } else if (nextRound === 'river') {
         // 번 카드 1장 + 리버 1장
+        newBurnCards = [...burnCards, deck[0]];
         newCommunityCards = [...communityCards, deck[1]];
         newDeck = deck.slice(2);
       }
@@ -180,6 +184,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       set({
         currentRound: nextRound,
         communityCards: newCommunityCards,
+        burnCards: newBurnCards,
         deck: newDeck,
         status: 'playing',
         winRateResult: null,
@@ -237,6 +242,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
       deck: newDeck,
       currentRound: 'preflop',
       communityCards: [],
+      burnCards: [],
       status: 'playing',
       winRateResult: null,
       answers: [],

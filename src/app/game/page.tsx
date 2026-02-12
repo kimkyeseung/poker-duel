@@ -44,6 +44,7 @@ export default function GamePage() {
     playerHand,
     computerHand,
     communityCards,
+    burnCards,
     timeRemaining,
     isTimerRunning,
     currentOpponentIndex,
@@ -506,6 +507,7 @@ export default function GamePage() {
           {/* Table */}
           <Table
             communityCards={communityCards}
+            burnCards={burnCards}
             className="w-full max-w-xl lg:max-w-2xl lg:scale-125 lg:origin-center"
             isRevealing={isRevealingCards}
             newCardsCount={newCardsCount}
