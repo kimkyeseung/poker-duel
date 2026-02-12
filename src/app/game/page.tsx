@@ -125,19 +125,16 @@ export default function GamePage() {
             setNewCardsCount(0);
           });
       } else if (currentRound === 'flop') {
-        console.log('Flop started, communityCards:', communityCards);
         setIsRevealingCards(true);
         setNewCardsCount(3);
         playSFX('card-deal');
         calculate(playerHand, computerHand, communityCards)
           .then(result => {
-            console.log('Flop calculation result:', result);
             setCurrentWinRate(result);
             setTimeout(() => {
               setIsRevealingCards(false);
               setNewCardsCount(0);
               hasSubmittedRef.current = false;
-              console.log('Flop: calling startRound');
               playSFX('round-start');
               startRound();
             }, CARD_REVEAL_DURATION);
