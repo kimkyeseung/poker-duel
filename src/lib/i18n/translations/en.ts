@@ -116,6 +116,17 @@ export const en = {
       showAnswer: "Answer",
       hideAnswer: "Hide",
     },
+    betting: {
+      title: "River Betting",
+      odds: "Odds",
+      oddsDescription: "Lower win rate means higher odds",
+      amount: "Bet Amount",
+      expectedPayout: "Expected Payout (on win)",
+      skip: "Skip",
+      bet: "Bet",
+      noChips: "No chips to bet",
+      chips: "Chips",
+    },
   },
 
   // Results

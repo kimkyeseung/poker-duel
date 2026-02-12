@@ -23,6 +23,7 @@ import {
 } from '@/lib/poker';
 import { isSameStrength } from '@/lib/poker/starting-hands';
 import { generateOpponentHand } from '@/lib/poker/hand-matcher';
+import { calculateChipReward } from '@/lib/game/chips';
 
 interface GameStore extends GameState {
   // 액션
@@ -57,6 +58,10 @@ interface GameStore extends GameState {
   shouldSkipPreflop: () => boolean;
   getCurrentOpponent: () => typeof OPPONENT_CONFIGS[number] | null;
   isLastOpponent: () => boolean;
+
+  // 칩 시스템
+  addChips: (amount: number) => void;
+  awardChipsForCorrectAnswer: () => void;
 }
 
 export const useGameStore = create<GameStore>((set, get) => ({
@@ -365,5 +370,33 @@ export const useGameStore = create<GameStore>((set, get) => ({
   isLastOpponent: () => {
     const state = get();
     return state.currentOpponentIndex === OPPONENT_CONFIGS.length - 1;
+  },
+
+  // 칩 추가
+  addChips: (amount: number) => {
+    const state = get();
+    set({
+      chips: state.chips + amount,
+      lastChipReward: amount > 0 ? amount : null,
+    });
+  },
+
+  // 정답 시 칩 보상 지급
+  awardChipsForCorrectAnswer: () => {
+    const state = get();
+    const { difficulty, timeRemaining, currentRound } = state;
+
+    const reward = calculateChipReward(
+      difficulty,
+      timeRemaining,
+      currentRound === 'preflop'
+    );
+
+    if (reward > 0) {
+      set({
+        chips: state.chips + reward,
+        lastChipReward: reward,
+      });
+    }
   },
 }));

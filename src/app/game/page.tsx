@@ -18,13 +18,16 @@ import {
   DevAnswerOverlay,
   LevelStartOverlay,
   OpponentProgress,
+  ChipDisplay,
+  RiverBetting,
 } from '@/components/game';
 import { checkAnswer } from '@/lib/poker/calculator';
+import { calculateOdds, calculateBetResult } from '@/lib/game/chips';
 import { evaluateStartingHand, compareStartingHands, StartingHandInfo } from '@/lib/poker/starting-hands';
-import { recordGameResult, updateStreak } from '@/lib/storage';
+import { recordGameResult, updateStreak, updateChipHighScoreIfNeeded } from '@/lib/storage';
 import { useBGM, useSFX } from '@/lib/audio';
 import { useTranslation } from '@/lib/i18n';
-import { DIFFICULTY_CONFIG, WinRateResult, AnswerResult, GameRound } from '@/types';
+import { WinRateResult, AnswerResult } from '@/types';
 import { cn } from '@/lib/utils';
 
 const CARD_REVEAL_DURATION = 2000;
@@ -45,6 +48,8 @@ export default function GamePage() {
     isTimerRunning,
     currentOpponentIndex,
     opponentsDefeated,
+    chips,
+    lastChipReward,
     initGame,
     startRound,
     decrementTimer,
@@ -60,6 +65,8 @@ export default function GamePage() {
     shouldSkipPreflop,
     getCurrentOpponent,
     isLastOpponent,
+    awardChipsForCorrectAnswer,
+    addChips,
   } = useGameStore();
 
   const { calculate, isCalculating, calculateWithDetails, isCalculatingDetails, detailsResult, clearDetailsResult } = usePokerCalculator();
@@ -79,6 +86,8 @@ export default function GamePage() {
   const [showOpponentOverlay, setShowOpponentOverlay] = useState(false);
   const [isViewingRiver, setIsViewingRiver] = useState(false);
   const [isAnswerPanelOpen, setIsAnswerPanelOpen] = useState(false);
+  const [showRiverBetting, setShowRiverBetting] = useState(false);
+  const [riverWinRate, setRiverWinRate] = useState<WinRateResult | null>(null);
 
   const hasSubmittedRef = useRef(false);
 
@@ -113,10 +122,16 @@ export default function GamePage() {
         calculate(playerHand, computerHand, communityCards)
           .then(result => {
             setCurrentWinRate(result);
+            setRiverWinRate(result);
             setTimeout(() => {
               setIsRevealingCards(false);
               setNewCardsCount(0);
-              handleRiverResult(result);
+              // 칩이 있으면 리버 베팅 보여주기, 없으면 바로 결과
+              if (chips > 0) {
+                setShowRiverBetting(true);
+              } else {
+                handleRiverResult(result);
+              }
             }, CARD_REVEAL_DURATION);
           })
           .catch(err => {
@@ -194,10 +209,11 @@ export default function GamePage() {
     if (hasSubmittedRef.current) return;
     stopTimer();
     playSFX('game-over');
+    updateChipHighScoreIfNeeded(chips);
     gameOver('Time Out!');
     recordGameResult(difficulty, false);
     updateStreak(false);
-  }, [stopTimer, gameOver, difficulty, playSFX]);
+  }, [stopTimer, gameOver, difficulty, playSFX, chips]);
 
   const handleSubmitAnswer = useCallback((answer: string | number) => {
     if (!playerHand || !computerHand) return;
@@ -249,8 +265,10 @@ export default function GamePage() {
 
     if (isCorrect) {
       playSFX('correct');
+      awardChipsForCorrectAnswer();
     } else {
       playSFX('wrong');
+      updateChipHighScoreIfNeeded(chips);
       gameOver('Wrong Answer!');
       recordGameResult(difficulty, false);
       updateStreak(false);
@@ -288,6 +306,7 @@ export default function GamePage() {
       playSFX('correct');
     } else {
       playSFX('wrong');
+      updateChipHighScoreIfNeeded(chips);
       gameOver('Wrong Answer!');
       recordGameResult(difficulty, false);
       updateStreak(false);
@@ -305,11 +324,34 @@ export default function GamePage() {
     setShowResult(true);
   };
 
+  const handleRiverBet = useCallback((betAmount: number) => {
+    if (!riverWinRate) return;
+    setShowRiverBetting(false);
+
+    // 배당률 계산 및 결과 처리
+    const odds = calculateOdds(riverWinRate.playerWinRate);
+    const isWin = riverWinRate.playerWinRate > riverWinRate.computerWinRate;
+    const betResult = calculateBetResult(betAmount, odds, isWin);
+
+    // 칩 업데이트
+    addChips(betResult);
+
+    // 결과 표시
+    handleRiverResult(riverWinRate);
+  }, [riverWinRate, addChips]);
+
+  const handleRiverSkip = useCallback(() => {
+    if (!riverWinRate) return;
+    setShowRiverBetting(false);
+    handleRiverResult(riverWinRate);
+  }, [riverWinRate]);
+
   const handleContinue = () => {
     setShowResult(false);
     setLastAnswer(null);
     setCurrentWinRate(null);
     setIsViewingRiver(false);
+    setRiverWinRate(null);
     clearDetailsResult();
 
     if (currentRound === 'river' || currentRound === 'turn') {
@@ -324,6 +366,7 @@ export default function GamePage() {
 
         if (difficulty === 'god') {
           playSFX('victory');
+          updateChipHighScoreIfNeeded(chips);
           victory();
         } else {
           playSFX('level-up');
@@ -347,6 +390,7 @@ export default function GamePage() {
     setLastAnswer(null);
     setCurrentWinRate(null);
     setIsViewingRiver(true);
+    setRiverWinRate(null);
     clearDetailsResult();
     nextRound();
   };
@@ -359,6 +403,8 @@ export default function GamePage() {
     setCurrentWinRate(null);
     setHasPlayerCardsRevealed(false);
     setShowLevelOverlay(true);
+    setShowRiverBetting(false);
+    setRiverWinRate(null);
     clearDetailsResult();
   };
 
@@ -379,8 +425,6 @@ export default function GamePage() {
   const handleWriteComment = () => {
     router.push('/comments');
   };
-
-  const config = DIFFICULTY_CONFIG[difficulty];
 
   return (
     <div className="h-screen bg-[#0a0e1a] overflow-hidden flex flex-col">
@@ -415,6 +459,7 @@ export default function GamePage() {
             />
           </div>
           <div className="flex items-center gap-1 sm:gap-2">
+            <ChipDisplay chips={chips} lastReward={lastChipReward} size="sm" />
             <LanguageSelector />
             <AudioToggle />
           </div>
@@ -666,6 +711,20 @@ export default function GamePage() {
             <p className="text-[#00d4ff] text-lg">
               Next: {getCurrentOpponent()?.label || 'Opponent'}
             </p>
+          </div>
+        </div>
+      )}
+
+      {/* River Betting Dialog */}
+      {showRiverBetting && riverWinRate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+          <div className="w-full max-w-md animate-bounce-in">
+            <RiverBetting
+              chips={chips}
+              playerWinRate={riverWinRate.playerWinRate}
+              onBet={handleRiverBet}
+              onSkip={handleRiverSkip}
+            />
           </div>
         </div>
       )}

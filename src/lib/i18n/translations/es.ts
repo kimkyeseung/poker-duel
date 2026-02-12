@@ -118,6 +118,17 @@ export const es: TranslationKeys = {
       showAnswer: "Responder",
       hideAnswer: "Ocultar",
     },
+    betting: {
+      title: "Apuesta del River",
+      odds: "Cuota",
+      oddsDescription: "Menor probabilidad significa mayor cuota",
+      amount: "Cantidad de apuesta",
+      expectedPayout: "Pago esperado (si ganas)",
+      skip: "Saltar",
+      bet: "Apostar",
+      noChips: "Sin fichas para apostar",
+      chips: "Fichas",
+    },
   },
 
   // Results

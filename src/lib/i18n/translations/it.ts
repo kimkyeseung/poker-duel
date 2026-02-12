@@ -118,6 +118,17 @@ export const it: TranslationKeys = {
       showAnswer: "Rispondi",
       hideAnswer: "Nascondi",
     },
+    betting: {
+      title: "Scommessa al River",
+      odds: "Quota",
+      oddsDescription: "Probabilità più bassa significa quota più alta",
+      amount: "Importo scommessa",
+      expectedPayout: "Vincita prevista (in caso di vittoria)",
+      skip: "Salta",
+      bet: "Scommetti",
+      noChips: "Nessuna fiche da scommettere",
+      chips: "Fiche",
+    },
   },
 
   // Results

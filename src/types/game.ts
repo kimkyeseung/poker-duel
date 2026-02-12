@@ -115,6 +115,10 @@ export interface GameState {
   // 게임 결과
   isVictory: boolean;
   finalMessage: string;
+
+  // 칩 시스템
+  chips: number;
+  lastChipReward: number | null;  // 마지막 획득 칩 (UI 표시용)
 }
 
 // 게임 통계
@@ -202,6 +206,8 @@ export const initialGameState: GameState = {
   isTimerRunning: false,
   isVictory: false,
   finalMessage: '',
+  chips: 0,
+  lastChipReward: null,
 };
 
 // 초기 통계

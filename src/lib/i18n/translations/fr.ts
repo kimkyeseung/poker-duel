@@ -118,6 +118,17 @@ export const fr: TranslationKeys = {
       showAnswer: "Répondre",
       hideAnswer: "Cacher",
     },
+    betting: {
+      title: "Mise à la River",
+      odds: "Cote",
+      oddsDescription: "Plus la probabilité est basse, plus la cote est élevée",
+      amount: "Montant de la mise",
+      expectedPayout: "Gain attendu (en cas de victoire)",
+      skip: "Passer",
+      bet: "Miser",
+      noChips: "Pas de jetons à miser",
+      chips: "Jetons",
+    },
   },
 
   // Results

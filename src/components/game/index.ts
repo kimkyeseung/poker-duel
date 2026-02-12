@@ -13,3 +13,5 @@ export * from './ResultDialog';
 export * from './LevelStartOverlay';
 export * from './OutcomeDetailsDialog';
 export * from './OpponentProgress';
+export * from './ChipDisplay';
+export * from './RiverBetting';

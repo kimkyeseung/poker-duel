@@ -118,6 +118,17 @@ export const ja: TranslationKeys = {
       showAnswer: "回答する",
       hideAnswer: "隠す",
     },
+    betting: {
+      title: "リバーベッティング",
+      odds: "オッズ",
+      oddsDescription: "勝率が低いほどオッズが高くなります",
+      amount: "ベット額",
+      expectedPayout: "予想配当（勝利時）",
+      skip: "スキップ",
+      bet: "ベット",
+      noChips: "ベットするチップがありません",
+      chips: "チップ",
+    },
   },
 
   // Results

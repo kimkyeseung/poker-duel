@@ -7,6 +7,7 @@ const STORAGE_KEYS = {
   COMMENTS: 'holdamnit-comments',
   SETTINGS: 'holdamnit-settings',
   TUTORIAL_SEEN: 'holdamnit-tutorial-seen',
+  CHIP_HIGH_SCORE: 'holdamnit-chip-highscore',
 };
 
 // 통계 관련
@@ -188,4 +189,41 @@ export function recordGameResult(
       },
     };
   });
+}
+
+// 칩 최고 기록 관련
+export function getChipHighScore(): number {
+  if (typeof window === 'undefined') return 0;
+
+  try {
+    const data = localStorage.getItem(STORAGE_KEYS.CHIP_HIGH_SCORE);
+    if (data) {
+      return parseInt(data, 10) || 0;
+    }
+  } catch (e) {
+    console.error('Failed to load chip high score:', e);
+  }
+  return 0;
+}
+
+export function saveChipHighScore(chips: number): void {
+  if (typeof window === 'undefined') return;
+
+  try {
+    const currentHighScore = getChipHighScore();
+    if (chips > currentHighScore) {
+      localStorage.setItem(STORAGE_KEYS.CHIP_HIGH_SCORE, chips.toString());
+    }
+  } catch (e) {
+    console.error('Failed to save chip high score:', e);
+  }
+}
+
+export function updateChipHighScoreIfNeeded(chips: number): boolean {
+  const currentHighScore = getChipHighScore();
+  if (chips > currentHighScore) {
+    saveChipHighScore(chips);
+    return true;
+  }
+  return false;
 }

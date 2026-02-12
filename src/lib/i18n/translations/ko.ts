@@ -118,6 +118,17 @@ export const ko: TranslationKeys = {
       showAnswer: "정답 입력",
       hideAnswer: "숨기기",
     },
+    betting: {
+      title: "리버 배팅",
+      odds: "배당률",
+      oddsDescription: "승률이 낮을수록 배당률이 높습니다",
+      amount: "배팅 금액",
+      expectedPayout: "예상 수익 (승리 시)",
+      skip: "스킵",
+      bet: "배팅",
+      noChips: "배팅할 칩이 없습니다",
+      chips: "칩",
+    },
   },
 
   // Results

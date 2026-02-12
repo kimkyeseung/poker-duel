@@ -118,6 +118,17 @@ export const zh: TranslationKeys = {
       showAnswer: "回答",
       hideAnswer: "隐藏",
     },
+    betting: {
+      title: "河牌下注",
+      odds: "赔率",
+      oddsDescription: "胜率越低，赔率越高",
+      amount: "下注金额",
+      expectedPayout: "预期收益（获胜时）",
+      skip: "跳过",
+      bet: "下注",
+      noChips: "没有可下注的筹码",
+      chips: "筹码",
+    },
   },
 
   // Results
