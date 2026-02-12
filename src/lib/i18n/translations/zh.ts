@@ -393,4 +393,22 @@ export const zh: TranslationKeys = {
     luckyCard: "今日幸运牌: {card}",
     hotTables: "牌桌火热!",
   },
+
+  // Leaderboard
+  leaderboard: {
+    title: "排行榜",
+    notConfigured: "排行榜不可用",
+    noEntries: "暂无记录，成为第一个吧！",
+    submitScore: "提交分数",
+    yourName: "昵称",
+    namePlaceholder: "请输入昵称",
+    nameRequired: "请输入昵称",
+    submit: "提交",
+    submitted: "分数已提交！",
+    checkLeaderboard: "去排行榜查看你的排名吧！",
+    rank: "排名",
+    player: "玩家",
+    chips: "筹码",
+    viewAll: "查看全部",
+  },
 };

@@ -393,4 +393,22 @@ export const ko: TranslationKeys = {
     luckyCard: "오늘의 럭키 카드: {card}",
     hotTables: "테이블이 뜨겁네요!",
   },
+
+  // Leaderboard
+  leaderboard: {
+    title: "리더보드",
+    notConfigured: "리더보드를 사용할 수 없습니다",
+    noEntries: "아직 기록이 없습니다. 첫 번째가 되어보세요!",
+    submitScore: "점수 등록",
+    yourName: "닉네임",
+    namePlaceholder: "닉네임을 입력하세요",
+    nameRequired: "닉네임을 입력해주세요",
+    submit: "등록",
+    submitted: "점수가 등록되었습니다!",
+    checkLeaderboard: "리더보드에서 순위를 확인하세요!",
+    rank: "순위",
+    player: "플레이어",
+    chips: "칩",
+    viewAll: "전체 보기",
+  },
 };

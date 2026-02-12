@@ -5,3 +5,5 @@ export * from './AudioToggle';
 export * from './ClickToStart';
 export * from './LanguageSelector';
 export * from './ProfileAvatar';
+export * from './Leaderboard';
+export * from './ScoreSubmitDialog';

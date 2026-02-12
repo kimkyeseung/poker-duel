@@ -393,4 +393,22 @@ export const ja: TranslationKeys = {
     luckyCard: "今日のラッキーカード: {card}",
     hotTables: "テーブルが熱い!",
   },
+
+  // Leaderboard
+  leaderboard: {
+    title: "リーダーボード",
+    notConfigured: "リーダーボードは利用できません",
+    noEntries: "まだ記録がありません。最初の一人になろう！",
+    submitScore: "スコアを登録",
+    yourName: "ニックネーム",
+    namePlaceholder: "名前を入力してください",
+    nameRequired: "名前を入力してください",
+    submit: "登録",
+    submitted: "スコアが登録されました！",
+    checkLeaderboard: "リーダーボードで順位を確認しよう！",
+    rank: "順位",
+    player: "プレイヤー",
+    chips: "チップ",
+    viewAll: "すべて見る",
+  },
 };

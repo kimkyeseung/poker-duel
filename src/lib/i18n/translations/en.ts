@@ -391,6 +391,24 @@ export const en = {
     luckyCard: "Today's lucky card: {card}",
     hotTables: "The tables are hot!",
   },
+
+  // Leaderboard
+  leaderboard: {
+    title: "Leaderboard",
+    notConfigured: "Leaderboard not available",
+    noEntries: "No entries yet. Be the first!",
+    submitScore: "Submit Your Score",
+    yourName: "Your Name",
+    namePlaceholder: "Enter your name",
+    nameRequired: "Name is required",
+    submit: "Submit",
+    submitted: "Score Submitted!",
+    checkLeaderboard: "Check the leaderboard to see your rank!",
+    rank: "Rank",
+    player: "Player",
+    chips: "Chips",
+    viewAll: "View All",
+  },
 };
 
 export type TranslationKeys = typeof en;

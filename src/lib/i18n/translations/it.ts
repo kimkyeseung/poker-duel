@@ -393,4 +393,22 @@ export const it: TranslationKeys = {
     luckyCard: "Carta fortunata: {card}",
     hotTables: "I tavoli sono caldi!",
   },
+
+  // Leaderboard
+  leaderboard: {
+    title: "Classifica",
+    notConfigured: "Classifica non disponibile",
+    noEntries: "Nessun punteggio ancora. Sii il primo!",
+    submitScore: "Invia Il Tuo Punteggio",
+    yourName: "Il Tuo Nome",
+    namePlaceholder: "Inserisci il tuo nome",
+    nameRequired: "Il nome è obbligatorio",
+    submit: "Invia",
+    submitted: "Punteggio Inviato!",
+    checkLeaderboard: "Controlla la classifica per vedere il tuo posto!",
+    rank: "Posizione",
+    player: "Giocatore",
+    chips: "Fiches",
+    viewAll: "Vedi Tutto",
+  },
 };
