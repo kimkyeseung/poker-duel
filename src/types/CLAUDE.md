@@ -30,9 +30,15 @@ interface Card {
 
 ### 게임 상태
 ```tsx
-type Round = 'preflop' | 'flop' | 'turn' | 'river';
+type GameRound = 'preflop' | 'flop' | 'turn' | 'river';
 type Difficulty = 'easy' | 'normal' | 'hard' | 'expert' | 'king' | 'god';
-type GamePhase = 'betting' | 'result' | 'gameover' | 'victory';
+type GameStatus =
+  | 'waiting'    // 게임 시작 전
+  | 'playing'    // 카드 공개 등 진행 중
+  | 'answering'  // 입력 UI 표시, 타이머 동작
+  | 'result'     // 라운드 결과 표시
+  | 'gameover'
+  | 'victory';
 ```
 
 ## 주의

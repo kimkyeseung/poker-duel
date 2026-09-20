@@ -64,8 +64,9 @@ const opponentHand = generateOpponentHand(opponentType, playerHand, availableCar
 
 ```
 src/
-├── app/          # 페이지 (game, practice, daily, stats, settings)
+├── app/          # 페이지 (game, practice, daily, stats, settings, comments)
 ├── components/   # game/ (게임 UI), ui/ (공통 UI)
+├── hooks/        # usePokerCalculator (Web Worker 래퍼)
 ├── lib/          # poker/ (엔진), audio/ (사운드), i18n/ (번역), game/ (칩), supabase/ (DB)
 ├── stores/       # gameStore, localeStore
 └── types/        # poker.ts, game.ts
@@ -113,13 +114,15 @@ export function Component() {
 
 ## 스토리지 키
 
-| 키 | 용도 |
-|----|------|
-| `holdamnit-stats` | 게임 통계 |
-| `holdamnit-settings` | 설정 |
-| `holdamnit-locale` | 언어 설정 |
-| `holdamnit-tutorial-seen` | 튜토리얼 완료 |
-| `holdamnit-chip-highscore` | 칩 최고 기록 |
+| 키 | 저장소 | 용도 |
+|----|--------|------|
+| `holdamnit-stats` | localStorage | 게임 통계 |
+| `holdamnit-settings` | localStorage | 설정 |
+| `holdamnit-locale` | localStorage | 언어 설정 |
+| `holdamnit-tutorial-seen` | localStorage | 튜토리얼 완료 |
+| `holdamnit-chip-highscore` | localStorage | 칩 최고 기록 |
+| `holdamnit-comments` | localStorage | 코멘트 목록 |
+| `holdamnit-started` | **sessionStorage** | Click to Start 오버레이 해제 여부 (탭을 닫으면 초기화) |
 
 ## Supabase 연동
 

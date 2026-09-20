@@ -60,13 +60,23 @@ calculate(playerHand, opponentHand, communityCards);
 
 프리플랍 전용. AA(1위) ~ 72o(169위)
 
-```tsx
-import { getHandRank, HAND_RANKINGS } from './starting-hands';
+순위표 `HAND_RANKINGS`는 모듈 내부 상수이며 export되지 않는다. 아래 두 함수로 접근한다.
 
-const rank = getHandRank(hand); // 1-169
+```tsx
+import { evaluateStartingHand, getHandRank } from './starting-hands';
+
+// 카드 2장 → 핸드명 + 순위 + 티어
+const { name, rank, tier } = evaluateStartingHand(hand); // rank: 1-169, tier: 1-8
+
+// 핸드명을 이미 알고 있을 때 (카드가 아니라 문자열을 받는다)
+const rank = getHandRank('AKs'); // 1-169
 ```
+
+핸드명 문자열 전체 목록이 필요하면 `hand-matcher.ts`의 `HAND_RANKING_LIST`(169개 배열)를 쓴다.
 
 ## 테스트
 
 - `starting-hands.test.ts`: 26개 (랭킹 정확성)
 - `hand-matcher.test.ts`: 20개 (매칭 로직)
+- `engine.test.ts`: 13개 (evaluator 서열 · calculator 불변식 · deck 무결성 ·
+  Web Worker와 라이브러리 구현 일치)
