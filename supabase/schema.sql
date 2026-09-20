@@ -1,6 +1,14 @@
 -- ============================================================================
 -- Hol'Damn It! Supabase Schema
--- Supabase SQL Editor에서 실행하세요.
+--
+-- 실행 방법
+--   Supabase SQL Editor에 이 파일 "전체"를 붙여넣고 한 번에 실행한다.
+--   일부만 선택해 실행하면 DROP과 CREATE가 짝을 이루지 못해
+--   "policy ... already exists" 같은 오류가 나고 트랜잭션이 통째로 롤백된다.
+--   이 스크립트는 멱등하므로 전체를 여러 번 실행해도 안전하다.
+--
+--   DO $$ ... $$ 블록과 함수 본문에 세미콜론이 들어 있다. 세미콜론으로
+--   구문을 쪼개는 클라이언트에서는 정상 동작하지 않으므로 그대로 전달할 것.
 --
 -- 보안 모델
 --   - 읽기: 누구나 가능 (리더보드는 공개 데이터)
@@ -244,19 +252,62 @@ $$;
 
 REVOKE ALL ON FUNCTION public.request_ip() FROM PUBLIC, anon, authenticated;
 
+-- IP 해시용 salt.
+--
+-- salt를 이 파일에 literal로 적으면 저장소를 볼 수 있는 누구나 알게 되어
+-- 해시가 IP를 전혀 보호하지 못한다(IPv4 전수 대입은 사소하다). 그래서 salt는
+-- DB 안에서 생성해 비공개 스키마에 보관하고, 이 파일에는 값이 남지 않는다.
+--
+-- 아래 INSERT는 salt가 없을 때만 생성하므로, 이 스크립트를 다시 실행해도
+-- 기존 salt는 바뀌지 않는다(= 기존 해시가 무효화되지 않는다).
+-- 의도적으로 교체하려면 먼저 행을 지우고 다시 실행한다:
+--   DELETE FROM private.app_secrets WHERE key = 'ip_salt';
+-- 교체하면 이전 해시와는 매칭되지 않으므로 레이트리밋 이력이 초기화된다.
+
+CREATE SCHEMA IF NOT EXISTS private;
+REVOKE ALL ON SCHEMA private FROM PUBLIC, anon, authenticated;
+
+CREATE TABLE IF NOT EXISTS private.app_secrets (
+  key   TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+REVOKE ALL ON private.app_secrets FROM PUBLIC, anon, authenticated;
+ALTER TABLE private.app_secrets ENABLE ROW LEVEL SECURITY;
+-- 정책을 만들지 않는다 → SECURITY DEFINER 함수(소유자)만 읽을 수 있다
+
+INSERT INTO private.app_secrets (key, value)
+SELECT 'ip_salt', encode(extensions.gen_random_bytes(32), 'hex')
+WHERE NOT EXISTS (SELECT 1 FROM private.app_secrets WHERE key = 'ip_salt');
+
 -- IP 해시. 원본 IP는 저장하지 않는다.
--- SALT는 배포마다 반드시 교체할 것.
+-- 비공개 테이블을 읽으므로 SECURITY DEFINER이고, 테이블을 읽는 이상
+-- IMMUTABLE이 아니라 STABLE이다.
 CREATE OR REPLACE FUNCTION public.hash_ip(p_ip TEXT)
 RETURNS TEXT
-LANGUAGE sql
-IMMUTABLE
+LANGUAGE plpgsql
+STABLE
+SECURITY DEFINER
 SET search_path = ''
-AS $$
-  SELECT CASE
-    WHEN p_ip IS NULL THEN NULL
-    ELSE md5(p_ip || 'holdamnit-change-this-salt')
-  END;
-$$;
+AS $fn$
+DECLARE
+  v_salt TEXT;
+BEGIN
+  IF p_ip IS NULL THEN
+    RETURN NULL;
+  END IF;
+
+  SELECT value INTO v_salt FROM private.app_secrets WHERE key = 'ip_salt';
+
+  -- salt가 없으면 해시를 만들지 않는다. 레이트리밋은 건너뛰게 되지만,
+  -- 보호되지 않는 형태로 IP를 저장하는 것보다 낫다.
+  IF v_salt IS NULL THEN
+    RETURN NULL;
+  END IF;
+
+  RETURN encode(extensions.digest(v_salt || p_ip, 'sha256'), 'hex');
+END;
+$fn$;
 
 REVOKE ALL ON FUNCTION public.hash_ip(TEXT) FROM PUBLIC, anon, authenticated;
 

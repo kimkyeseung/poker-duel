@@ -137,8 +137,15 @@ anon 키가 클라이언트에 노출되므로 **테이블 직접 INSERT는 막�
 - `submit_daily_score(p_player_name, p_chips, p_country_code)`
 
 `id` / `created_at` / `date`는 인자에 없으며 서버가 정한다. UPDATE/DELETE는 불가.
-스키마 변경 시 `supabase/schema.sql`을 수정하고 SQL Editor에서 재실행한다
-(신규 설치와 기존 배포 업그레이드 모두 처리하는 멱등 스크립트).
+스키마 변경 시 `supabase/schema.sql`을 수정하고 SQL Editor에서 **파일 전체를**
+재실행한다 (신규 설치와 기존 배포 업그레이드 모두 처리하는 멱등 스크립트).
+일부만 선택해 실행하면 DROP/CREATE 짝이 깨져 롤백된다.
+
+### 비밀값
+IP 해시용 salt는 `private.app_secrets` 테이블에 있으며 **저장소에 두지 않는다**.
+`schema.sql`이 없을 때만 DB 안에서 생성하므로 재실행해도 기존 salt는 보존된다.
+`private` 스키마는 anon/authenticated 접근이 회수되어 있어
+SECURITY DEFINER 함수만 읽을 수 있다.
 
 ### API
 ```tsx
