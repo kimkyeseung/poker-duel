@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { goToHome, waitForCardReveal, clickAnswerButton, dismissClickToStart } from './helpers';
+import { goToHome, waitForCardReveal, clickAnswerButton, dismissClickToStart, answerChoiceButtons } from './helpers';
 
 test.describe('카드 공개 애니메이션', () => {
   test.describe('프리플랍 카드 공개', () => {
@@ -33,7 +33,7 @@ test.describe('카드 공개 애니메이션', () => {
       await waitForCardReveal(page);
 
       // 버튼이 표시됨
-      const answerButtons = page.locator('[role="group"] button, [role="radio"], .game-card button');
+      const answerButtons = answerChoiceButtons(page);
       await expect(answerButtons.first()).toBeVisible({ timeout: 5000 });
     });
 
@@ -78,7 +78,7 @@ test.describe('카드 공개 애니메이션', () => {
 
         // 플랍에서 입력 UI가 다시 표시될 때까지 대기
         await waitForCardReveal(page);
-        const answerButtons = page.locator('[role="group"] button, [role="radio"], .game-card button');
+        const answerButtons = answerChoiceButtons(page);
         await expect(answerButtons.first()).toBeVisible({ timeout: 5000 });
       }
     });
@@ -96,7 +96,7 @@ test.describe('카드 공개 애니메이션', () => {
       await waitForCardReveal(page);
 
       // 버튼이 표시됨
-      const answerButtons = page.locator('[role="group"] button, [role="radio"], .game-card button');
+      const answerButtons = answerChoiceButtons(page);
       await expect(answerButtons.first()).toBeVisible({ timeout: 5000 });
     });
 

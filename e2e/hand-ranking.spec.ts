@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { goToGame, waitForCardReveal, clickAnswerButton, dismissClickToStart } from './helpers';
+import { goToGame, waitForCardReveal, clickAnswerButton, dismissClickToStart, answerChoiceButtons } from './helpers';
 
 test.describe('핸드 랭킹 표시', () => {
   test('프리플랍 결과에서 핸드 이름이 올바르게 표시된다', async ({ page }) => {
@@ -7,7 +7,7 @@ test.describe('핸드 랭킹 표시', () => {
     await waitForCardReveal(page);
 
     // 선택 버튼이 표시될 때까지 대기
-    const choiceButtons = page.locator('[role="group"] button, [role="radio"], .game-card button');
+    const choiceButtons = answerChoiceButtons(page);
     await expect(choiceButtons.first()).toBeVisible({ timeout: 5000 });
 
     // 아무 버튼이나 클릭
@@ -48,7 +48,7 @@ test.describe('핸드 랭킹 표시', () => {
       await waitForCardReveal(page);
 
       // 선택 버튼 클릭
-      const choiceButtons = page.locator('[role="group"] button, [role="radio"], .game-card button');
+      const choiceButtons = answerChoiceButtons(page);
       if (await choiceButtons.first().isVisible({ timeout: 3000 }).catch(() => false)) {
         await choiceButtons.first().click();
         await page.waitForTimeout(1000);

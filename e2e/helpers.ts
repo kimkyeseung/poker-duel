@@ -75,6 +75,22 @@ export async function goToDaily(page: Page) {
 }
 
 /**
+ * 현재 뷰포트에서 보이는 정답 선택 버튼들.
+ *
+ * game/page.tsx는 AnswerInput을 반응형으로 3벌 렌더링한다
+ * (모바일 / `hidden sm:block lg:hidden` 태블릿 / 데스크톱). 따라서 이 셀렉터는
+ * 여러 사본에 매칭되고 그중 실제로 보이는 것은 한 벌뿐이다. .first()는 DOM
+ * 순서상 첫 번째를 잡으므로 데스크톱 뷰포트에서는 숨겨진 태블릿용 사본을
+ * 집어와 toBeVisible()이 "hidden"으로 실패한다.
+ * 그래서 보이는 것만 남긴다.
+ */
+export function answerChoiceButtons(page: Page) {
+  return page
+    .locator('[role="group"] button, [role="radio"], .game-card button')
+    .filter({ visible: true });
+}
+
+/**
  * 게임에서 카드 공개 애니메이션이 완료될 때까지 대기합니다.
  */
 export async function waitForCardReveal(page: Page) {
@@ -85,9 +101,10 @@ export async function waitForCardReveal(page: Page) {
  * 정답 선택 버튼 중 하나를 클릭합니다.
  */
 export async function clickAnswerButton(page: Page, buttonIndex: number = 0) {
-  const buttons = page.locator('main button, [role="group"] button, [role="radio"]');
-  const button = buttons.nth(buttonIndex);
-  if (await button.isVisible({ timeout: 5000 })) {
-    await button.click();
-  }
+  // 이전 구현은 'main button'까지 포함해 헤더·나가기 버튼 등 정답과 무관한
+  // 버튼이 DOM 순서상 앞에 오면 nth(0)이 그것을 집었다. 게다가 isVisible()은
+  // 대기하지 않고 즉시 판정하므로, 아직 보이지 않으면 클릭을 조용히 건너뛰고
+  // 테스트는 정답이 제출된 줄 알고 진행하다 엉뚱한 곳에서 실패했다.
+  const button = answerChoiceButtons(page).nth(buttonIndex);
+  await button.click({ timeout: 10000 });
 }
