@@ -339,28 +339,57 @@ export const it: TranslationKeys = {
     showHint: "Mostra Suggerimento",
   },
 
-  // Achievements
+  // 도전과제 (id는 lib/game/achievements.ts의 id와 1:1로 맞춘다)
   achievements: {
-    firstStep: "Primo Passo",
-    firstStepDesc: "Gioca la tua prima partita",
-    tenGames: "Dieci Sfide",
-    tenGamesDesc: "Gioca 10 partite",
-    firstWin: "Prima Vittoria",
-    firstWinDesc: "Vinci la tua prima partita",
-    streakStarter: "Inizio Serie",
-    streakStarterDesc: "Vinci 3 partite consecutive",
+    "first-game": { name: "Primo Passo", desc: "Hai iniziato la tua prima partita" },
+    "games-10": { name: "Dieci Sfide", desc: "Hai giocato 10 partite" },
+    "games-50": { name: "Mezzo Centinaio", desc: "Hai giocato 50 partite" },
+    "games-100": { name: "Veterano di Mille Battaglie", desc: "Hai giocato 100 partite" },
+    "first-win": { name: "Sapore di Vittoria", desc: "Hai vinto la tua prima partita" },
+    "wins-10": { name: "Vittorie in Serie", desc: "Hai raggiunto 10 vittorie" },
+    "wins-25": { name: "Esperto di Vittorie", desc: "Hai raggiunto 25 vittorie" },
+    "streak-3": { name: "Inizio Serie", desc: "Hai raggiunto 3 vittorie consecutive" },
+    "streak-5": { name: "Serie Infuocata", desc: "Hai raggiunto 5 vittorie consecutive" },
+    "streak-10": { name: "Maestro delle Serie", desc: "Hai raggiunto 10 vittorie consecutive" },
+    "easy-clear": { name: "Facile Completato", desc: "Hai completato la difficoltà Facile" },
+    "normal-clear": { name: "Normale Completato", desc: "Hai completato la difficoltà Normale" },
+    "hard-clear": { name: "Difficile Completato", desc: "Hai completato la difficoltà Difficile" },
+    "expert-clear": { name: "Esperto Completato", desc: "Hai completato la difficoltà Esperto" },
+    "god-clear": { name: "Dio dell'Holdem", desc: "Hai completato la difficoltà Dio dell'Holdem" },
+    "high-winrate": { name: "Padrone delle Probabilità", desc: "Hai raggiunto il 70% di vittorie (min. 20 partite)" },
+    "perfectionist": { name: "Perfezionista", desc: "5 previsioni esatte di fila (±1%)" },
+    "all-clear": { name: "Tutto Completato", desc: "Hai completato ogni difficoltà almeno 3 volte" },
   },
 
-  // Titles
+  achievementCategories: {
+    gameplay: "Gioco",
+    mastery: "Maestria",
+    special: "Speciale",
+  },
+
+  // 테마 (id는 lib/game/themes.ts의 ThemeId와 1:1로 맞춘다)
+  themes: {
+    "casino": { name: "Casinò", desc: "Atmosfera classica da casinò" },
+    "minimal": { name: "Minimal", desc: "Design pulito e minimale" },
+    "dark": { name: "Scuro", desc: "Modalità scura riposante per gli occhi" },
+  },
+
+  // 칭호 (id는 lib/game/titles.ts의 id와 1:1로 맞춘다)
   titles: {
-    beginner: "Giocatore Novizio",
-    probabilityStudent: "Studente di Probabilità",
-    firstWinner: "Primo Vincitore",
-    consistentPlayer: "Giocatore Costante",
-    expert: "Esperto di Poker",
-    master: "Maestro del Poker",
-    legend: "Leggenda Vivente",
-    godOfHoldem: "Dio dell'Holdem",
+    "beginner": { name: "Giocatore Novizio", desc: "Hai giocato la tua prima partita" },
+    "learner": { name: "Studente di Probabilità", desc: "Hai giocato 10 partite" },
+    "first-win": { name: "Prima Vittoria", desc: "Hai vinto la tua prima partita" },
+    "streak-3": { name: "Inizio Serie", desc: "Hai raggiunto 3 vittorie consecutive" },
+    "streak-5": { name: "Serie Solida", desc: "Hai raggiunto 5 vittorie consecutive" },
+    "streak-10": { name: "Maestro delle Serie", desc: "Hai raggiunto 10 vittorie consecutive" },
+    "easy-master": { name: "Conquistatore Facile", desc: "Hai completato Facile 3 volte" },
+    "normal-master": { name: "Conquistatore Normale", desc: "Hai completato Normale 3 volte" },
+    "hard-master": { name: "Conquistatore Difficile", desc: "Hai completato Difficile 3 volte" },
+    "expert-clear": { name: "Esperto", desc: "Hai completato la difficoltà Esperto" },
+    "god-clear": { name: "Dio dell'Holdem", desc: "Hai completato la difficoltà Dio dell'Holdem" },
+    "calculator": { name: "Calcolatrice Umana", desc: "Mantieni almeno il 50% di vittorie" },
+    "veteran": { name: "Veterano", desc: "Hai giocato 50 partite" },
+    "legend": { name: "Leggenda", desc: "Hai giocato 100 partite" },
   },
 
   // Mascot Messages

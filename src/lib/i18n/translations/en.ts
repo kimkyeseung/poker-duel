@@ -337,28 +337,57 @@ export const en = {
     showHint: "Show Hint",
   },
 
-  // Achievements (sample)
+  // 도전과제 (id는 lib/game/achievements.ts의 id와 1:1로 맞춘다)
   achievements: {
-    firstStep: "First Step",
-    firstStepDesc: "Play your first game",
-    tenGames: "Ten Challenges",
-    tenGamesDesc: "Play 10 games",
-    firstWin: "First Victory",
-    firstWinDesc: "Win your first game",
-    streakStarter: "Streak Starter",
-    streakStarterDesc: "Win 3 games in a row",
+    "first-game": { name: "First Step", desc: "Started your first game" },
+    "games-10": { name: "Ten Challenges", desc: "Played 10 games" },
+    "games-50": { name: "Half a Hundred", desc: "Played 50 games" },
+    "games-100": { name: "Battle-Hardened", desc: "Played 100 games" },
+    "first-win": { name: "Taste of Victory", desc: "Won your first game" },
+    "wins-10": { name: "Winning Streak", desc: "Reached 10 wins" },
+    "wins-25": { name: "Victory Expert", desc: "Reached 25 wins" },
+    "streak-3": { name: "Streak Starter", desc: "Reached a 3-win streak" },
+    "streak-5": { name: "Burning Streak", desc: "Reached a 5-win streak" },
+    "streak-10": { name: "Streak Master", desc: "Reached a 10-win streak" },
+    "easy-clear": { name: "Easy Cleared", desc: "Cleared Easy difficulty" },
+    "normal-clear": { name: "Normal Cleared", desc: "Cleared Normal difficulty" },
+    "hard-clear": { name: "Hard Cleared", desc: "Cleared Hard difficulty" },
+    "expert-clear": { name: "Expert Cleared", desc: "Cleared Expert difficulty" },
+    "god-clear": { name: "God of Holdem", desc: "Cleared God of Holdem difficulty" },
+    "high-winrate": { name: "Master of Odds", desc: "Reached a 70% win rate (min. 20 games)" },
+    "perfectionist": { name: "Perfectionist", desc: "5 exact win rate calls in a row (within ±1%)" },
+    "all-clear": { name: "All Clear", desc: "Cleared every difficulty at least 3 times" },
   },
 
-  // Titles (sample)
+  achievementCategories: {
+    gameplay: "Gameplay",
+    mastery: "Mastery",
+    special: "Special",
+  },
+
+  // 테마 (id는 lib/game/themes.ts의 ThemeId와 1:1로 맞춘다)
+  themes: {
+    "casino": { name: "Casino", desc: "Classic casino atmosphere" },
+    "minimal": { name: "Minimal", desc: "Clean minimal design" },
+    "dark": { name: "Dark", desc: "Easy on the eyes" },
+  },
+
+  // 칭호 (id는 lib/game/titles.ts의 id와 1:1로 맞춘다)
   titles: {
-    beginner: "Novice Gambler",
-    probabilityStudent: "Probability Student",
-    firstWinner: "First Winner",
-    consistentPlayer: "Consistent Player",
-    expert: "Poker Expert",
-    master: "Poker Master",
-    legend: "Living Legend",
-    godOfHoldem: "God of Holdem",
+    "beginner": { name: "Novice Gambler", desc: "Played your first game" },
+    "learner": { name: "Probability Student", desc: "Played 10 games" },
+    "first-win": { name: "First Victory", desc: "Won your first game" },
+    "streak-3": { name: "Streak Starter", desc: "Reached a 3-win streak" },
+    "streak-5": { name: "Streak Keeper", desc: "Reached a 5-win streak" },
+    "streak-10": { name: "Streak Master", desc: "Reached a 10-win streak" },
+    "easy-master": { name: "Easy Conqueror", desc: "Cleared Easy 3 times" },
+    "normal-master": { name: "Normal Conqueror", desc: "Cleared Normal 3 times" },
+    "hard-master": { name: "Hard Conqueror", desc: "Cleared Hard 3 times" },
+    "expert-clear": { name: "Expert", desc: "Cleared Expert difficulty" },
+    "god-clear": { name: "God of Holdem", desc: "Cleared God of Holdem difficulty" },
+    "calculator": { name: "Human Calculator", desc: "Keeping a win rate of 50% or higher" },
+    "veteran": { name: "Veteran", desc: "Played 50 games" },
+    "legend": { name: "Legend", desc: "Played 100 games" },
   },
 
   // Mascot Messages

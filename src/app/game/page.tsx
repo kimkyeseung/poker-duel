@@ -697,6 +697,7 @@ export default function GamePage() {
           onRetry={handleRetry}
           onGoHome={handleGoHome}
           isViewingRiver={isViewingRiver}
+          isLastOpponent={isLastOpponent()}
           difficulty={difficulty}
           outcomes={detailsResult?.outcomes}
           isCalculatingDetails={isCalculatingDetails}

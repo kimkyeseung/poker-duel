@@ -10,15 +10,18 @@ import {
   getCurrentTitle,
   TITLES,
   TitleDefinition,
+  getTitleText,
 } from '@/lib/game/titles';
 import {
   getUnlockedAchievements,
   getAchievementProgress,
   ACHIEVEMENTS,
   AchievementDefinition,
+  getAchievementText,
 } from '@/lib/game/achievements';
 import { GameStats, Difficulty, DIFFICULTY_CONFIG, initialGameStats } from '@/types';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
 
 type TabType = 'overview' | 'titles' | 'achievements' | 'history';
 
@@ -117,6 +120,8 @@ function OverviewTab({
   currentTitle: TitleDefinition;
   achievementProgress: { unlocked: number; total: number; percentage: number };
 }) {
+  const { t } = useTranslation();
+  const titleText = getTitleText(t, currentTitle.id);
   const winRate = stats.totalGames > 0 ? (stats.totalWins / stats.totalGames) * 100 : 0;
 
   return (
@@ -124,8 +129,8 @@ function OverviewTab({
       {/* 현재 칭호 */}
       <div className="bg-gradient-to-r from-[#ffd700]/10 to-[#ff4d94]/10 rounded-2xl p-6 border border-[#ffd700]/30 text-center">
         <div className="text-4xl mb-2">{currentTitle.icon}</div>
-        <div className="text-xl font-bold text-white">{currentTitle.name}</div>
-        <div className="text-sm text-[#64748b] mt-1">{currentTitle.description}</div>
+        <div className="text-xl font-bold text-white">{titleText.name}</div>
+        <div className="text-sm text-[#64748b] mt-1">{titleText.desc}</div>
       </div>
 
       {/* 주요 통계 */}
@@ -226,7 +231,8 @@ function TitlesTab({
   unlockedTitles: TitleDefinition[];
   currentTitle: TitleDefinition;
 }) {
-  const unlockedIds = new Set(unlockedTitles.map((t) => t.id));
+  const { t } = useTranslation();
+  const unlockedIds = new Set(unlockedTitles.map((title) => title.id));
 
   return (
     <div className="space-y-4">
@@ -255,7 +261,7 @@ function TitlesTab({
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
                     <span className={cn('font-bold', isUnlocked ? 'text-white' : 'text-[#64748b]')}>
-                      {title.name}
+                      {getTitleText(t, title.id).name}
                     </span>
                     {isCurrent && (
                       <span className="text-xs bg-[#ffd700] text-[#0a0e1a] px-2 py-0.5 rounded-full font-bold">
@@ -263,7 +269,7 @@ function TitlesTab({
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-[#64748b]">{title.description}</p>
+                  <p className="text-sm text-[#64748b]">{getTitleText(t, title.id).desc}</p>
                 </div>
               </div>
             </div>
@@ -282,11 +288,12 @@ function AchievementsTab({
   unlockedAchievements: AchievementDefinition[];
   stats: GameStats;
 }) {
+  const { t } = useTranslation();
   const unlockedIds = new Set(unlockedAchievements.map((a) => a.id));
   const categories = [
-    { id: 'gameplay' as const, name: 'Gameplay', icon: 'G' },
-    { id: 'mastery' as const, name: 'Mastery', icon: 'M' },
-    { id: 'special' as const, name: 'Special', icon: 'S' },
+    { id: 'gameplay' as const, name: t.achievementCategories.gameplay, icon: 'G' },
+    { id: 'mastery' as const, name: t.achievementCategories.mastery, icon: 'M' },
+    { id: 'special' as const, name: t.achievementCategories.special, icon: 'S' },
   ];
 
   return (
@@ -323,9 +330,9 @@ function AchievementsTab({
                     <div className="text-2xl">{isUnlocked ? achievement.icon : '?'}</div>
                     <div className="flex-1">
                       <div className={cn('font-medium', isUnlocked ? 'text-white' : 'text-[#64748b]')}>
-                        {achievement.name}
+                        {getAchievementText(t, achievement.id).name}
                       </div>
-                      <p className="text-xs text-[#64748b]">{achievement.description}</p>
+                      <p className="text-xs text-[#64748b]">{getAchievementText(t, achievement.id).desc}</p>
                     </div>
                     {isUnlocked && (
                       <div className="text-[#00ff88] text-sm font-bold">✓</div>

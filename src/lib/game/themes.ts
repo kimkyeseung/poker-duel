@@ -1,3 +1,5 @@
+import { TranslationKeys } from '@/lib/i18n';
+
 // 테마 정의
 export type ThemeId = 'casino' | 'minimal' | 'dark';
 
@@ -56,3 +58,14 @@ export const THEMES: Record<ThemeId, Theme> = {
     },
   },
 };
+
+/**
+ * 테마의 현지화된 이름/설명을 반환한다.
+ * THEMES의 name/description은 한국어 하드코딩이라 직접 그리면 안 된다.
+ */
+export function getThemeText(
+  t: TranslationKeys,
+  themeId: ThemeId
+): { name: string; desc: string } {
+  return t.themes[themeId] ?? { name: themeId, desc: '' };
+}

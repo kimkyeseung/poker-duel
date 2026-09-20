@@ -339,28 +339,57 @@ export const zh: TranslationKeys = {
     showHint: "显示提示",
   },
 
-  // Achievements
+  // 도전과제 (id는 lib/game/achievements.ts의 id와 1:1로 맞춘다)
   achievements: {
-    firstStep: "第一步",
-    firstStepDesc: "玩第一局游戏",
-    tenGames: "十次挑战",
-    tenGamesDesc: "玩10局游戏",
-    firstWin: "首次胜利",
-    firstWinDesc: "赢得第一局游戏",
-    streakStarter: "连胜开始",
-    streakStarterDesc: "连续赢3局",
+    "first-game": { name: "第一步", desc: "开始了第一局游戏" },
+    "games-10": { name: "十次挑战", desc: "游玩了10局游戏" },
+    "games-50": { name: "五十战经验", desc: "游玩了50局游戏" },
+    "games-100": { name: "百战老将", desc: "游玩了100局游戏" },
+    "first-win": { name: "胜利的滋味", desc: "取得了第一场胜利" },
+    "wins-10": { name: "连绵的胜利", desc: "达成10场胜利" },
+    "wins-25": { name: "胜利专家", desc: "达成25场胜利" },
+    "streak-3": { name: "连胜开端", desc: "达成3连胜" },
+    "streak-5": { name: "火热连胜", desc: "达成5连胜" },
+    "streak-10": { name: "连胜大师", desc: "达成10连胜" },
+    "easy-clear": { name: "简单通关", desc: "通关简单难度" },
+    "normal-clear": { name: "普通通关", desc: "通关普通难度" },
+    "hard-clear": { name: "困难通关", desc: "通关困难难度" },
+    "expert-clear": { name: "专家通关", desc: "通关专家难度" },
+    "god-clear": { name: "德州之神", desc: "通关德州之神难度" },
+    "high-winrate": { name: "概率的主宰", desc: "达成70%以上的胜率（至少20局）" },
+    "perfectionist": { name: "完美主义者", desc: "连续5次精准预测（误差±1%以内）" },
+    "all-clear": { name: "全部通关", desc: "每个难度各通关3次以上" },
   },
 
-  // Titles
+  achievementCategories: {
+    gameplay: "游戏",
+    mastery: "精通",
+    special: "特殊",
+  },
+
+  // 테마 (id는 lib/game/themes.ts의 ThemeId와 1:1로 맞춘다)
+  themes: {
+    "casino": { name: "赌场", desc: "经典赌场氛围" },
+    "minimal": { name: "极简", desc: "简洁的极简设计" },
+    "dark": { name: "暗色", desc: "护眼的暗色模式" },
+  },
+
+  // 칭호 (id는 lib/game/titles.ts의 id와 1:1로 맞춘다)
   titles: {
-    beginner: "新手赌徒",
-    probabilityStudent: "概率学生",
-    firstWinner: "首胜者",
-    consistentPlayer: "稳定玩家",
-    expert: "扑克专家",
-    master: "扑克大师",
-    legend: "活着的传奇",
-    godOfHoldem: "德州之神",
+    "beginner": { name: "新手赌徒", desc: "完成了第一局游戏" },
+    "learner": { name: "概率入门者", desc: "游玩了10局游戏" },
+    "first-win": { name: "首胜", desc: "取得了第一场胜利" },
+    "streak-3": { name: "连胜开端", desc: "达成3连胜" },
+    "streak-5": { name: "连胜纪录", desc: "达成5连胜" },
+    "streak-10": { name: "连胜大师", desc: "达成10连胜" },
+    "easy-master": { name: "简单征服者", desc: "通关简单难度3次" },
+    "normal-master": { name: "普通征服者", desc: "通关普通难度3次" },
+    "hard-master": { name: "困难征服者", desc: "通关困难难度3次" },
+    "expert-clear": { name: "专家", desc: "通关专家难度" },
+    "god-clear": { name: "德州之神", desc: "通关德州之神难度" },
+    "calculator": { name: "人肉计算器", desc: "保持50%以上的胜率" },
+    "veteran": { name: "老兵", desc: "游玩了50局游戏" },
+    "legend": { name: "传奇", desc: "游玩了100局游戏" },
   },
 
   // Mascot Messages

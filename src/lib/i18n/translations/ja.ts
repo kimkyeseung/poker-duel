@@ -339,28 +339,57 @@ export const ja: TranslationKeys = {
     showHint: "ヒントを表示",
   },
 
-  // Achievements
+  // 도전과제 (id는 lib/game/achievements.ts의 id와 1:1로 맞춘다)
   achievements: {
-    firstStep: "最初の一歩",
-    firstStepDesc: "初めてのゲームをプレイ",
-    tenGames: "10回の挑戦",
-    tenGamesDesc: "10ゲームをプレイ",
-    firstWin: "初勝利",
-    firstWinDesc: "初めてのゲームに勝利",
-    streakStarter: "連勝開始",
-    streakStarterDesc: "3連勝を達成",
+    "first-game": { name: "最初の一歩", desc: "初めてゲームを開始しました" },
+    "games-10": { name: "10回の挑戦", desc: "10ゲームをプレイしました" },
+    "games-50": { name: "五十戦の経験", desc: "50ゲームをプレイしました" },
+    "games-100": { name: "百戦錬磨", desc: "100ゲームをプレイしました" },
+    "first-win": { name: "勝利の味", desc: "初めて勝利しました" },
+    "wins-10": { name: "連なる勝利", desc: "10勝を達成しました" },
+    "wins-25": { name: "勝利のエキスパート", desc: "25勝を達成しました" },
+    "streak-3": { name: "連勝のはじまり", desc: "3連勝を達成しました" },
+    "streak-5": { name: "燃える連勝", desc: "5連勝を達成しました" },
+    "streak-10": { name: "連勝マスター", desc: "10連勝を達成しました" },
+    "easy-clear": { name: "イージークリア", desc: "イージーをクリアしました" },
+    "normal-clear": { name: "ノーマルクリア", desc: "ノーマルをクリアしました" },
+    "hard-clear": { name: "ハードクリア", desc: "ハードをクリアしました" },
+    "expert-clear": { name: "エキスパートクリア", desc: "エキスパートをクリアしました" },
+    "god-clear": { name: "ホールデムの神", desc: "ホールデムの神をクリアしました" },
+    "high-winrate": { name: "確率の支配者", desc: "勝率70%以上を達成しました（最低20ゲーム）" },
+    "perfectionist": { name: "完璧主義者", desc: "5回連続で正確に予測しました（±1%以内）" },
+    "all-clear": { name: "オールクリア", desc: "すべての難易度をそれぞれ3回以上クリアしました" },
   },
 
-  // Titles
+  achievementCategories: {
+    gameplay: "ゲームプレイ",
+    mastery: "熟練度",
+    special: "スペシャル",
+  },
+
+  // 테마 (id는 lib/game/themes.ts의 ThemeId와 1:1로 맞춘다)
+  themes: {
+    "casino": { name: "カジノ", desc: "クラシックなカジノの雰囲気" },
+    "minimal": { name: "ミニマル", desc: "すっきりしたミニマルデザイン" },
+    "dark": { name: "ダーク", desc: "目にやさしいダークモード" },
+  },
+
+  // 칭호 (id는 lib/game/titles.ts의 id와 1:1로 맞춘다)
   titles: {
-    beginner: "初心者ギャンブラー",
-    probabilityStudent: "確率の学生",
-    firstWinner: "初勝利者",
-    consistentPlayer: "安定したプレイヤー",
-    expert: "ポーカーエキスパート",
-    master: "ポーカーマスター",
-    legend: "生きる伝説",
-    godOfHoldem: "ホールデムの神",
+    "beginner": { name: "初心者ギャンブラー", desc: "初めてゲームをプレイしました" },
+    "learner": { name: "確率の入門者", desc: "10ゲームをプレイしました" },
+    "first-win": { name: "初勝利", desc: "初めて勝利しました" },
+    "streak-3": { name: "連勝のはじまり", desc: "3連勝を達成しました" },
+    "streak-5": { name: "連勝記録", desc: "5連勝を達成しました" },
+    "streak-10": { name: "連勝マスター", desc: "10連勝を達成しました" },
+    "easy-master": { name: "イージー制覇者", desc: "イージーを3回クリアしました" },
+    "normal-master": { name: "ノーマル制覇者", desc: "ノーマルを3回クリアしました" },
+    "hard-master": { name: "ハード制覇者", desc: "ハードを3回クリアしました" },
+    "expert-clear": { name: "エキスパート", desc: "エキスパートをクリアしました" },
+    "god-clear": { name: "ホールデムの神", desc: "ホールデムの神をクリアしました" },
+    "calculator": { name: "人間計算機", desc: "勝率50%以上を維持しています" },
+    "veteran": { name: "ベテラン", desc: "50ゲームをプレイしました" },
+    "legend": { name: "伝説", desc: "100ゲームをプレイしました" },
   },
 
   // Mascot Messages

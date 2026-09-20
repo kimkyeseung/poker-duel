@@ -339,28 +339,57 @@ export const es: TranslationKeys = {
     showHint: "Mostrar Pista",
   },
 
-  // Achievements
+  // 도전과제 (id는 lib/game/achievements.ts의 id와 1:1로 맞춘다)
   achievements: {
-    firstStep: "Primer Paso",
-    firstStepDesc: "Juega tu primera partida",
-    tenGames: "Diez Desafíos",
-    tenGamesDesc: "Juega 10 partidas",
-    firstWin: "Primera Victoria",
-    firstWinDesc: "Gana tu primera partida",
-    streakStarter: "Inicio de Racha",
-    streakStarterDesc: "Gana 3 partidas seguidas",
+    "first-game": { name: "Primer Paso", desc: "Empezaste tu primera partida" },
+    "games-10": { name: "Diez Desafíos", desc: "Jugaste 10 partidas" },
+    "games-50": { name: "Media Centena", desc: "Jugaste 50 partidas" },
+    "games-100": { name: "Curtido en Batallas", desc: "Jugaste 100 partidas" },
+    "first-win": { name: "Sabor a Victoria", desc: "Ganaste tu primera partida" },
+    "wins-10": { name: "Victorias Encadenadas", desc: "Alcanzaste 10 victorias" },
+    "wins-25": { name: "Experto en Victorias", desc: "Alcanzaste 25 victorias" },
+    "streak-3": { name: "Inicio de Racha", desc: "Lograste una racha de 3 victorias" },
+    "streak-5": { name: "Racha Ardiente", desc: "Lograste una racha de 5 victorias" },
+    "streak-10": { name: "Maestro de Rachas", desc: "Lograste una racha de 10 victorias" },
+    "easy-clear": { name: "Fácil Superado", desc: "Superaste la dificultad Fácil" },
+    "normal-clear": { name: "Normal Superado", desc: "Superaste la dificultad Normal" },
+    "hard-clear": { name: "Difícil Superado", desc: "Superaste la dificultad Difícil" },
+    "expert-clear": { name: "Experto Superado", desc: "Superaste la dificultad Experto" },
+    "god-clear": { name: "Dios del Holdem", desc: "Superaste la dificultad Dios del Holdem" },
+    "high-winrate": { name: "Amo de las Probabilidades", desc: "Alcanzaste un 70% de victorias (mín. 20 partidas)" },
+    "perfectionist": { name: "Perfeccionista", desc: "5 predicciones exactas seguidas (±1%)" },
+    "all-clear": { name: "Todo Superado", desc: "Superaste cada dificultad al menos 3 veces" },
   },
 
-  // Titles
+  achievementCategories: {
+    gameplay: "Juego",
+    mastery: "Maestría",
+    special: "Especial",
+  },
+
+  // 테마 (id는 lib/game/themes.ts의 ThemeId와 1:1로 맞춘다)
+  themes: {
+    "casino": { name: "Casino", desc: "Ambiente clásico de casino" },
+    "minimal": { name: "Minimalista", desc: "Diseño limpio y minimalista" },
+    "dark": { name: "Oscuro", desc: "Modo oscuro que cuida la vista" },
+  },
+
+  // 칭호 (id는 lib/game/titles.ts의 id와 1:1로 맞춘다)
   titles: {
-    beginner: "Apostador Novato",
-    probabilityStudent: "Estudiante de Probabilidad",
-    firstWinner: "Primer Ganador",
-    consistentPlayer: "Jugador Constante",
-    expert: "Experto en Póker",
-    master: "Maestro del Póker",
-    legend: "Leyenda Viviente",
-    godOfHoldem: "Dios del Holdem",
+    "beginner": { name: "Apostador Novato", desc: "Jugaste tu primera partida" },
+    "learner": { name: "Estudiante de Probabilidad", desc: "Jugaste 10 partidas" },
+    "first-win": { name: "Primera Victoria", desc: "Ganaste tu primera partida" },
+    "streak-3": { name: "Inicio de Racha", desc: "Lograste una racha de 3 victorias" },
+    "streak-5": { name: "Racha Sólida", desc: "Lograste una racha de 5 victorias" },
+    "streak-10": { name: "Maestro de Rachas", desc: "Lograste una racha de 10 victorias" },
+    "easy-master": { name: "Conquistador Fácil", desc: "Superaste Fácil 3 veces" },
+    "normal-master": { name: "Conquistador Normal", desc: "Superaste Normal 3 veces" },
+    "hard-master": { name: "Conquistador Difícil", desc: "Superaste Difícil 3 veces" },
+    "expert-clear": { name: "Experto", desc: "Superaste la dificultad Experto" },
+    "god-clear": { name: "Dios del Holdem", desc: "Superaste la dificultad Dios del Holdem" },
+    "calculator": { name: "Calculadora Humana", desc: "Mantienes un 50% o más de victorias" },
+    "veteran": { name: "Veterano", desc: "Jugaste 50 partidas" },
+    "legend": { name: "Leyenda", desc: "Jugaste 100 partidas" },
   },
 
   // Mascot Messages

@@ -339,28 +339,57 @@ export const fr: TranslationKeys = {
     showHint: "Montrer Indice",
   },
 
-  // Achievements
+  // 도전과제 (id는 lib/game/achievements.ts의 id와 1:1로 맞춘다)
   achievements: {
-    firstStep: "Premier Pas",
-    firstStepDesc: "Jouez votre première partie",
-    tenGames: "Dix Défis",
-    tenGamesDesc: "Jouez 10 parties",
-    firstWin: "Première Victoire",
-    firstWinDesc: "Gagnez votre première partie",
-    streakStarter: "Début de Série",
-    streakStarterDesc: "Gagnez 3 parties consécutives",
+    "first-game": { name: "Premier Pas", desc: "Vous avez lancé votre première partie" },
+    "games-10": { name: "Dix Défis", desc: "Vous avez joué 10 parties" },
+    "games-50": { name: "Cinquante Parties", desc: "Vous avez joué 50 parties" },
+    "games-100": { name: "Vieux Briscard", desc: "Vous avez joué 100 parties" },
+    "first-win": { name: "Goût de la Victoire", desc: "Vous avez gagné votre première partie" },
+    "wins-10": { name: "Victoires en Série", desc: "Vous avez atteint 10 victoires" },
+    "wins-25": { name: "Expert de la Victoire", desc: "Vous avez atteint 25 victoires" },
+    "streak-3": { name: "Début de Série", desc: "Vous avez atteint 3 victoires d'affilée" },
+    "streak-5": { name: "Série Brûlante", desc: "Vous avez atteint 5 victoires d'affilée" },
+    "streak-10": { name: "Maître des Séries", desc: "Vous avez atteint 10 victoires d'affilée" },
+    "easy-clear": { name: "Facile Terminé", desc: "Vous avez terminé la difficulté Facile" },
+    "normal-clear": { name: "Normal Terminé", desc: "Vous avez terminé la difficulté Normal" },
+    "hard-clear": { name: "Difficile Terminé", desc: "Vous avez terminé la difficulté Difficile" },
+    "expert-clear": { name: "Expert Terminé", desc: "Vous avez terminé la difficulté Expert" },
+    "god-clear": { name: "Dieu du Holdem", desc: "Vous avez terminé la difficulté Dieu du Holdem" },
+    "high-winrate": { name: "Maître des Probabilités", desc: "Vous avez atteint 70% de victoires (min. 20 parties)" },
+    "perfectionist": { name: "Perfectionniste", desc: "5 prédictions exactes d'affilée (±1%)" },
+    "all-clear": { name: "Tout Terminé", desc: "Vous avez terminé chaque difficulté au moins 3 fois" },
   },
 
-  // Titles
+  achievementCategories: {
+    gameplay: "Jeu",
+    mastery: "Maîtrise",
+    special: "Spécial",
+  },
+
+  // 테마 (id는 lib/game/themes.ts의 ThemeId와 1:1로 맞춘다)
+  themes: {
+    "casino": { name: "Casino", desc: "Ambiance de casino classique" },
+    "minimal": { name: "Minimaliste", desc: "Design épuré et minimaliste" },
+    "dark": { name: "Sombre", desc: "Mode sombre reposant pour les yeux" },
+  },
+
+  // 칭호 (id는 lib/game/titles.ts의 id와 1:1로 맞춘다)
   titles: {
-    beginner: "Joueur Débutant",
-    probabilityStudent: "Étudiant en Probabilité",
-    firstWinner: "Premier Gagnant",
-    consistentPlayer: "Joueur Régulier",
-    expert: "Expert en Poker",
-    master: "Maître du Poker",
-    legend: "Légende Vivante",
-    godOfHoldem: "Dieu du Holdem",
+    "beginner": { name: "Joueur Débutant", desc: "Vous avez joué votre première partie" },
+    "learner": { name: "Étudiant en Probabilités", desc: "Vous avez joué 10 parties" },
+    "first-win": { name: "Première Victoire", desc: "Vous avez gagné votre première partie" },
+    "streak-3": { name: "Début de Série", desc: "Vous avez atteint 3 victoires d'affilée" },
+    "streak-5": { name: "Série Confirmée", desc: "Vous avez atteint 5 victoires d'affilée" },
+    "streak-10": { name: "Maître des Séries", desc: "Vous avez atteint 10 victoires d'affilée" },
+    "easy-master": { name: "Conquérant Facile", desc: "Vous avez terminé Facile 3 fois" },
+    "normal-master": { name: "Conquérant Normal", desc: "Vous avez terminé Normal 3 fois" },
+    "hard-master": { name: "Conquérant Difficile", desc: "Vous avez terminé Difficile 3 fois" },
+    "expert-clear": { name: "Expert", desc: "Vous avez terminé la difficulté Expert" },
+    "god-clear": { name: "Dieu du Holdem", desc: "Vous avez terminé la difficulté Dieu du Holdem" },
+    "calculator": { name: "Calculatrice Humaine", desc: "Vous maintenez 50% de victoires ou plus" },
+    "veteran": { name: "Vétéran", desc: "Vous avez joué 50 parties" },
+    "legend": { name: "Légende", desc: "Vous avez joué 100 parties" },
   },
 
   // Mascot Messages

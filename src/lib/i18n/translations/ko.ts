@@ -339,28 +339,57 @@ export const ko: TranslationKeys = {
     showHint: "힌트 보기",
   },
 
-  // Achievements
+  // 도전과제 (id는 lib/game/achievements.ts의 id와 1:1로 맞춘다)
   achievements: {
-    firstStep: "첫 발걸음",
-    firstStepDesc: "첫 게임 플레이",
-    tenGames: "열 번의 도전",
-    tenGamesDesc: "10게임 플레이",
-    firstWin: "첫 승리",
-    firstWinDesc: "첫 게임 승리",
-    streakStarter: "연승 시작",
-    streakStarterDesc: "3연승 달성",
+    "first-game": { name: "첫 발걸음", desc: "첫 번째 게임을 시작했습니다." },
+    "games-10": { name: "열 번의 도전", desc: "10게임을 플레이했습니다." },
+    "games-50": { name: "반백의 경험", desc: "50게임을 플레이했습니다." },
+    "games-100": { name: "백전노장", desc: "100게임을 플레이했습니다." },
+    "first-win": { name: "승리의 맛", desc: "첫 번째 승리를 달성했습니다." },
+    "wins-10": { name: "승리의 연속", desc: "10승을 달성했습니다." },
+    "wins-25": { name: "승리 전문가", desc: "25승을 달성했습니다." },
+    "streak-3": { name: "연승 시작", desc: "3연승을 달성했습니다." },
+    "streak-5": { name: "불타는 연승", desc: "5연승을 달성했습니다." },
+    "streak-10": { name: "연승 마스터", desc: "10연승을 달성했습니다." },
+    "easy-clear": { name: "쉬움 클리어", desc: "쉬움 난이도를 클리어했습니다." },
+    "normal-clear": { name: "보통 클리어", desc: "보통 난이도를 클리어했습니다." },
+    "hard-clear": { name: "어려움 클리어", desc: "어려움 난이도를 클리어했습니다." },
+    "expert-clear": { name: "전문가 클리어", desc: "전문가 난이도를 클리어했습니다." },
+    "god-clear": { name: "홀덤의 신", desc: "홀덤의 신 난이도를 클리어했습니다." },
+    "high-winrate": { name: "확률의 지배자", desc: "승률 70% 이상을 달성했습니다. (최소 20게임)" },
+    "perfectionist": { name: "완벽주의자", desc: "5연속 정확한 승률 예측 (±1% 이내)" },
+    "all-clear": { name: "올 클리어", desc: "모든 난이도를 각각 3회 이상 클리어했습니다." },
   },
 
-  // Titles
+  achievementCategories: {
+    gameplay: "게임플레이",
+    mastery: "숙련도",
+    special: "특별",
+  },
+
+  // 테마 (id는 lib/game/themes.ts의 ThemeId와 1:1로 맞춘다)
+  themes: {
+    "casino": { name: "카지노", desc: "클래식한 카지노 분위기" },
+    "minimal": { name: "미니멀", desc: "깔끔한 미니멀 디자인" },
+    "dark": { name: "다크", desc: "눈이 편한 다크 모드" },
+  },
+
+  // 칭호 (id는 lib/game/titles.ts의 id와 1:1로 맞춘다)
   titles: {
-    beginner: "초보 갬블러",
-    probabilityStudent: "확률 입문자",
-    firstWinner: "첫 승리자",
-    consistentPlayer: "꾸준한 플레이어",
-    expert: "포커 전문가",
-    master: "포커 마스터",
-    legend: "살아있는 전설",
-    godOfHoldem: "홀덤의 신",
+    "beginner": { name: "초보 갬블러", desc: "첫 번째 게임을 플레이했습니다." },
+    "learner": { name: "확률 입문자", desc: "10게임을 플레이했습니다." },
+    "first-win": { name: "첫 승리", desc: "첫 번째 승리를 달성했습니다." },
+    "streak-3": { name: "연승 시작", desc: "3연승을 달성했습니다." },
+    "streak-5": { name: "연승 기록", desc: "5연승을 달성했습니다." },
+    "streak-10": { name: "연승 마스터", desc: "10연승을 달성했습니다." },
+    "easy-master": { name: "쉬움 정복자", desc: "쉬움 난이도를 3회 클리어했습니다." },
+    "normal-master": { name: "보통 정복자", desc: "보통 난이도를 3회 클리어했습니다." },
+    "hard-master": { name: "어려움 정복자", desc: "어려움 난이도를 3회 클리어했습니다." },
+    "expert-clear": { name: "전문가", desc: "전문가 난이도를 클리어했습니다." },
+    "god-clear": { name: "홀덤의 신", desc: "홀덤의 신 난이도를 클리어했습니다." },
+    "calculator": { name: "인간 계산기", desc: "승률 50% 이상을 유지합니다." },
+    "veteran": { name: "베테랑", desc: "50게임을 플레이했습니다." },
+    "legend": { name: "전설", desc: "100게임을 플레이했습니다." },
   },
 
   // Mascot Messages

@@ -1,4 +1,5 @@
 import { GameStats } from '@/types';
+import { TranslationKeys } from '@/lib/i18n';
 
 // 도전과제 정의
 export interface AchievementDefinition {
@@ -198,4 +199,20 @@ export function getAchievementProgress(stats: GameStats): {
     total,
     percentage: Math.round((unlocked / total) * 100),
   };
+}
+
+/**
+ * 도전과제의 현지화된 이름/설명을 반환한다.
+ * ACHIEVEMENTS의 name/description은 한국어 하드코딩이라 직접 그리면 안 된다.
+ */
+export function getAchievementText(
+  t: TranslationKeys,
+  achievementId: string
+): { name: string; desc: string } {
+  return (
+    t.achievements[achievementId as keyof typeof t.achievements] ?? {
+      name: achievementId,
+      desc: '',
+    }
+  );
 }

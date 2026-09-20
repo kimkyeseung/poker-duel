@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { Button, AudioToggle, ClickToStart, LanguageSelector } from '@/components/ui';
 import { TutorialDialog } from '@/components/TutorialDialog';
 import { getGameStats } from '@/lib/storage';
-import { getCurrentTitle, getTitleKey } from '@/lib/game/titles';
+import { getCurrentTitle, getTitleText } from '@/lib/game/titles';
 import { useGameStore } from '@/stores/gameStore';
 import { useAudio } from '@/lib/audio';
 import { useTranslation, TranslationKeys } from '@/lib/i18n';
@@ -192,7 +192,7 @@ export default function Home() {
                 className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#1a1f35] hover:bg-[#252b45] transition-colors"
               >
                 <span className="text-lg">{currentTitle.icon}</span>
-                <span className="text-white text-sm font-medium hidden sm:inline">{t.titles[getTitleKey(currentTitle.id) as keyof typeof t.titles]}</span>
+                <span className="text-white text-sm font-medium hidden sm:inline">{getTitleText(t, currentTitle.id).name}</span>
               </button>
             )}
             <LanguageSelector />
@@ -368,7 +368,7 @@ export default function Home() {
               <div className="flex items-center gap-2">
                 <span className="text-2xl">{currentTitle?.icon ?? '🎮'}</span>
                 <span className="text-lg font-bold text-gradient-gold">
-                  {currentTitle ? t.titles[getTitleKey(currentTitle.id) as keyof typeof t.titles] : t.titles.beginner}
+                  {currentTitle ? getTitleText(t, currentTitle.id).name : getTitleText(t, 'beginner').name}
                 </span>
               </div>
             </div>

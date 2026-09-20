@@ -1,4 +1,5 @@
 import { GameStats } from '@/types';
+import { TranslationKeys } from '@/lib/i18n';
 
 // 칭호 정의
 export interface TitleDefinition {
@@ -147,24 +148,16 @@ export function getTitleById(id: string): TitleDefinition | undefined {
   return TITLES.find((t) => t.id === id);
 }
 
-// 칭호 ID를 번역 키로 변환
-const TITLE_KEY_MAP: Record<string, string> = {
-  'beginner': 'beginner',
-  'learner': 'probabilityStudent',
-  'first-win': 'firstWinner',
-  'streak-3': 'consistentPlayer',
-  'streak-5': 'consistentPlayer',
-  'streak-10': 'master',
-  'easy-master': 'consistentPlayer',
-  'normal-master': 'expert',
-  'hard-master': 'expert',
-  'expert-clear': 'master',
-  'god-clear': 'godOfHoldem',
-  'calculator': 'expert',
-  'veteran': 'master',
-  'legend': 'legend',
-};
-
-export function getTitleKey(titleId: string): string {
-  return TITLE_KEY_MAP[titleId] || 'beginner';
+/**
+ * 칭호의 현지화된 이름/설명을 반환한다.
+ *
+ * TITLES의 name/description은 한국어로 하드코딩돼 있어 그대로 그리면
+ * 다른 언어에서도 한국어가 나온다. 번역 테이블은 칭호 id를 그대로 키로
+ * 쓰므로 매핑 테이블 없이 바로 찾는다.
+ */
+export function getTitleText(
+  t: TranslationKeys,
+  titleId: string
+): { name: string; desc: string } {
+  return t.titles[titleId as keyof typeof t.titles] ?? { name: titleId, desc: '' };
 }

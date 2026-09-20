@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button, LanguageSelector } from '@/components/ui';
 import { getSettings, saveSettings, GameSettings } from '@/lib/storage';
-import { THEMES, ThemeId } from '@/lib/game/themes';
+import { THEMES, ThemeId, getThemeText } from '@/lib/game/themes';
 import { soundManager, vibrationManager } from '@/lib/game/sounds';
 import { cn } from '@/lib/utils';
 import { useTranslation } from '@/lib/i18n';
@@ -126,8 +126,8 @@ export default function SettingsPage() {
                 >
                   <div className="flex items-center justify-between">
                     <div>
-                      <div className="font-semibold text-white">{theme.name}</div>
-                      <div className="text-sm text-[#64748b]">{theme.description}</div>
+                      <div className="font-semibold text-white">{getThemeText(t, theme.id).name}</div>
+                      <div className="text-sm text-[#64748b]">{getThemeText(t, theme.id).desc}</div>
                     </div>
                     {settings.theme === theme.id && (
                       <div className="text-[#00d4ff] text-xl font-bold">✓</div>

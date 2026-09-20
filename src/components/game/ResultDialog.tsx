@@ -24,6 +24,8 @@ interface ResultDialogProps {
   currentRound: GameRound;
   onContinue: () => void;
   onViewRiver?: () => void;
+  /** 현재 상대가 딜러(마지막 상대)인지. 진행 버튼 문구가 달라진다. */
+  isLastOpponent?: boolean;
   onRetry?: () => void;
   onGoHome?: () => void;
   isViewingRiver?: boolean;
@@ -48,6 +50,7 @@ export function ResultDialog({
   currentRound,
   onContinue,
   onViewRiver,
+  isLastOpponent = false,
   onRetry,
   onGoHome,
   isViewingRiver = false,
@@ -71,6 +74,12 @@ export function ResultDialog({
   const isRiver = currentRound === 'river';
   const isTurn = currentRound === 'turn';
   const isFlop = currentRound === 'flop';
+
+  // 턴/리버에서 상대를 잡고 넘어가는 버튼. 난이도가 올라가는 건 딜러를
+  // 잡았을 때뿐이고, 나머지 네 번은 같은 난이도의 다음 상대로 갈 뿐이다.
+  const advanceLabel = isLastOpponent
+    ? t.game.actions.nextLevel
+    : t.game.opponents.nextOpponent;
 
   // Details button should show for flop/turn only (not preflop or river)
   const canShowDetails = (isFlop || isTurn) && !isViewingRiver;
@@ -367,7 +376,7 @@ export function ResultDialog({
               onClick={onContinue}
               fullWidth
             >
-              {t.game.actions.nextLevel}
+              {advanceLabel}
             </Button>
           </div>
         ) : isCorrect || isRiver ? (
@@ -377,7 +386,7 @@ export function ResultDialog({
             fullWidth
             size="lg"
           >
-            {isRiver ? t.game.actions.nextLevel : t.game.actions.nextRound}
+            {isRiver ? advanceLabel : t.game.actions.nextRound}
           </Button>
         ) : (
           <div className="flex gap-3 w-full">
