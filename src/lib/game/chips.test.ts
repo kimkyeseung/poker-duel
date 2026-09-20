@@ -6,6 +6,8 @@ import {
   formatOdds,
   formatChips,
   calculateExpectedPayout,
+  getBetOutcome,
+  resolveBet,
 } from './chips';
 
 describe('calculateChipReward', () => {
@@ -136,5 +138,36 @@ describe('calculateExpectedPayout', () => {
 
   it('floors the result', () => {
     expect(calculateExpectedPayout(100, 1.33)).toBe(133);
+  });
+});
+
+describe('getBetOutcome', () => {
+  it('판단한다: 승/패', () => {
+    expect(getBetOutcome(100, 0)).toBe('win');
+    expect(getBetOutcome(0, 100)).toBe('loss');
+  });
+
+  it('스플릿 팟은 푸시다 (양쪽 승률 0, 무승부율 100)', () => {
+    expect(getBetOutcome(0, 0)).toBe('push');
+  });
+
+  it('승률이 같으면 푸시다', () => {
+    expect(getBetOutcome(50, 50)).toBe('push');
+  });
+});
+
+describe('resolveBet', () => {
+  it('적중하면 배당만큼 순수익을 준다', () => {
+    // 100칩을 3.7배에 걸어 적중 -> 370 회수, 순수익 270
+    expect(resolveBet(100, 3.7, 'win')).toBe(270);
+  });
+
+  it('빗나가면 판돈을 잃는다', () => {
+    expect(resolveBet(100, 3.7, 'loss')).toBe(-100);
+  });
+
+  it('푸시면 판돈이 그대로 남는다', () => {
+    expect(resolveBet(100, 10.0, 'push')).toBe(0);
+    expect(resolveBet(999, 1.05, 'push')).toBe(0);
   });
 });

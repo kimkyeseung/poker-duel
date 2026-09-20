@@ -22,7 +22,7 @@ import {
   RiverBetting,
 } from '@/components/game';
 import { checkAnswer } from '@/lib/poker/calculator';
-import { calculateOdds, calculateBetResult } from '@/lib/game/chips';
+import { calculateOdds, getBetOutcome, resolveBet } from '@/lib/game/chips';
 import { evaluateStartingHand, compareStartingHands, StartingHandInfo } from '@/lib/poker/starting-hands';
 import { recordGameResult, updateStreak, updateChipHighScoreIfNeeded } from '@/lib/storage';
 import { useBGM, useSFX } from '@/lib/audio';
@@ -88,7 +88,13 @@ export default function GamePage() {
   const [isViewingRiver, setIsViewingRiver] = useState(false);
   const [isAnswerPanelOpen, setIsAnswerPanelOpen] = useState(false);
   const [showRiverBetting, setShowRiverBetting] = useState(false);
-  const [riverWinRate, setRiverWinRate] = useState<WinRateResult | null>(null);
+  // 배당률의 근거가 되는 승률. 리버 카드를 깔기 전(턴 시점)의 값이라
+  // 아직 불확실하고, 그래서 배당률이 결과를 누설하지 않는다.
+  const [bettingWinRate, setBettingWinRate] = useState<WinRateResult | null>(null);
+  // 리버 카드 공개 후에 정산할 베팅. 배당률은 베팅하는 순간 확정된다.
+  // 화면에 그리지 않고 리버 공개 타이머 안에서만 읽으므로, 렌더 타이밍에
+  // 영향받지 않도록 state가 아닌 ref로 들고 있는다.
+  const pendingBetRef = useRef<{ amount: number; odds: number } | null>(null);
 
   const hasSubmittedRef = useRef(false);
 
@@ -98,6 +104,27 @@ export default function GamePage() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  /**
+   * 리버 카드가 공개된 뒤 베팅을 정산한다.
+   *
+   * 보드가 완성된 시점이라 result는 승/패/무승부가 확정된 값이다.
+   * 배당률은 베팅하던 순간(턴 시점 승률)에 이미 고정됐으므로 여기서는
+   * 적중 여부만 본다.
+   */
+  const resolveRiverBet = (result: WinRateResult) => {
+    const bet = pendingBetRef.current;
+    if (!bet) return;
+    const { amount, odds } = bet;
+    pendingBetRef.current = null;
+
+    // 스플릿 팟은 판돈을 그대로 돌려준다 (원래는 패배로 처리해 전액 잃었다).
+    const outcome = getBetOutcome(result.playerWinRate, result.computerWinRate);
+    const delta = resolveBet(amount, odds, outcome);
+
+    if (delta !== 0) addChips(delta);
+    if (outcome !== 'push') playSFX(outcome === 'win' ? 'correct' : 'wrong');
+  };
 
   useEffect(() => {
     if (status === 'playing' && playerHand && computerHand && !showLevelOverlay) {
@@ -123,16 +150,12 @@ export default function GamePage() {
         calculate(playerHand, computerHand, communityCards)
           .then(result => {
             setCurrentWinRate(result);
-            setRiverWinRate(result);
             setTimeout(() => {
               setIsRevealingCards(false);
               setNewCardsCount(0);
-              // 칩이 있으면 리버 베팅 보여주기, 없으면 바로 결과
-              if (chips > 0) {
-                setShowRiverBetting(true);
-              } else {
-                handleRiverResult(result);
-              }
+              // 보드가 다 깔렸으므로 여기서 승패가 확정된다. 베팅했다면 정산한다.
+              resolveRiverBet(result);
+              handleRiverResult(result);
             }, CARD_REVEAL_DURATION);
           })
           .catch(err => {
@@ -191,10 +214,10 @@ export default function GamePage() {
 
   // Auto-open answer panel when entering answering state
   useEffect(() => {
-    if (status === 'answering' && !isCalculating && !showResult) {
+    if (status === 'answering' && !isCalculating && !showResult && !showRiverBetting) {
       setIsAnswerPanelOpen(true);
     }
-  }, [status, isCalculating, showResult]);
+  }, [status, isCalculating, showResult, showRiverBetting]);
 
   // Handle opponent transition overlay
   useEffect(() => {
@@ -326,33 +349,30 @@ export default function GamePage() {
   };
 
   const handleRiverBet = useCallback((betAmount: number) => {
-    if (!riverWinRate) return;
+    if (!bettingWinRate) return;
     setShowRiverBetting(false);
 
-    // 배당률 계산 및 결과 처리
-    const odds = calculateOdds(riverWinRate.playerWinRate);
-    const isWin = riverWinRate.playerWinRate > riverWinRate.computerWinRate;
-    const betResult = calculateBetResult(betAmount, odds, isWin);
-
-    // 칩 업데이트
-    addChips(betResult);
-
-    // 결과 표시
-    handleRiverResult(riverWinRate);
-  }, [riverWinRate, addChips]);
+    // 배당률은 리버 카드를 보기 전 승률로 확정하고, 정산은 카드가 깔린 뒤에 한다.
+    pendingBetRef.current = {
+      amount: betAmount,
+      odds: calculateOdds(bettingWinRate.playerWinRate),
+    };
+    nextRound();
+  }, [bettingWinRate, nextRound]);
 
   const handleRiverSkip = useCallback(() => {
-    if (!riverWinRate) return;
     setShowRiverBetting(false);
-    handleRiverResult(riverWinRate);
-  }, [riverWinRate]);
+    pendingBetRef.current = null;
+    nextRound();
+  }, [nextRound]);
 
   const handleContinue = () => {
     setShowResult(false);
     setLastAnswer(null);
     setCurrentWinRate(null);
     setIsViewingRiver(false);
-    setRiverWinRate(null);
+    setBettingWinRate(null);
+    pendingBetRef.current = null;
     clearDetailsResult();
 
     if (currentRound === 'river' || currentRound === 'turn') {
@@ -387,13 +407,25 @@ export default function GamePage() {
   };
 
   const handleViewRiver = () => {
+    // 턴 시점 승률을 배당률 근거로 잡아둔다. 아래에서 currentWinRate를 비우므로
+    // 비우기 전에 읽어야 한다.
+    const turnWinRate = currentWinRate;
+
     setShowResult(false);
     setLastAnswer(null);
     setCurrentWinRate(null);
     setIsViewingRiver(true);
-    setRiverWinRate(null);
     clearDetailsResult();
-    nextRound();
+
+    // 리버 카드를 깔기 전에 베팅을 받는다. 카드가 깔린 뒤에 물으면 승패가
+    // 이미 확정돼 배당률이 1.05x(이김) 아니면 10.00x(짐) 둘 중 하나로만
+    // 나오고, 그게 곧 정답 누설이자 절대 안 터지는 베팅이 된다.
+    if (chips > 0 && turnWinRate) {
+      setBettingWinRate(turnWinRate);
+      setShowRiverBetting(true);
+    } else {
+      nextRound();
+    }
   };
 
   const handleRetry = () => {
@@ -405,7 +437,8 @@ export default function GamePage() {
     setHasPlayerCardsRevealed(false);
     setShowLevelOverlay(true);
     setShowRiverBetting(false);
-    setRiverWinRate(null);
+    setBettingWinRate(null);
+    pendingBetRef.current = null;
     clearDetailsResult();
   };
 
@@ -479,7 +512,9 @@ export default function GamePage() {
             <h2 className="text-lg sm:text-2xl lg:text-4xl font-black text-white">
               {t.game.rounds[currentRound]}
             </h2>
-            {status === 'answering' && (
+            {/* 리버 베팅 중에는 status가 아직 'answering'이지만 타이머는 멈춰 있다.
+                멈춘 타이머를 띄워두면 시간 제한이 있는 것처럼 보이므로 감춘다. */}
+            {status === 'answering' && !showRiverBetting && (
               <Timer
                 seconds={Math.ceil(timeRemaining)}
                 maxSeconds={getTimeLimit()}
@@ -549,7 +584,7 @@ export default function GamePage() {
             )}
 
             {/* Answer Input - Mobile Toggle */}
-            {status === 'answering' && !isCalculating && !showResult && (
+            {status === 'answering' && !isCalculating && !showResult && !showRiverBetting && (
               <div className="relative">
                 {/* Mobile Toggle Button */}
                 <button
@@ -629,7 +664,7 @@ export default function GamePage() {
               )}
 
               {/* Answer Input */}
-              {status === 'answering' && !isCalculating && !showResult && (
+              {status === 'answering' && !isCalculating && !showResult && !showRiverBetting && (
                 <AnswerInput
                   difficulty={difficulty}
                   currentRound={currentRound}
@@ -718,12 +753,14 @@ export default function GamePage() {
       )}
 
       {/* River Betting Dialog */}
-      {showRiverBetting && riverWinRate && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-          <div className="w-full max-w-md animate-bounce-in">
+      {showRiverBetting && bettingWinRate && (
+        // 데스크탑에서는 오른쪽(정답 패널 자리)에 붙이고 배경도 덜 어둡게 해서,
+        // 베팅 판단의 근거인 보드와 양쪽 핸드가 가리지 않게 한다.
+        <div className="fixed inset-0 z-50 flex items-center justify-center lg:justify-end bg-black/80 lg:bg-black/40 p-4 lg:pr-8">
+          <div className="w-full max-w-md lg:max-w-sm animate-bounce-in">
             <RiverBetting
               chips={chips}
-              playerWinRate={riverWinRate.playerWinRate}
+              playerWinRate={bettingWinRate.playerWinRate}
               onBet={handleRiverBet}
               onSkip={handleRiverSkip}
             />
@@ -732,7 +769,7 @@ export default function GamePage() {
       )}
 
       {/* Mobile Answer Panel Popup */}
-      {status === 'answering' && !isCalculating && !showResult && (
+      {status === 'answering' && !isCalculating && !showResult && !showRiverBetting && (
         <div
           className={cn(
             'sm:hidden fixed inset-0 z-50 transition-all duration-300',

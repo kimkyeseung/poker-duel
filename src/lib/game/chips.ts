@@ -111,3 +111,32 @@ export function formatChips(chips: number): string {
 export function calculateExpectedPayout(betAmount: number, odds: number): number {
   return Math.floor(betAmount * odds);
 }
+
+/**
+ * 베팅 결과 판정
+ *
+ * 리버 카드까지 깔린 뒤의 승률로 판정한다. 보드가 완성된 시점이라
+ * 승률은 100/0 중 하나이거나, 스플릿 팟이면 양쪽 모두 0이 된다.
+ * 스플릿은 판돈을 돌려주는 푸시다 (패배로 처리하면 전액을 잃는다).
+ */
+export type BetOutcome = 'win' | 'loss' | 'push';
+
+export function getBetOutcome(
+  playerWinRate: number,
+  computerWinRate: number
+): BetOutcome {
+  if (playerWinRate === computerWinRate) return 'push';
+  return playerWinRate > computerWinRate ? 'win' : 'loss';
+}
+
+/**
+ * 판정까지 포함한 베팅 정산 (칩 증감분 반환)
+ */
+export function resolveBet(
+  betAmount: number,
+  odds: number,
+  outcome: BetOutcome
+): number {
+  if (outcome === 'push') return 0;
+  return calculateBetResult(betAmount, odds, outcome === 'win');
+}
