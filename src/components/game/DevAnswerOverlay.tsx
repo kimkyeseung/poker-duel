@@ -12,12 +12,18 @@ interface DevAnswerOverlayProps {
   } | null;
 }
 
-export function DevAnswerOverlay({ currentWinRate }: DevAnswerOverlayProps) {
-  // Only show in development
-  if (process.env.NODE_ENV !== 'development') {
-    return null;
-  }
+const IS_DEV = process.env.NODE_ENV === 'development';
 
+/**
+ * 개발 모드 전용 정답 오버레이의 실제 구현.
+ *
+ * 훅을 호출하는 쪽과 개발/프로덕션을 가르는 쪽을 분리했다. 한 컴포넌트에서
+ * process.env 검사로 조기 반환한 뒤 useGameStore를 호출하면 훅이 조건부로
+ * 호출되어 React 규칙을 위반한다. 바깥 컴포넌트는 훅을 전혀 쓰지 않으므로
+ * 조기 반환이 안전하고, 프로덕션에서는 이 컴포넌트가 아예 마운트되지 않아
+ * 스토어를 구독하지도 않는다.
+ */
+function DevAnswerOverlayContent({ currentWinRate }: DevAnswerOverlayProps) {
   const { currentRound, playerHand, computerHand, difficulty, status } = useGameStore();
 
   // Don't show if not in answering state or no hands
@@ -100,4 +106,13 @@ export function DevAnswerOverlay({ currentWinRate }: DevAnswerOverlayProps) {
       {answerInfo}
     </div>
   );
+}
+
+export function DevAnswerOverlay(props: DevAnswerOverlayProps) {
+  // Only show in development
+  if (!IS_DEV) {
+    return null;
+  }
+
+  return <DevAnswerOverlayContent {...props} />;
 }
