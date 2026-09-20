@@ -5,17 +5,23 @@ import { expect, Page } from '@playwright/test';
  * 오버레이가 표시되면 클릭하여 닫습니다.
  */
 export async function dismissClickToStart(page: Page) {
+  const overlay = page.locator('[data-testid="click-to-start"]');
+
+  // isVisible()은 대기하지 않고 즉시 판정한다. 오버레이는 하이드레이션 이후
+  // useEffect에서 나타나므로, 즉시 확인하면 아직 DOM에 없어 "없음"으로 판정되고
+  // 해제를 건너뛴다. 그 직후 나타난 오버레이(z-[9999] fixed inset-0)가 이후의
+  // 모든 클릭을 가로채 테스트가 30초 타임아웃으로 줄줄이 실패한다.
+  // 따라서 나타날 때까지 명시적으로 기다린다.
   try {
-    // 오버레이 컨테이너를 찾아서 클릭
-    const overlay = page.locator('[data-testid="click-to-start"]');
-    if (await overlay.isVisible({ timeout: 2000 })) {
-      await overlay.click({ force: true });
-      // 오버레이가 사라질 때까지 대기
-      await expect(overlay).not.toBeVisible({ timeout: 2000 });
-    }
+    await overlay.waitFor({ state: 'visible', timeout: 10000 });
   } catch {
-    // 오버레이가 없으면 무시
+    // 같은 세션에서 이미 시작했다면 오버레이가 아예 나타나지 않는다
+    return;
   }
+
+  await overlay.click();
+  // 오버레이가 실제로 사라질 때까지 기다린다. 여기서 실패하면 삼켜서는 안 된다.
+  await expect(overlay).toBeHidden({ timeout: 10000 });
 }
 
 /**
