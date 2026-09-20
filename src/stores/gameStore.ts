@@ -216,7 +216,7 @@ export const useGameStore = create<GameStore>((set, get) => ({
   // 다음 상대로 전환
   nextOpponent: () => {
     const state = get();
-    const { currentOpponentIndex, playerHand, deck } = state;
+    const { currentOpponentIndex, playerHand } = state;
 
     const nextIndex = currentOpponentIndex + 1;
 
@@ -228,16 +228,32 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     if (!playerHand) return;
 
+    // 상대가 바뀌면 새 판이므로 덱도 새로 섞는다.
+    //
+    // 이전에는 남은 deck을 그대로 넘겼는데, 앞 상대전에서 쓴 번/커뮤니티 카드가
+    // 빠진 채라 상대를 거칠수록 덱이 고갈됐다(5번째 상대인 딜러 차례에는 18장).
+    // 그러면 generateOpponentHand가 매칭 범위(딜러 ±5) 안의 핸드에 해당하는
+    // 카드를 못 찾고 조용히 랜덤 핸드로 폴백한다. 3000판 시뮬레이션 기준
+    // 딜러 ±5가 46.8%(리버까지 보면 76.9%) 확률로 깨졌고, 최대 편차는 169위 중
+    // 166위였다 — 난이도의 핵심인 딜러전이 사실상 랜덤이었다.
+    //
+    // 플레이어 핸드는 한 난이도 동안 유지되는 설계이므로 그대로 두고,
+    // 그 2장만 제외한 50장에서 상대 핸드를 뽑는다.
+    const freshDeck = shuffleDeck(createDeck()).filter(
+      (card) =>
+        !playerHand.some((p) => p.suit === card.suit && p.rank === card.rank)
+    );
+
     // 다음 상대 핸드 생성
     const nextOpponentType = OPPONENT_CONFIGS[nextIndex].type;
     const newOpponentHand = generateOpponentHand(
       nextOpponentType,
       playerHand,
-      deck
-    ) || [deck[0], deck[1]];
+      freshDeck
+    ) || [freshDeck[0], freshDeck[1]];
 
     // 상대 카드 제외한 덱
-    const newDeck = deck.filter(
+    const newDeck = freshDeck.filter(
       (card) =>
         !newOpponentHand.some((c) => c.suit === card.suit && c.rank === card.rank)
     );
