@@ -200,7 +200,13 @@ export const useGameStore = create<GameStore>((set, get) => ({
 
     if (currentIndex < difficulties.length - 1) {
       const nextDifficultyLevel = difficulties[currentIndex + 1];
+
+      // initGame은 initialGameState로 전체를 덮어쓰므로 칩까지 0으로 돌아간다.
+      // 칩은 난이도를 걸쳐 누적되는 점수이므로 새 난이도에 다시 실어준다.
+      // lastChipReward("+N" 표시)는 이전 라운드의 잔상이라 그대로 초기화한다.
+      const { chips } = state;
       get().initGame(nextDifficultyLevel);
+      set({ chips });
     } else {
       // 모든 난이도 클리어
       get().victory();
