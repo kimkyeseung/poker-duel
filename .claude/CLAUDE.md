@@ -64,8 +64,9 @@ const opponentHand = generateOpponentHand(opponentType, playerHand, availableCar
 
 ```
 src/
-├── app/          # 페이지 (game, practice, daily, stats, settings)
+├── app/          # 페이지 (game, practice, daily, stats, settings, comments)
 ├── components/   # game/ (게임 UI), ui/ (공통 UI)
+├── hooks/        # usePokerCalculator (Web Worker 래퍼)
 ├── lib/          # poker/ (엔진), audio/ (사운드), i18n/ (번역), game/ (칩), supabase/ (DB)
 ├── stores/       # gameStore, localeStore
 └── types/        # poker.ts, game.ts
@@ -113,19 +114,31 @@ export function Component() {
 
 ## 스토리지 키
 
-| 키 | 용도 |
-|----|------|
-| `holdamnit-stats` | 게임 통계 |
-| `holdamnit-settings` | 설정 |
-| `holdamnit-locale` | 언어 설정 |
-| `holdamnit-tutorial-seen` | 튜토리얼 완료 |
-| `holdamnit-chip-highscore` | 칩 최고 기록 |
+| 키 | 저장소 | 용도 |
+|----|--------|------|
+| `holdamnit-stats` | localStorage | 게임 통계 |
+| `holdamnit-settings` | localStorage | 설정 |
+| `holdamnit-locale` | localStorage | 언어 설정 |
+| `holdamnit-tutorial-seen` | localStorage | 튜토리얼 완료 |
+| `holdamnit-chip-highscore` | localStorage | 칩 최고 기록 |
+| `holdamnit-comments` | localStorage | 코멘트 목록 |
+| `holdamnit-started` | **sessionStorage** | Click to Start 오버레이 해제 여부 (탭을 닫으면 초기화) |
 
 ## Supabase 연동
 
 ### 테이블
 - `leaderboard`: 전체 리더보드 (id, player_name, chips, difficulty_reached, country_code, created_at)
 - `daily_leaderboard`: 일일 리더보드 (id, player_name, chips, date, country_code, created_at)
+
+### 쓰기 경로 (중요)
+anon 키가 클라이언트에 노출되므로 **테이블 직접 INSERT는 막혀 있다**.
+점수 쓰기는 검증 + 레이트리밋을 거치는 RPC로만 가능하다.
+- `submit_leaderboard_score(p_player_name, p_chips, p_difficulty_reached, p_country_code)`
+- `submit_daily_score(p_player_name, p_chips, p_country_code)`
+
+`id` / `created_at` / `date`는 인자에 없으며 서버가 정한다. UPDATE/DELETE는 불가.
+스키마 변경 시 `supabase/schema.sql`을 수정하고 SQL Editor에서 재실행한다
+(신규 설치와 기존 배포 업그레이드 모두 처리하는 멱등 스크립트).
 
 ### API
 ```tsx

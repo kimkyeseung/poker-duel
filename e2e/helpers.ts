@@ -5,17 +5,23 @@ import { expect, Page } from '@playwright/test';
  * 오버레이가 표시되면 클릭하여 닫습니다.
  */
 export async function dismissClickToStart(page: Page) {
+  const overlay = page.locator('[data-testid="click-to-start"]');
+
+  // isVisible()은 대기하지 않고 즉시 판정한다. 오버레이는 하이드레이션 이후
+  // useEffect에서 나타나므로, 즉시 확인하면 아직 DOM에 없어 "없음"으로 판정되고
+  // 해제를 건너뛴다. 그 직후 나타난 오버레이(z-[9999] fixed inset-0)가 이후의
+  // 모든 클릭을 가로채 테스트가 30초 타임아웃으로 줄줄이 실패한다.
+  // 따라서 나타날 때까지 명시적으로 기다린다.
   try {
-    // 오버레이 컨테이너를 찾아서 클릭
-    const overlay = page.locator('[data-testid="click-to-start"]');
-    if (await overlay.isVisible({ timeout: 2000 })) {
-      await overlay.click({ force: true });
-      // 오버레이가 사라질 때까지 대기
-      await expect(overlay).not.toBeVisible({ timeout: 2000 });
-    }
+    await overlay.waitFor({ state: 'visible', timeout: 10000 });
   } catch {
-    // 오버레이가 없으면 무시
+    // 같은 세션에서 이미 시작했다면 오버레이가 아예 나타나지 않는다
+    return;
   }
+
+  await overlay.click();
+  // 오버레이가 실제로 사라질 때까지 기다린다. 여기서 실패하면 삼켜서는 안 된다.
+  await expect(overlay).toBeHidden({ timeout: 10000 });
 }
 
 /**
@@ -69,6 +75,22 @@ export async function goToDaily(page: Page) {
 }
 
 /**
+ * 현재 뷰포트에서 보이는 정답 선택 버튼들.
+ *
+ * game/page.tsx는 AnswerInput을 반응형으로 3벌 렌더링한다
+ * (모바일 / `hidden sm:block lg:hidden` 태블릿 / 데스크톱). 따라서 이 셀렉터는
+ * 여러 사본에 매칭되고 그중 실제로 보이는 것은 한 벌뿐이다. .first()는 DOM
+ * 순서상 첫 번째를 잡으므로 데스크톱 뷰포트에서는 숨겨진 태블릿용 사본을
+ * 집어와 toBeVisible()이 "hidden"으로 실패한다.
+ * 그래서 보이는 것만 남긴다.
+ */
+export function answerChoiceButtons(page: Page) {
+  return page
+    .locator('[role="group"] button, [role="radio"], .game-card button')
+    .filter({ visible: true });
+}
+
+/**
  * 게임에서 카드 공개 애니메이션이 완료될 때까지 대기합니다.
  */
 export async function waitForCardReveal(page: Page) {
@@ -79,9 +101,10 @@ export async function waitForCardReveal(page: Page) {
  * 정답 선택 버튼 중 하나를 클릭합니다.
  */
 export async function clickAnswerButton(page: Page, buttonIndex: number = 0) {
-  const buttons = page.locator('main button, [role="group"] button, [role="radio"]');
-  const button = buttons.nth(buttonIndex);
-  if (await button.isVisible({ timeout: 5000 })) {
-    await button.click();
-  }
+  // 이전 구현은 'main button'까지 포함해 헤더·나가기 버튼 등 정답과 무관한
+  // 버튼이 DOM 순서상 앞에 오면 nth(0)이 그것을 집었다. 게다가 isVisible()은
+  // 대기하지 않고 즉시 판정하므로, 아직 보이지 않으면 클릭을 조용히 건너뛰고
+  // 테스트는 정답이 제출된 줄 알고 진행하다 엉뚱한 곳에서 실패했다.
+  const button = answerChoiceButtons(page).nth(buttonIndex);
+  await button.click({ timeout: 10000 });
 }

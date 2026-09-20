@@ -44,3 +44,8 @@ playwright-report/
 
 # 디자인 리뉴얼
 design-ref/
+
+# Next.js가 dev 서버 기동 시 자동 생성 (generate-agent-files.js)
+# 프로젝트 가이드는 .claude/CLAUDE.md를 사용한다
+/AGENTS.md
+/CLAUDE.md

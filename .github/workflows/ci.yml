@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # 실패하면 머지를 막아야 하는 검증. 현재 모두 통과하는 항목만 넣는다.
+  verify:
+    name: Typecheck / Test / Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npx tsc --noEmit
+
+      - name: Unit tests
+        run: npm run test:run
+
+      - name: Build
+        run: npm run build
+
+  # ESLint 잡은 두지 않는다. 기존 코드에 에러가 다수 남아 있어 항상 빨간색으로
+  # 뜨고, 그러면 신호로서 의미가 없어 오히려 실제 실패를 가린다.
+  # 로컬에서는 `npm run lint`로 돌릴 수 있다.
+  # 에러를 0으로 정리한 뒤 차단 잡으로 추가하는 것이 맞다.
+
+  # 차단 잡. 로컬과 CI 양쪽에서 75/75 통과, flaky 0건을 확인한 뒤 정보성에서
+  # 승격했다. 게임 플로우 회귀를 여기서 막는다.
+  e2e:
+    name: E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps chromium
+
+      # 러너가 timeout-minutes로 잡을 강제 종료하면 결과가 cancelled로 찍혀
+      # 실패인지 중단인지 구분되지 않는다. Playwright 자체 global-timeout으로
+      # 먼저 스스로 종료시켜 명확한 실패로 보고되게 한다.
+      # timeout-minutes는 그래도 안 끝날 때를 위한 최후 방어선으로 남긴다.
+      # 전체 스위트는 약 5분이므로 15분이면 충분한 여유다.
+      - name: Run Playwright tests
+        run: npx playwright test --global-timeout=900000
+
+      - name: Upload report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 7

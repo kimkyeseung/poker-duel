@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { goToGame, waitForCardReveal } from './helpers';
+import { goToGame, waitForCardReveal, answerChoiceButtons } from './helpers';
 
 test.describe('난이도 시스템', () => {
   test.describe('쉬움 난이도', () => {
@@ -19,7 +19,7 @@ test.describe('난이도 시스템', () => {
       await waitForCardReveal(page);
 
       // 버튼 확인
-      const answerButtons = page.locator('[role="group"] button, [role="radio"], .game-card button');
+      const answerButtons = answerChoiceButtons(page);
       await expect(answerButtons.first()).toBeVisible({ timeout: 5000 });
     });
   });
@@ -55,7 +55,7 @@ test.describe('입력 방식', () => {
     await waitForCardReveal(page);
 
     // 버튼만 표시됨 (입력 필드 없음)
-    const answerButtons = page.locator('[role="group"] button, [role="radio"], .game-card button');
+    const answerButtons = answerChoiceButtons(page);
     await expect(answerButtons.first()).toBeVisible({ timeout: 5000 });
   });
 });
