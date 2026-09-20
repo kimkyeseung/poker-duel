@@ -66,7 +66,29 @@ export interface Database {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      // 점수 쓰기는 이 RPC로만 가능하다. id/created_at/date는 인자에 없으며
+      // 서버가 정한다 (supabase/schema.sql 참조).
+      submit_leaderboard_score: {
+        Args: {
+          p_player_name: string;
+          p_chips: number;
+          p_difficulty_reached: string;
+          p_country_code?: string | null;
+        };
+        Returns: Database['public']['Tables']['leaderboard']['Row'];
+      };
+      submit_daily_score: {
+        Args: {
+          p_player_name: string;
+          p_chips: number;
+          p_country_code?: string | null;
+        };
+        Returns: Database['public']['Tables']['daily_leaderboard']['Row'];
+      };
+      get_player_rank: {
+        Args: { player_chips: number };
+        Returns: number;
+      };
     };
     Enums: {
       [_ in never]: never;
