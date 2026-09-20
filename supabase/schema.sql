@@ -25,7 +25,7 @@
 CREATE TABLE IF NOT EXISTS public.leaderboard (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   player_name VARCHAR(20) NOT NULL,
-  chips INTEGER NOT NULL,
+  chips BIGINT NOT NULL,
   difficulty_reached VARCHAR(20) NOT NULL,
   country_code VARCHAR(2),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS public.leaderboard (
 CREATE TABLE IF NOT EXISTS public.daily_leaderboard (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   player_name VARCHAR(20) NOT NULL,
-  chips INTEGER NOT NULL,
+  chips BIGINT NOT NULL,
   date DATE NOT NULL DEFAULT CURRENT_DATE,
   country_code VARCHAR(2),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
@@ -53,11 +53,24 @@ CREATE TABLE IF NOT EXISTS public.score_submissions (
 
 -- ----------------------------------------------------------------------------
 -- 기존 배포 보정
---
--- 이전 스키마에서 created_at은 NULL을 허용했다. 서버가 항상 시각을 정하도록
--- 기본값을 채우고 NOT NULL로 승격한다.
 -- ----------------------------------------------------------------------------
 
+-- chips는 이전에 INTEGER였다. 리버 올인 배당(최대 10배)이 상대마다 복리로
+-- 쌓이면 int4 상한(2,147,483,647)을 넘길 수 있어 BIGINT로 확장한다.
+--
+-- RPC가 테이블의 합성 타입(public.leaderboard)을 반환하므로 컬럼 타입을 바꾸기
+-- 전에 기존 함수를 먼저 제거해야 한다. 아울러 인자 타입이 바뀌면
+-- CREATE OR REPLACE는 교체가 아니라 오버로드 추가가 되어 PostgREST 호출이
+-- 모호해지므로, 구 시그니처를 명시적으로 지운다.
+DROP FUNCTION IF EXISTS public.submit_leaderboard_score(TEXT, INTEGER, TEXT, TEXT);
+DROP FUNCTION IF EXISTS public.submit_daily_score(TEXT, INTEGER, TEXT);
+DROP FUNCTION IF EXISTS public.get_player_rank(INTEGER);
+
+ALTER TABLE public.leaderboard ALTER COLUMN chips TYPE BIGINT;
+ALTER TABLE public.daily_leaderboard ALTER COLUMN chips TYPE BIGINT;
+
+-- 이전 스키마에서 created_at은 NULL을 허용했다. 서버가 항상 시각을 정하도록
+-- 기본값을 채우고 NOT NULL로 승격한다.
 UPDATE public.leaderboard SET created_at = NOW() WHERE created_at IS NULL;
 UPDATE public.daily_leaderboard SET created_at = NOW() WHERE created_at IS NULL;
 
@@ -290,7 +303,7 @@ REVOKE ALL ON FUNCTION public.enforce_submission_rate_limit(TEXT, TEXT)
 
 CREATE OR REPLACE FUNCTION public.submit_leaderboard_score(
   p_player_name TEXT,
-  p_chips INTEGER,
+  p_chips BIGINT,
   p_difficulty_reached TEXT,
   p_country_code TEXT DEFAULT NULL
 )
@@ -334,7 +347,7 @@ $$;
 
 CREATE OR REPLACE FUNCTION public.submit_daily_score(
   p_player_name TEXT,
-  p_chips INTEGER,
+  p_chips BIGINT,
   p_country_code TEXT DEFAULT NULL
 )
 RETURNS public.daily_leaderboard
@@ -371,16 +384,16 @@ BEGIN
 END;
 $$;
 
-GRANT EXECUTE ON FUNCTION public.submit_leaderboard_score(TEXT, INTEGER, TEXT, TEXT)
+GRANT EXECUTE ON FUNCTION public.submit_leaderboard_score(TEXT, BIGINT, TEXT, TEXT)
   TO anon, authenticated;
-GRANT EXECUTE ON FUNCTION public.submit_daily_score(TEXT, INTEGER, TEXT)
+GRANT EXECUTE ON FUNCTION public.submit_daily_score(TEXT, BIGINT, TEXT)
   TO anon, authenticated;
 
 -- ----------------------------------------------------------------------------
 -- 순위 조회
 -- ----------------------------------------------------------------------------
 
-CREATE OR REPLACE FUNCTION public.get_player_rank(player_chips INTEGER)
+CREATE OR REPLACE FUNCTION public.get_player_rank(player_chips BIGINT)
 RETURNS INTEGER
 LANGUAGE sql
 STABLE
@@ -391,4 +404,4 @@ AS $$
   WHERE chips > player_chips;
 $$;
 
-GRANT EXECUTE ON FUNCTION public.get_player_rank(INTEGER) TO anon, authenticated;
+GRANT EXECUTE ON FUNCTION public.get_player_rank(BIGINT) TO anon, authenticated;
