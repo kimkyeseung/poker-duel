@@ -227,8 +227,8 @@ export const en = {
   // Level Info
   levelInfo: {
     easy: "Choose who has the better hand",
-    normal: "Select from 3 win rate ranges",
-    hard: "Select from 5 win rate ranges",
+    normal: "Select from 5 win rate ranges",
+    hard: "Predict within ±10% accuracy",
     expert: "Predict within ±5% accuracy",
     king: "Predict within ±3% accuracy",
     god: "Predict within ±1% accuracy",

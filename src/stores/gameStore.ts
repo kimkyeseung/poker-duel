@@ -90,7 +90,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const computerHand = generateOpponentHand(
       firstOpponentType,
       playerHand,
-      remainingAfterPlayer
+      remainingAfterPlayer,
+      DIFFICULTY_CONFIG[difficulty].handRankCap
     ) || [remainingAfterPlayer[0], remainingAfterPlayer[1]];
 
     // 상대 카드 제외한 덱
@@ -249,7 +250,8 @@ export const useGameStore = create<GameStore>((set, get) => ({
     const newOpponentHand = generateOpponentHand(
       nextOpponentType,
       playerHand,
-      freshDeck
+      freshDeck,
+      DIFFICULTY_CONFIG[state.difficulty].handRankCap
     ) || [freshDeck[0], freshDeck[1]];
 
     // 상대 카드 제외한 덱

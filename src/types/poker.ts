@@ -94,8 +94,17 @@ export type Difficulty = 'easy' | 'normal' | 'hard' | 'expert' | 'king' | 'god';
 export interface DifficultyConfig {
   name: string;
   nameKo: string;
-  inputType: 'choice' | 'choice3' | 'range' | 'input';
+  inputType: 'choice' | 'range' | 'input';
   tolerance?: number; // 오차 허용 범위 (%)
+  /**
+   * 프리플랍 핸드랭킹 최대 격차 (1~169 순위 기준).
+   *
+   * 상대별 매칭 범위(스몰 ±30 / 빅 ±15 / 딜러 ±5)와 min을 취해 적용한다.
+   * 난이도가 오를수록 좁아지므로, 완전 랜덤이던 상대1·2도 고난이도에서는
+   * 플레이어와 비슷한 핸드를 들고 나와 구분이 어려워진다.
+   * 쉬움은 상한 없음(undefined) — 상대별 규칙만 적용된다.
+   */
+  handRankCap?: number;
   timeLimit: number; // 초
 }
 
@@ -109,14 +118,17 @@ export const DIFFICULTY_CONFIG: Record<Difficulty, DifficultyConfig> = {
   normal: {
     name: 'Normal',
     nameKo: '보통',
-    inputType: 'choice3',
+    inputType: 'range',
     timeLimit: 60,
+    handRankCap: 60,
   },
   hard: {
     name: 'Hard',
     nameKo: '어려움',
-    inputType: 'range',
+    inputType: 'input',
+    tolerance: 10,
     timeLimit: 60,
+    handRankCap: 40,
   },
   expert: {
     name: 'Expert',
@@ -124,6 +136,7 @@ export const DIFFICULTY_CONFIG: Record<Difficulty, DifficultyConfig> = {
     inputType: 'input',
     tolerance: 5,
     timeLimit: 60,
+    handRankCap: 25,
   },
   king: {
     name: 'King of Holdem',
@@ -131,6 +144,7 @@ export const DIFFICULTY_CONFIG: Record<Difficulty, DifficultyConfig> = {
     inputType: 'input',
     tolerance: 3,
     timeLimit: 60,
+    handRankCap: 15,
   },
   god: {
     name: 'God of Holdem',
@@ -138,6 +152,7 @@ export const DIFFICULTY_CONFIG: Record<Difficulty, DifficultyConfig> = {
     inputType: 'input',
     tolerance: 1,
     timeLimit: 60,
+    handRankCap: 8,
   },
 };
 

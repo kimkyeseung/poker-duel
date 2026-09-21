@@ -229,8 +229,8 @@ export const zh: TranslationKeys = {
   // Level Info
   levelInfo: {
     easy: "选择谁有更好的牌",
-    normal: "从3个胜率范围中选择",
-    hard: "从5个胜率范围中选择",
+    normal: "从5个胜率范围中选择",
+    hard: "预测精度在±10%以内",
     expert: "预测精度在±5%以内",
     king: "预测精度在±3%以内",
     god: "预测精度在±1%以内",

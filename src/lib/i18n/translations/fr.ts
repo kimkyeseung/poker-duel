@@ -229,8 +229,8 @@ export const fr: TranslationKeys = {
   // Level Info
   levelInfo: {
     easy: "Choisissez qui a la meilleure main",
-    normal: "Choisissez parmi 3 plages de probabilité",
-    hard: "Choisissez parmi 5 plages de probabilité",
+    normal: "Choisissez parmi 5 plages de probabilité",
+    hard: "Prédisez avec ±10% de précision",
     expert: "Prédisez avec ±5% de précision",
     king: "Prédisez avec ±3% de précision",
     god: "Prédisez avec ±1% de précision",

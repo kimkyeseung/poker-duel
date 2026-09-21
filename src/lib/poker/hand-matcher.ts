@@ -311,21 +311,30 @@ export function findCardsForHandName(
 export function getOpponentHandName(
   opponentType: OpponentType,
   playerHandName: string,
-  playerRank: number
+  playerRank: number,
+  rankCap?: number
 ): string {
   const config = OPPONENT_CONFIGS.find((c) => c.type === opponentType);
   if (!config) {
-    return getRandomHandName();
+    return rankCap === undefined
+      ? getRandomHandName()
+      : getMatchedHandName(playerRank, rankCap);
   }
 
   const rule = config.handMatchingRule;
   const filter = config.filterVisuallyObvious;
 
+  // 'random' 상대(상대1·2)는 원래 169위 전체에서 뽑는다. 난이도 상한이 있으면
+  // 그 폭으로 매칭해, 고난이도에서는 첫 두 상대부터 구분이 어려워진다.
   if (rule === 'random') {
-    return getRandomHandName();
+    return rankCap === undefined
+      ? getRandomHandName()
+      : getMatchedHandName(playerRank, rankCap);
   }
 
-  const range = rule === 'range30' ? 30 : rule === 'range15' ? 15 : 5;
+  const baseRange = rule === 'range30' ? 30 : rule === 'range15' ? 15 : 5;
+  // 상대별 규칙과 난이도 상한 중 좁은 쪽을 쓴다.
+  const range = rankCap === undefined ? baseRange : Math.min(baseRange, rankCap);
 
   if (filter) {
     return getFilteredMatchedHandName(playerHandName, playerRank, range);
@@ -344,13 +353,15 @@ export function getOpponentHandName(
 export function generateOpponentHand(
   opponentType: OpponentType,
   playerHand: [Card, Card],
-  availableCards: Card[]
+  availableCards: Card[],
+  rankCap?: number
 ): [Card, Card] | null {
   const playerHandInfo = evaluateStartingHand(playerHand);
   const opponentHandName = getOpponentHandName(
     opponentType,
     playerHandInfo.name,
-    playerHandInfo.rank
+    playerHandInfo.rank,
+    rankCap
   );
 
   // 핸드 이름에 맞는 카드 찾기 (플레이어 카드 제외)
@@ -360,9 +371,13 @@ export function generateOpponentHand(
     return cards;
   }
 
-  // 찾지 못하면 랜덤 핸드로 재시도 (최대 10회)
+  // 찾지 못하면 재시도 (최대 10회). 난이도 상한이 있으면 그 범위 안에서 다시
+  // 고른다 — 여기서 169위 전체 랜덤으로 빠지면 상한이 무의미해진다.
   for (let i = 0; i < 10; i++) {
-    const fallbackHandName = getRandomHandName();
+    const fallbackHandName =
+      rankCap === undefined
+        ? getRandomHandName()
+        : getMatchedHandName(playerHandInfo.rank, rankCap);
     const fallbackCards = findCardsForHandName(fallbackHandName, availableCards, playerHand);
     if (fallbackCards) {
       return fallbackCards;

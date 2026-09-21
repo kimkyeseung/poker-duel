@@ -229,8 +229,8 @@ export const ja: TranslationKeys = {
   // Level Info
   levelInfo: {
     easy: "より良いハンドを持っている方を選んでください",
-    normal: "3つの勝率範囲から選んでください",
-    hard: "5つの勝率範囲から選んでください",
+    normal: "5つの勝率範囲から選んでください",
+    hard: "±10%の精度で予測してください",
     expert: "±5%の精度で予測してください",
     king: "±3%の精度で予測してください",
     god: "±1%の精度で予測してください",

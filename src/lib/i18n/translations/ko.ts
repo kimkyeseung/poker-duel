@@ -229,8 +229,8 @@ export const ko: TranslationKeys = {
   // Level Info
   levelInfo: {
     easy: "더 좋은 패를 가진 사람을 선택하세요",
-    normal: "3개의 승률 범위 중 선택하세요",
-    hard: "5개의 승률 범위 중 선택하세요",
+    normal: "5개의 승률 범위 중 선택하세요",
+    hard: "±10% 오차 내로 예측하세요",
     expert: "±5% 오차 내로 예측하세요",
     king: "±3% 오차 내로 예측하세요",
     god: "±1% 오차 내로 예측하세요",

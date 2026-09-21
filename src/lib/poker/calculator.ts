@@ -160,14 +160,13 @@ export function checkAnswer(
       return false;
 
     case 'normal':
-      // 3지선다 (0-35, 35-70, 70-100)
-      const correctRange3 = getRange3ForWinRate(playerWinRate);
-      return playerAnswer === correctRange3;
-
-    case 'hard':
       // 5지선다 (자신의 승률 구간)
       const correctRange5 = getRange5ForWinRate(playerWinRate);
       return playerAnswer === correctRange5;
+
+    case 'hard':
+      // 직접 입력, ±10% 오차
+      return Math.abs(Number(playerAnswer) - playerWinRate) <= 10;
 
     case 'expert':
       // 직접 입력, ±5% 오차
@@ -186,12 +185,6 @@ export function checkAnswer(
   }
 }
 
-// 승률에 해당하는 3지선다 구간 반환 (normal)
-function getRange3ForWinRate(winRate: number): string {
-  if (winRate < 35) return '0-35';
-  if (winRate < 70) return '35-70';
-  return '70-100';
-}
 
 // 승률에 해당하는 5지선다 구간 반환 (hard)
 function getRange5ForWinRate(winRate: number): string {
