@@ -2,6 +2,7 @@
 
 import { useEffect } from 'react';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
 
 interface TimerProps {
   seconds: number;
@@ -197,6 +198,7 @@ export function TimerBar({
     return () => clearInterval(timer);
   }, [isRunning, seconds, onTick, onTimeout]);
 
+  const { t } = useTranslation();
   const percentage = (seconds / maxSeconds) * 100;
   const isWarning = seconds <= 5;
   const isCritical = seconds <= 3;
@@ -205,7 +207,7 @@ export function TimerBar({
   return (
     <div className={cn('w-full', className)}>
       <div className="flex justify-between items-center mb-2">
-        <span className="text-xs text-[#64748b] uppercase tracking-wider">Time Remaining</span>
+        <span className="text-xs text-[#64748b] uppercase tracking-wider">{t.game.timeRemaining}</span>
         <span
           className={cn(
             'text-xl font-bold tabular-nums',

@@ -24,6 +24,16 @@ export const en = {
     no: "No",
   },
 
+  a11y: {
+    exitGame: "Exit game",
+    selectWinner: "Select winner",
+    selectWinRateRange: "Select win rate range",
+    winProbability: "Win probability",
+    selectLanguage: "Select language",
+    muteSound: "Mute sound",
+    unmuteSound: "Unmute sound",
+  },
+
   // Navigation
   nav: {
     home: "HOME",
@@ -50,6 +60,8 @@ export const en = {
     hotTables: "The tables are hot!",
     clickToStart: "Click anywhere to start",
     soundEnabled: "Sound will be enabled",
+    masterStats: "MASTER STATS:",
+    best: "BEST",
   },
 
   // Practice Mode
@@ -78,11 +90,13 @@ export const en = {
       bigBlind: "Big Blind",
       vs: "VS",
       yourAnswer: "Your Answer",
+      burn: "BURN",
     },
     opponents: {
       defeated: "Opponent Defeated!",
       nextOpponent: "Next Opponent",
       preparing: "Preparing next opponent...",
+      next: "Next: {opponent}",
     },
     messages: {
       revealingCards: "Revealing cards...",
@@ -127,6 +141,7 @@ export const en = {
       noChips: "No chips to bet",
       chips: "Chips",
     },
+    timeRemaining: "Time Remaining",
   },
 
   // Results
@@ -152,6 +167,11 @@ export const en = {
     addedCards: "Added Cards",
     totalCombinations: "Total Combinations",
     noOutcomes: "No outcomes in this category",
+    detailedAnalysis: "Detailed Analysis",
+    yourWins: "Your Wins",
+    dealerWins: "Dealer Wins",
+    winProbabilityClash: "Win Probability Clash",
+    winnerBadge: "WINNER",
   },
 
   // Hand Ranks
@@ -290,6 +310,13 @@ export const en = {
     resetData: "Reset All Data",
     resetConfirm: "All game data will be deleted. Continue?",
     language: "Language",
+    soundEffectsDesc: "Play in-game sounds",
+    vibrationDesc: "Mobile haptic feedback",
+    themeNote: "* Theme changes will apply on next page load.",
+    resetDataDesc: "All game records, stats, and achievements will be deleted.",
+    information: "Information",
+    version: "Version",
+    developer: "Developer",
   },
 
   // Stats
@@ -303,6 +330,52 @@ export const en = {
     difficultyStats: "Difficulty Statistics",
     played: "Played",
     cleared: "Cleared",
+    losses: "Losses",
+    tabOverview: "Overview",
+    tabTitles: "Titles",
+    tabAchievements: "Achievements",
+    tabHistory: "History",
+    difficultyClears: "Difficulty Clears",
+    achievementProgress: "Achievement Progress",
+    percentComplete: "{percent}% Complete",
+    unlocked: "Unlocked: {unlocked}/{total}",
+    current: "CURRENT",
+    noHistory: "No play history yet.",
+    historyHint: "Your games will appear here.",
+    recentRecords: "Recent {count} records",
+    win: "WIN",
+    loss: "LOSS",
+  },
+
+  comments: {
+    title: "HALL OF FAME",
+    godModeCleared: "GOD MODE CLEARED!",
+    leaveMessage: "Leave your victory message",
+    nickname: "Nickname (optional)",
+    nicknamePlaceholder: "Anonymous Champion",
+    messageLabel: "Victory Message",
+    messagePlaceholder: "Share your thoughts on clearing the game...",
+    submitMessage: "Submit Message",
+    submitting: "Submitting...",
+    submitted: "Your message has been submitted!",
+    listTitle: "Victory Messages ({count})",
+    noMessages: "No messages yet.",
+    beFirst: "Be the first to leave a victory message!",
+  },
+
+  daily: {
+    title: "DAILY CHALLENGE",
+    description: "Today's challenge! Same puzzle for all players.",
+    clearAllLevels: "Clear all 6 difficulty levels in order.",
+    oneAttempt: "You only get one attempt per day!",
+    startChallenge: "START TODAY'S CHALLENGE",
+    cleared: "CHALLENGE CLEARED!",
+    complete: "CHALLENGE COMPLETE",
+    clearedMessage: "Congratulations! You cleared today's challenge.",
+    tryTomorrow: "Try again tomorrow!",
+    reachedDifficulty: "Reached Difficulty",
+    backToMain: "Back to Main",
+    failed: "Daily challenge failed! Try again tomorrow.",
   },
 
   // Tutorial
@@ -325,6 +398,20 @@ export const en = {
     },
     gotIt: "Got it!",
     letsPlay: "Let's Play!",
+    roundsTitle: "4 Rounds",
+    communityCards: "{count} community cards",
+    answerAllRounds: "Answer correctly in all rounds to win!",
+    timeOthers: "Flop / Turn / River",
+    secondsValue: "{count} seconds",
+    timeWarning: "Warning: Failure to answer in time = Game Over!",
+    practiceNote: "Practice mode has no time limits.",
+    practiceHint: "New here? Try Practice Mode first to play without time limits!",
+    goal: "Clear all 6 difficulty levels to become the {title}!",
+    prev: "Back",
+    ready: {
+      title: "Ready to Play",
+      description: "You're ready to start playing!",
+    },
   },
 
   // Hints

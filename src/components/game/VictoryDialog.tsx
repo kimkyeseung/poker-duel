@@ -2,6 +2,7 @@
 
 import { Dialog, DialogContent, DialogFooter, DialogHeader } from '@/components/ui/Dialog';
 import { Button } from '@/components/ui/Button';
+import { useTranslation } from '@/lib/i18n';
 
 interface VictoryDialogProps {
   isOpen: boolean;
@@ -14,15 +15,17 @@ export function VictoryDialog({
   onGoHome,
   onWriteComment,
 }: VictoryDialogProps) {
+  const { t } = useTranslation();
+
   return (
     <Dialog isOpen={isOpen} onClose={() => {}}>
       <DialogHeader className="text-center">
         {/* Title */}
         <h1 className="text-5xl font-black text-gradient-gold text-glow-gold animate-bounce-in">
-          YOU WON!
+          {t.victory.youWon}
         </h1>
         <div className="flex justify-center gap-2 mt-3">
-          <span className="badge badge-gold">LEVEL CLEARED</span>
+          <span className="badge badge-gold">{t.victory.levelCleared}</span>
           <span className="badge badge-secondary">+500 XP</span>
         </div>
       </DialogHeader>
@@ -46,7 +49,7 @@ export function VictoryDialog({
         <div className="bg-[#1a1f35] rounded-xl p-4">
           <div className="flex justify-between items-center mb-2">
             <div>
-              <span className="text-[#64748b] text-xs">NEXT RANK</span>
+              <span className="text-[#64748b] text-xs">{t.victory.nextRank}</span>
               <div className="text-white font-bold">LEVEL 12 → 13</div>
             </div>
             <span className="text-[#00d4ff] font-bold">79%</span>
@@ -59,27 +62,27 @@ export function VictoryDialog({
         {/* Stats */}
         <div className="grid grid-cols-2 gap-4">
           <div className="bg-[#1a1f35] rounded-xl p-4 text-center">
-            <div className="text-[#64748b] text-xs uppercase mb-1">Best Accuracy</div>
+            <div className="text-[#64748b] text-xs uppercase mb-1">{t.victory.bestAccuracy}</div>
             <div className="text-2xl font-bold text-[#00ff88]">94.2%</div>
           </div>
           <div className="bg-[#1a1f35] rounded-xl p-4 text-center">
-            <div className="text-[#64748b] text-xs uppercase mb-1">Total Score</div>
+            <div className="text-[#64748b] text-xs uppercase mb-1">{t.victory.totalScore}</div>
             <div className="text-2xl font-bold text-[#ffd700] tabular-nums">12,450</div>
           </div>
         </div>
 
         {/* Call to action */}
         <p className="text-center text-[#64748b] text-sm">
-          Share your victory with the community!
+          {t.victory.shareMessage}
         </p>
       </DialogContent>
 
       <DialogFooter className="flex-col sm:flex-row gap-3">
         <Button variant="success" onClick={onWriteComment} size="lg" fullWidth>
-          KEEP GOING →
+          {t.victory.keepGoing}
         </Button>
         <Button variant="secondary" onClick={onGoHome} size="md" fullWidth>
-          ≡ MENU
+          ≡ {t.common.menu}
         </Button>
       </DialogFooter>
     </Dialog>

@@ -26,6 +26,16 @@ export const zh: TranslationKeys = {
     no: "否",
   },
 
+  a11y: {
+    exitGame: "退出游戏",
+    selectWinner: "选择胜者",
+    selectWinRateRange: "选择胜率区间",
+    winProbability: "胜率",
+    selectLanguage: "选择语言",
+    muteSound: "静音",
+    unmuteSound: "取消静音",
+  },
+
   // Navigation
   nav: {
     home: "主页",
@@ -52,6 +62,8 @@ export const zh: TranslationKeys = {
     hotTables: "牌桌火热！",
     clickToStart: "点击任意位置开始",
     soundEnabled: "将启用声音",
+    masterStats: "总计记录:",
+    best: "最佳",
   },
 
   // Practice Mode
@@ -80,11 +92,13 @@ export const zh: TranslationKeys = {
       bigBlind: "大盲注",
       vs: "VS",
       yourAnswer: "你的答案",
+      burn: "烧牌",
     },
     opponents: {
       defeated: "击败对手！",
       nextOpponent: "下一个对手",
       preparing: "准备下一个对手...",
+      next: "下一位: {opponent}",
     },
     messages: {
       revealingCards: "正在揭示牌...",
@@ -129,6 +143,7 @@ export const zh: TranslationKeys = {
       noChips: "没有可下注的筹码",
       chips: "筹码",
     },
+    timeRemaining: "剩余时间",
   },
 
   // Results
@@ -154,6 +169,11 @@ export const zh: TranslationKeys = {
     addedCards: "添加的牌",
     totalCombinations: "总组合数",
     noOutcomes: "此类别无结果",
+    detailedAnalysis: "详细分析",
+    yourWins: "我方胜出",
+    dealerWins: "庄家胜出",
+    winProbabilityClash: "胜率对决",
+    winnerBadge: "胜者",
   },
 
   // Hand Ranks
@@ -292,6 +312,13 @@ export const zh: TranslationKeys = {
     resetData: "重置所有数据",
     resetConfirm: "所有游戏数据将被删除。继续？",
     language: "语言",
+    soundEffectsDesc: "播放游戏内音效",
+    vibrationDesc: "移动端触觉反馈",
+    themeNote: "* 主题更改将在下次加载页面时生效。",
+    resetDataDesc: "所有游戏记录、统计和成就都将被删除。",
+    information: "信息",
+    version: "版本",
+    developer: "开发者",
   },
 
   // Stats
@@ -305,6 +332,52 @@ export const zh: TranslationKeys = {
     difficultyStats: "难度统计",
     played: "已玩",
     cleared: "已通关",
+    losses: "失败",
+    tabOverview: "总览",
+    tabTitles: "称号",
+    tabAchievements: "成就",
+    tabHistory: "历史",
+    difficultyClears: "难度通关",
+    achievementProgress: "成就进度",
+    percentComplete: "已完成 {percent}%",
+    unlocked: "已解锁: {unlocked}/{total}",
+    current: "当前",
+    noHistory: "还没有游戏记录。",
+    historyHint: "你的对局会显示在这里。",
+    recentRecords: "最近 {count} 条记录",
+    win: "胜",
+    loss: "负",
+  },
+
+  comments: {
+    title: "名人堂",
+    godModeCleared: "通关神之难度!",
+    leaveMessage: "留下你的胜利感言",
+    nickname: "昵称（可选）",
+    nicknamePlaceholder: "无名冠军",
+    messageLabel: "胜利感言",
+    messagePlaceholder: "分享一下通关的感受...",
+    submitMessage: "提交感言",
+    submitting: "提交中...",
+    submitted: "你的感言已提交!",
+    listTitle: "胜利感言 ({count})",
+    noMessages: "还没有留言。",
+    beFirst: "来做第一个留言的人吧!",
+  },
+
+  daily: {
+    title: "每日挑战",
+    description: "今日的挑战! 所有玩家面对同一道题。",
+    clearAllLevels: "按顺序通关全部6个难度。",
+    oneAttempt: "每天只有一次机会!",
+    startChallenge: "开始今日挑战",
+    cleared: "挑战成功!",
+    complete: "挑战结束",
+    clearedMessage: "恭喜! 你完成了今天的挑战。",
+    tryTomorrow: "明天再来挑战吧!",
+    reachedDifficulty: "到达的难度",
+    backToMain: "返回主页",
+    failed: "每日挑战失败! 明天再来。",
   },
 
   // Tutorial
@@ -327,6 +400,20 @@ export const zh: TranslationKeys = {
     },
     gotIt: "明白了！",
     letsPlay: "开始游戏！",
+    roundsTitle: "4个回合",
+    communityCards: "{count} 张公共牌",
+    answerAllRounds: "答对所有回合即可获胜!",
+    timeOthers: "翻牌 / 转牌 / 河牌",
+    secondsValue: "{count} 秒",
+    timeWarning: "注意: 超时未作答即游戏结束!",
+    practiceNote: "练习模式没有时间限制。",
+    practiceHint: "新手? 先到练习模式无时间限制地试试吧!",
+    goal: "通关全部6个难度，成为{title}!",
+    prev: "上一步",
+    ready: {
+      title: "准备开始",
+      description: "你已经可以开始了!",
+    },
   },
 
   // Hints

@@ -26,6 +26,16 @@ export const es: TranslationKeys = {
     no: "No",
   },
 
+  a11y: {
+    exitGame: "Salir del juego",
+    selectWinner: "Seleccionar ganador",
+    selectWinRateRange: "Seleccionar rango de probabilidad",
+    winProbability: "Probabilidad de victoria",
+    selectLanguage: "Seleccionar idioma",
+    muteSound: "Silenciar",
+    unmuteSound: "Activar sonido",
+  },
+
   // Navigation
   nav: {
     home: "INICIO",
@@ -52,6 +62,8 @@ export const es: TranslationKeys = {
     hotTables: "¡Las mesas están calientes!",
     clickToStart: "Haz clic en cualquier lugar para empezar",
     soundEnabled: "El sonido se habilitará",
+    masterStats: "ESTADÍSTICAS:",
+    best: "MEJOR",
   },
 
   // Practice Mode
@@ -80,11 +92,13 @@ export const es: TranslationKeys = {
       bigBlind: "Ciega Grande",
       vs: "VS",
       yourAnswer: "Tu respuesta",
+      burn: "QUEMA",
     },
     opponents: {
       defeated: "¡Oponente Derrotado!",
       nextOpponent: "Siguiente Oponente",
       preparing: "Preparando siguiente oponente...",
+      next: "Siguiente: {opponent}",
     },
     messages: {
       revealingCards: "Revelando cartas...",
@@ -129,6 +143,7 @@ export const es: TranslationKeys = {
       noChips: "Sin fichas para apostar",
       chips: "Fichas",
     },
+    timeRemaining: "Tiempo restante",
   },
 
   // Results
@@ -154,6 +169,11 @@ export const es: TranslationKeys = {
     addedCards: "Cartas Añadidas",
     totalCombinations: "Combinaciones Totales",
     noOutcomes: "Sin resultados en esta categoría",
+    detailedAnalysis: "Análisis detallado",
+    yourWins: "Tus victorias",
+    dealerWins: "Victorias del crupier",
+    winProbabilityClash: "Duelo de probabilidades",
+    winnerBadge: "GANADOR",
   },
 
   // Hand Ranks
@@ -292,6 +312,13 @@ export const es: TranslationKeys = {
     resetData: "Restablecer Datos",
     resetConfirm: "Se eliminarán todos los datos. ¿Continuar?",
     language: "Idioma",
+    soundEffectsDesc: "Reproduce los sonidos del juego",
+    vibrationDesc: "Vibración háptica en móvil",
+    themeNote: "* Los cambios de tema se aplicarán al recargar la página.",
+    resetDataDesc: "Se eliminarán todos los registros, estadísticas y logros.",
+    information: "Información",
+    version: "Versión",
+    developer: "Desarrollador",
   },
 
   // Stats
@@ -305,6 +332,52 @@ export const es: TranslationKeys = {
     difficultyStats: "Estadísticas por Dificultad",
     played: "Jugadas",
     cleared: "Completadas",
+    losses: "Derrotas",
+    tabOverview: "Resumen",
+    tabTitles: "Títulos",
+    tabAchievements: "Logros",
+    tabHistory: "Historial",
+    difficultyClears: "Niveles superados",
+    achievementProgress: "Progreso de logros",
+    percentComplete: "{percent}% completado",
+    unlocked: "Desbloqueados: {unlocked}/{total}",
+    current: "ACTUAL",
+    noHistory: "Aún no hay historial de partidas.",
+    historyHint: "Tus partidas aparecerán aquí.",
+    recentRecords: "Últimos {count} registros",
+    win: "VICTORIA",
+    loss: "DERROTA",
+  },
+
+  comments: {
+    title: "SALÓN DE LA FAMA",
+    godModeCleared: "¡MODO DIOS SUPERADO!",
+    leaveMessage: "Deja tu mensaje de victoria",
+    nickname: "Apodo (opcional)",
+    nicknamePlaceholder: "Campeón Anónimo",
+    messageLabel: "Mensaje de victoria",
+    messagePlaceholder: "Comparte cómo fue superar el juego...",
+    submitMessage: "Enviar mensaje",
+    submitting: "Enviando...",
+    submitted: "¡Tu mensaje ha sido enviado!",
+    listTitle: "Mensajes de victoria ({count})",
+    noMessages: "Aún no hay mensajes.",
+    beFirst: "¡Sé el primero en dejar un mensaje!",
+  },
+
+  daily: {
+    title: "DESAFÍO DIARIO",
+    description: "¡El reto de hoy! El mismo puzle para todos.",
+    clearAllLevels: "Supera las 6 dificultades en orden.",
+    oneAttempt: "¡Solo tienes un intento al día!",
+    startChallenge: "EMPEZAR EL RETO DE HOY",
+    cleared: "¡RETO SUPERADO!",
+    complete: "RETO FINALIZADO",
+    clearedMessage: "¡Enhorabuena! Superaste el reto de hoy.",
+    tryTomorrow: "¡Inténtalo de nuevo mañana!",
+    reachedDifficulty: "Dificultad alcanzada",
+    backToMain: "Volver al inicio",
+    failed: "¡Reto diario fallido! Inténtalo mañana.",
   },
 
   // Tutorial
@@ -327,6 +400,20 @@ export const es: TranslationKeys = {
     },
     gotIt: "¡Entendido!",
     letsPlay: "¡A Jugar!",
+    roundsTitle: "4 rondas",
+    communityCards: "{count} cartas comunitarias",
+    answerAllRounds: "¡Acierta en todas las rondas para ganar!",
+    timeOthers: "Flop / Turn / River",
+    secondsValue: "{count} segundos",
+    timeWarning: "Aviso: ¡Si no respondes a tiempo, fin del juego!",
+    practiceNote: "El modo práctica no tiene límite de tiempo.",
+    practiceHint: "¿Nuevo? ¡Prueba el modo práctica sin límite de tiempo!",
+    goal: "¡Supera las 6 dificultades para ser {title}!",
+    prev: "Atrás",
+    ready: {
+      title: "Listo para jugar",
+      description: "¡Ya puedes empezar a jugar!",
+    },
   },
 
   // Hints

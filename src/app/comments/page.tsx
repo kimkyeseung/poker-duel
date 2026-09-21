@@ -6,10 +6,12 @@ import { Button } from '@/components/ui';
 import { getEndingComments, addEndingComment } from '@/lib/storage';
 import { EndingComment, Difficulty, DIFFICULTY_CONFIG } from '@/types';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
 import { v4 as uuidv4 } from 'uuid';
 
 export default function CommentsPage() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [comments, setComments] = useState<EndingComment[]>([]);
   const [newComment, setNewComment] = useState('');
   const [authorName, setAuthorName] = useState('');
@@ -53,9 +55,9 @@ export default function CommentsPage() {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            <span>Back</span>
+            <span>{t.common.back}</span>
           </button>
-          <div className="text-[#ffd700] font-bold text-lg">HALL OF FAME</div>
+          <div className="text-[#ffd700] font-bold text-lg">{t.comments.title}</div>
           <div className="w-16" />
         </div>
       </header>
@@ -67,9 +69,9 @@ export default function CommentsPage() {
             <div className="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-[#ffd700] to-[#ffb800] flex items-center justify-center text-[#0a0e1a] text-4xl font-black">
               G
             </div>
-            <h1 className="text-2xl font-black text-white">GOD MODE CLEARED!</h1>
+            <h1 className="text-2xl font-black text-white">{t.comments.godModeCleared}</h1>
             <p className="text-[#64748b]">
-              Leave your victory message
+              {t.comments.leaveMessage}
             </p>
           </div>
 
@@ -77,23 +79,23 @@ export default function CommentsPage() {
           {!hasSubmitted ? (
             <div className="game-card p-6 space-y-4">
               <div>
-                <label className="block text-sm text-[#64748b] mb-2">Nickname (optional)</label>
+                <label className="block text-sm text-[#64748b] mb-2">{t.comments.nickname}</label>
                 <input
                   type="text"
                   value={authorName}
                   onChange={(e) => setAuthorName(e.target.value)}
-                  placeholder="Anonymous Champion"
+                  placeholder={t.comments.nicknamePlaceholder}
                   maxLength={20}
                   className="w-full px-4 py-3 bg-[#0f1424] border border-white/10 rounded-xl text-white placeholder:text-[#64748b] focus:outline-none focus:border-[#00d4ff] focus:shadow-[0_0_20px_rgba(0,212,255,0.2)] transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-[#64748b] mb-2">Victory Message</label>
+                <label className="block text-sm text-[#64748b] mb-2">{t.comments.messageLabel}</label>
                 <textarea
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Share your thoughts on clearing the game..."
+                  placeholder={t.comments.messagePlaceholder}
                   maxLength={200}
                   rows={4}
                   className="w-full px-4 py-3 bg-[#0f1424] border border-white/10 rounded-xl text-white placeholder:text-[#64748b] focus:outline-none focus:border-[#00d4ff] focus:shadow-[0_0_20px_rgba(0,212,255,0.2)] transition-all resize-none"
@@ -110,7 +112,7 @@ export default function CommentsPage() {
                 disabled={!newComment.trim() || isSubmitting}
                 fullWidth
               >
-                {isSubmitting ? 'Submitting...' : 'Submit Message'}
+                {isSubmitting ? t.comments.submitting : t.comments.submitMessage}
               </Button>
             </div>
           ) : (
@@ -118,7 +120,7 @@ export default function CommentsPage() {
               <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[#00ff88]/20 flex items-center justify-center text-[#00ff88] text-xl font-bold">
                 ✓
               </div>
-              <p className="text-[#00ff88] font-semibold">Your message has been submitted!</p>
+              <p className="text-[#00ff88] font-semibold">{t.comments.submitted}</p>
             </div>
           )}
 
@@ -126,13 +128,13 @@ export default function CommentsPage() {
           <div className="space-y-4">
             <h2 className="text-lg font-bold text-white flex items-center gap-2">
               <span className="w-8 h-8 rounded-full bg-[#ff4d94]/20 flex items-center justify-center text-[#ff4d94] text-sm">C</span>
-              Victory Messages ({comments.length})
+              {t.comments.listTitle.replace('{count}', String(comments.length))}
             </h2>
 
             {comments.length === 0 ? (
               <div className="text-center text-[#64748b] py-8">
-                No messages yet.<br />
-                Be the first to leave a victory message!
+                {t.comments.noMessages}<br />
+                {t.comments.beFirst}
               </div>
             ) : (
               <div className="space-y-3">

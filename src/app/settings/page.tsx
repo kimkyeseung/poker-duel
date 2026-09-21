@@ -93,13 +93,13 @@ export default function SettingsPage() {
             <div className="space-y-4">
               <ToggleSetting
                 label={t.settings.soundEffects}
-                description="Play in-game sounds"
+                description={t.settings.soundEffectsDesc}
                 enabled={settings.soundEnabled}
                 onToggle={handleSoundToggle}
               />
               <ToggleSetting
                 label={t.settings.vibration}
-                description="Mobile haptic feedback"
+                description={t.settings.vibrationDesc}
                 enabled={settings.vibrationEnabled}
                 onToggle={handleVibrationToggle}
               />
@@ -137,7 +137,7 @@ export default function SettingsPage() {
               ))}
             </div>
             <p className="text-xs text-[#64748b] mt-3">
-              * Theme changes will apply on next page load.
+              {t.settings.themeNote}
             </p>
           </div>
 
@@ -156,7 +156,7 @@ export default function SettingsPage() {
               {t.settings.resetData}
             </Button>
             <p className="text-xs text-[#64748b] mt-3 text-center">
-              All game records, stats, and achievements will be deleted.
+              {t.settings.resetDataDesc}
             </p>
           </div>
 
@@ -164,15 +164,15 @@ export default function SettingsPage() {
           <div className="game-card p-6">
             <h3 className="text-white font-bold mb-4 flex items-center gap-2">
               <span className="w-8 h-8 rounded-full bg-[#ffd700]/20 flex items-center justify-center text-[#ffd700] text-sm">i</span>
-              Information
+              {t.settings.information}
             </h3>
             <div className="space-y-2 text-sm text-[#64748b]">
               <div className="flex justify-between">
-                <span>Version</span>
+                <span>{t.settings.version}</span>
                 <span className="text-white">1.0.0</span>
               </div>
               <div className="flex justify-between">
-                <span>Developer</span>
+                <span>{t.settings.developer}</span>
                 <span className="text-white">Hol'Damn It! Team</span>
               </div>
             </div>

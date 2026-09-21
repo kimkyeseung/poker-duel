@@ -26,6 +26,16 @@ export const ko: TranslationKeys = {
     no: "아니오",
   },
 
+  a11y: {
+    exitGame: "게임 나가기",
+    selectWinner: "승자 선택",
+    selectWinRateRange: "승률 구간 선택",
+    winProbability: "승률",
+    selectLanguage: "언어 선택",
+    muteSound: "소리 끄기",
+    unmuteSound: "소리 켜기",
+  },
+
   // Navigation
   nav: {
     home: "홈",
@@ -52,6 +62,8 @@ export const ko: TranslationKeys = {
     hotTables: "테이블이 뜨겁습니다!",
     clickToStart: "아무 곳이나 클릭하여 시작",
     soundEnabled: "사운드가 활성화됩니다",
+    masterStats: "전체 기록:",
+    best: "최고",
   },
 
   // Practice Mode
@@ -80,11 +92,13 @@ export const ko: TranslationKeys = {
       bigBlind: "빅 블라인드",
       vs: "VS",
       yourAnswer: "정답 입력",
+      burn: "번",
     },
     opponents: {
       defeated: "상대 격파!",
       nextOpponent: "다음 상대",
       preparing: "다음 상대 준비 중...",
+      next: "다음: {opponent}",
     },
     messages: {
       revealingCards: "카드 공개 중...",
@@ -129,6 +143,7 @@ export const ko: TranslationKeys = {
       noChips: "배팅할 칩이 없습니다",
       chips: "칩",
     },
+    timeRemaining: "남은 시간",
   },
 
   // Results
@@ -154,6 +169,11 @@ export const ko: TranslationKeys = {
     addedCards: "추가 카드",
     totalCombinations: "총 경우의 수",
     noOutcomes: "해당 카테고리에 경우의 수 없음",
+    detailedAnalysis: "상세 분석",
+    yourWins: "내 승리",
+    dealerWins: "딜러 승리",
+    winProbabilityClash: "승률 대결",
+    winnerBadge: "승리",
   },
 
   // Hand Ranks
@@ -292,6 +312,13 @@ export const ko: TranslationKeys = {
     resetData: "모든 데이터 초기화",
     resetConfirm: "모든 게임 데이터가 삭제됩니다. 계속하시겠습니까?",
     language: "언어",
+    soundEffectsDesc: "게임 내 사운드를 재생합니다",
+    vibrationDesc: "모바일 햅틱 피드백",
+    themeNote: "* 테마 변경은 다음 페이지 로드 시 적용됩니다.",
+    resetDataDesc: "모든 게임 기록, 통계, 도전과제가 삭제됩니다.",
+    information: "정보",
+    version: "버전",
+    developer: "개발",
   },
 
   // Stats
@@ -305,6 +332,52 @@ export const ko: TranslationKeys = {
     difficultyStats: "난이도별 통계",
     played: "플레이",
     cleared: "클리어",
+    losses: "패배",
+    tabOverview: "개요",
+    tabTitles: "칭호",
+    tabAchievements: "도전과제",
+    tabHistory: "기록",
+    difficultyClears: "난이도별 클리어",
+    achievementProgress: "도전과제 진행률",
+    percentComplete: "{percent}% 달성",
+    unlocked: "획득: {unlocked}/{total}",
+    current: "현재",
+    noHistory: "아직 플레이 기록이 없습니다.",
+    historyHint: "플레이한 게임이 여기에 표시됩니다.",
+    recentRecords: "최근 {count}개 기록",
+    win: "승리",
+    loss: "패배",
+  },
+
+  comments: {
+    title: "명예의 전당",
+    godModeCleared: "홀덤의 신 클리어!",
+    leaveMessage: "승리 메시지를 남겨보세요",
+    nickname: "닉네임 (선택)",
+    nicknamePlaceholder: "이름 없는 챔피언",
+    messageLabel: "승리 메시지",
+    messagePlaceholder: "게임을 클리어한 소감을 남겨주세요...",
+    submitMessage: "메시지 등록",
+    submitting: "등록 중...",
+    submitted: "메시지가 등록되었습니다!",
+    listTitle: "승리 메시지 ({count})",
+    noMessages: "아직 메시지가 없습니다.",
+    beFirst: "첫 번째 승리 메시지를 남겨보세요!",
+  },
+
+  daily: {
+    title: "일일 챌린지",
+    description: "오늘의 챌린지! 모든 플레이어가 같은 문제를 풉니다.",
+    clearAllLevels: "6개 난이도를 순서대로 클리어하세요.",
+    oneAttempt: "하루에 한 번만 도전할 수 있습니다!",
+    startChallenge: "오늘의 챌린지 시작",
+    cleared: "챌린지 클리어!",
+    complete: "챌린지 종료",
+    clearedMessage: "축하합니다! 오늘의 챌린지를 클리어했습니다.",
+    tryTomorrow: "내일 다시 도전하세요!",
+    reachedDifficulty: "도달한 난이도",
+    backToMain: "메인으로",
+    failed: "일일 챌린지 실패! 내일 다시 도전하세요.",
   },
 
   // Tutorial
@@ -327,6 +400,20 @@ export const ko: TranslationKeys = {
     },
     gotIt: "알겠습니다!",
     letsPlay: "플레이하기!",
+    roundsTitle: "4개 라운드",
+    communityCards: "커뮤니티 카드 {count}장",
+    answerAllRounds: "모든 라운드를 맞히면 승리합니다!",
+    timeOthers: "플랍 / 턴 / 리버",
+    secondsValue: "{count}초",
+    timeWarning: "주의: 시간 내에 답하지 못하면 게임 오버!",
+    practiceNote: "연습 모드에는 시간 제한이 없습니다.",
+    practiceHint: "처음이라면 연습 모드에서 시간 제한 없이 먼저 해보세요!",
+    goal: "6개 난이도를 모두 클리어하면 {title}이 됩니다!",
+    prev: "이전",
+    ready: {
+      title: "준비 완료",
+      description: "이제 시작할 준비가 되었습니다!",
+    },
   },
 
   // Hints

@@ -181,7 +181,7 @@ export default function Home() {
             </div>
             <div className="hidden sm:block">
               <span className="text-white font-bold text-lg">HOL&apos;DAMN IT!</span>
-              <span className="text-[#64748b] text-xs ml-2">Alpha 0.1</span>
+              <span className="text-[#64748b] text-xs ml-2">{t.common.version}</span>
             </div>
           </div>
           <div className="flex items-center gap-4">
@@ -354,7 +354,7 @@ export default function Home() {
               <div className="flex justify-between items-start mb-2">
                 <span className="text-[#64748b] text-xs uppercase tracking-wider">{t.home.bestStreak}</span>
                 <div className="px-2 py-0.5 rounded-full bg-[#ffd700]/20 text-[#ffd700] text-xs font-bold">
-                  BEST
+                  {t.home.best}
                 </div>
               </div>
               <div className="text-3xl font-black text-white tabular-nums">
@@ -429,7 +429,7 @@ export default function Home() {
           </div>
 
           <div className="hidden sm:flex items-center gap-2 text-[#64748b] text-xs">
-            <span>MASTER STATS:</span>
+            <span>{t.home.masterStats}</span>
             <span className="text-white font-medium">{stats?.totalGames ?? 0}</span>
             <span>/</span>
             <span>100</span>

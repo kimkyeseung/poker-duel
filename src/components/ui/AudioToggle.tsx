@@ -2,6 +2,7 @@
 
 import { useAudio } from '@/lib/audio';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
 
 interface AudioToggleProps {
   className?: string;
@@ -9,6 +10,7 @@ interface AudioToggleProps {
 
 export function AudioToggle({ className }: AudioToggleProps) {
   const { isMuted, toggleMute, initAudio } = useAudio();
+  const { t } = useTranslation();
 
   const handleClick = () => {
     initAudio();
@@ -26,8 +28,8 @@ export function AudioToggle({ className }: AudioToggleProps) {
         'focus:outline-none focus:ring-2 focus:ring-[#00d4ff] focus:ring-offset-2 focus:ring-offset-[#0a0e1a]',
         className
       )}
-      aria-label={isMuted ? 'Unmute sound' : 'Mute sound'}
-      title={isMuted ? 'Unmute sound' : 'Mute sound'}
+      aria-label={isMuted ? t.a11y.unmuteSound : t.a11y.muteSound}
+      title={isMuted ? t.a11y.unmuteSound : t.a11y.muteSound}
     >
       {isMuted ? (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

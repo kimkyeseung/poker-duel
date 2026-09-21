@@ -3,6 +3,7 @@
 import { Card as CardType } from '@/types';
 import { Card, CardSlot } from './Card';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
 
 type CardSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
@@ -29,6 +30,7 @@ export function Table({
   cardSize: propCardSize,
   showBurnCards = true,
 }: TableProps) {
+  const { t } = useTranslation();
   const cardSize = propCardSize ?? (compact ? 'sm' : 'lg');
   const burnCardSize = compact ? 'xs' : 'sm';
   const slots = Array(5).fill(null);
@@ -102,7 +104,7 @@ export function Table({
               'text-[#64748b] font-medium mt-1',
               compact ? 'text-[8px]' : 'text-[10px]'
             )}>
-              BURN
+              {t.game.labels.burn}
             </span>
           </div>
         )}

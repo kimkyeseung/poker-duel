@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { WinRateResult, Card as CardType } from '@/types';
 import { getRangeHint, Hint } from '@/lib/game/hints';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
 
 interface HintButtonProps {
   winRateResult: WinRateResult | null;
@@ -20,6 +21,7 @@ export function HintButton({
   disabled = false,
   onHintUsed,
 }: HintButtonProps) {
+  const { t } = useTranslation();
   const [hint, setHint] = useState<Hint | null>(null);
   const [hintUsed, setHintUsed] = useState(false);
 
@@ -61,7 +63,7 @@ export function HintButton({
       <span className="w-5 h-5 rounded-full bg-[#ffd700]/20 flex items-center justify-center text-xs font-bold">
         ?
       </span>
-      <span>Use Hint</span>
+      <span>{t.hints.showHint}</span>
     </button>
   );
 }

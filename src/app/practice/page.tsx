@@ -282,7 +282,7 @@ export default function PracticePage() {
             <PlayerArea
               cards={computerHand}
               isComputer
-              label="DEALER"
+              label={t.game.labels.dealer}
               handName={computerHand ? evaluateStartingHand(computerHand).name : undefined}
               compact
               showCards
@@ -294,7 +294,7 @@ export default function PracticePage() {
             {/* 플레이어 영역 */}
             <PlayerArea
               cards={playerHand}
-              label="YOU"
+              label={t.game.labels.you}
               handName={playerHand ? evaluateStartingHand(playerHand).name : undefined}
               winRate={showResult && currentWinRate && currentRound !== 'preflop' ? currentWinRate.playerWinRate : undefined}
               compact

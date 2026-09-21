@@ -468,7 +468,7 @@ export default function GamePage() {
           <button
             onClick={handleGoHome}
             className="text-[#64748b] hover:text-white transition-colors flex items-center gap-1 sm:gap-2"
-            aria-label="Exit game"
+            aria-label={t.a11y.exitGame}
           >
             {/* Mobile: Symbol Image */}
             <div className="relative w-7 h-7 sm:hidden">
@@ -744,10 +744,10 @@ export default function GamePage() {
           <div className="text-center animate-bounce-in">
             <div className="text-6xl mb-4">🎯</div>
             <h2 className="text-2xl sm:text-3xl font-black text-white mb-2">
-              Opponent Defeated!
+              {t.game.opponents.defeated}
             </h2>
             <p className="text-[#00d4ff] text-lg">
-              Next: {getCurrentOpponent()?.label || 'Opponent'}
+              {t.game.opponents.next.replace('{opponent}', getCurrentOpponent()?.label || '')}
             </p>
           </div>
         </div>

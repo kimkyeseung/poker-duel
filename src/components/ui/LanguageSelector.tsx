@@ -33,7 +33,7 @@ export function LanguageSelector({ className }: LanguageSelectorProps) {
           'focus:outline-none focus:ring-2 focus:ring-amber-500/50',
           className
         )}
-        aria-label="Select language"
+        aria-label={t.a11y.selectLanguage}
       >
         <span className="text-base">{currentLocale.flag}</span>
         <span className="hidden sm:inline">{currentLocale.nativeName}</span>

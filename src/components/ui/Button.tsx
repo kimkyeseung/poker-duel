@@ -3,6 +3,7 @@
 import { ButtonHTMLAttributes, forwardRef, ReactNode, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 import { audioManager } from '@/lib/audio';
+import { useTranslation } from '@/lib/i18n';
 
 export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'secondary' | 'success' | 'danger' | 'ghost' | 'outline' | 'player' | 'computer' | 'gold';
@@ -23,6 +24,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       onClick?.(e);
     }, [enableSound, onClick]);
 
+    const { t } = useTranslation();
     const handleMouseEnter = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
       if (enableSound && !disabled && !isLoading) {
         audioManager.playSFX('button-hover');
@@ -143,7 +145,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
               />
             </svg>
-            <span>Loading...</span>
+            <span>{t.common.loading}</span>
           </>
         ) : (
           <>

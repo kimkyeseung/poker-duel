@@ -29,6 +29,7 @@ import {
   DailyChallengeRecord,
 } from '@/types';
 import { cn } from '@/lib/utils';
+import { useTranslation } from '@/lib/i18n';
 
 // 오늘 날짜 문자열
 function getTodayString(): string {
@@ -38,6 +39,7 @@ function getTodayString(): string {
 
 export default function DailyChallengePage() {
   const router = useRouter();
+  const { t } = useTranslation();
   const { calculate, isCalculating } = usePokerCalculator();
   const todayString = getTodayString();
 
@@ -317,9 +319,9 @@ export default function DailyChallengePage() {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            <span>Exit</span>
+            <span>{t.common.exit}</span>
           </button>
-          <div className="text-[#ffd700] font-bold text-lg">DAILY CHALLENGE</div>
+          <div className="text-[#ffd700] font-bold text-lg">{t.daily.title}</div>
           <div className="text-[#64748b] text-sm">{todayString}</div>
         </div>
       </header>
@@ -332,16 +334,16 @@ export default function DailyChallengePage() {
               <div className="text-6xl">
                 <span className="inline-block bg-gradient-to-br from-[#ffd700] to-[#ffb800] text-transparent bg-clip-text font-black">D</span>
               </div>
-              <h1 className="text-2xl font-black text-white">DAILY CHALLENGE</h1>
+              <h1 className="text-2xl font-black text-white">{t.daily.title}</h1>
               <p className="text-[#64748b]">
-                Today's challenge! Same puzzle for all players.
+                {t.daily.description}
               </p>
             </div>
 
             <div className="game-card p-6">
               <p className="text-sm text-white/80">
-                Clear all 5 difficulty levels in order.<br />
-                You only get one attempt per day!
+                {t.daily.clearAllLevels}<br />
+                {t.daily.oneAttempt}
               </p>
             </div>
 
@@ -351,7 +353,7 @@ export default function DailyChallengePage() {
               onClick={startGame}
               fullWidth
             >
-              START TODAY'S CHALLENGE
+              {t.daily.startChallenge}
             </Button>
           </div>
         )}
@@ -368,17 +370,17 @@ export default function DailyChallengePage() {
                 )}
               </div>
               <h1 className="text-2xl font-black text-white">
-                {existingRecord.isVictory ? 'CHALLENGE CLEARED!' : 'CHALLENGE COMPLETE'}
+                {existingRecord.isVictory ? t.daily.cleared : t.daily.complete}
               </h1>
               <p className="text-[#64748b]">
                 {existingRecord.isVictory
-                  ? 'Congratulations! You cleared today\'s challenge.'
-                  : 'Try again tomorrow!'}
+                  ? t.daily.clearedMessage
+                  : t.daily.tryTomorrow}
               </p>
             </div>
 
             <div className="game-card p-6">
-              <div className="text-sm text-[#64748b] mb-2">Reached Difficulty</div>
+              <div className="text-sm text-[#64748b] mb-2">{t.daily.reachedDifficulty}</div>
               <DifficultyBadge difficulty={existingRecord.difficulty} size="lg" />
             </div>
 
@@ -387,7 +389,7 @@ export default function DailyChallengePage() {
               onClick={() => router.push('/')}
               fullWidth
             >
-              Back to Main
+              {t.daily.backToMain}
             </Button>
           </div>
         )}
@@ -403,7 +405,7 @@ export default function DailyChallengePage() {
             <PlayerArea
               cards={computerHand}
               isComputer
-              label="DEALER"
+              label={t.game.labels.dealer}
               handName={computerHand ? evaluateStartingHand(computerHand).name : undefined}
               isActive={status === 'answering'}
             />
@@ -412,7 +414,7 @@ export default function DailyChallengePage() {
 
             <PlayerArea
               cards={playerHand}
-              label="YOU"
+              label={t.game.labels.you}
               handName={playerHand ? evaluateStartingHand(playerHand).name : undefined}
               winRate={showResult && currentWinRate ? currentWinRate.playerWinRate : undefined}
               isActive={status === 'answering'}
@@ -434,7 +436,7 @@ export default function DailyChallengePage() {
               {isCalculating && (
                 <div className="text-center text-[#64748b]">
                   <div className="animate-spin inline-block w-6 h-6 border-2 border-[#00d4ff] border-t-transparent rounded-full mb-2" />
-                  <p>Calculating win rate...</p>
+                  <p>{t.game.messages.calculatingWinRate}</p>
                 </div>
               )}
 
@@ -460,7 +462,7 @@ export default function DailyChallengePage() {
                       onClick={handleContinue}
                       fullWidth
                     >
-                      {currentRound === 'river' ? 'Next Level' : 'Next Round'} →
+                      {currentRound === 'river' ? t.game.actions.nextLevel : t.game.actions.nextRound} →
                     </Button>
                   )}
                 </div>
@@ -477,7 +479,7 @@ export default function DailyChallengePage() {
         onGoHome={() => router.push('/')}
         difficulty={difficulty}
         winRateResult={currentWinRate}
-        message="Daily challenge failed! Try again tomorrow."
+        message={t.daily.failed}
       />
 
       {/* 승리 */}

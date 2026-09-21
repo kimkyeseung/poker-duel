@@ -70,7 +70,7 @@ function ChoiceInput({
 }) {
   const { t } = useTranslation();
   return (
-    <div className={cn('game-card p-3 sm:p-6 lg:!bg-transparent lg:!border-none lg:!shadow-none lg:!p-0', className)} role="group" aria-label="Select winner">
+    <div className={cn('game-card p-3 sm:p-6 lg:!bg-transparent lg:!border-none lg:!shadow-none lg:!p-0', className)} role="group" aria-label={t.a11y.selectWinner}>
       {/* Symbol Image - Desktop only */}
       <div className="hidden lg:flex justify-center mb-4">
         <div className="relative w-48 h-48">
@@ -129,7 +129,7 @@ function Choice3Input({
   ];
 
   return (
-    <div className={cn('game-card p-3 sm:p-6 lg:!bg-transparent lg:!border-none lg:!shadow-none lg:!p-0', className)} role="radiogroup" aria-label="Select win rate range">
+    <div className={cn('game-card p-3 sm:p-6 lg:!bg-transparent lg:!border-none lg:!shadow-none lg:!p-0', className)} role="radiogroup" aria-label={t.a11y.selectWinRateRange}>
       {/* Symbol Image - Desktop only */}
       <div className="hidden lg:flex justify-center mb-3">
         <div className="relative w-32 h-32">
@@ -195,7 +195,7 @@ function RangeInput({
   ];
 
   return (
-    <div className={cn('game-card p-3 sm:p-6 lg:!bg-transparent lg:!border-none lg:!shadow-none lg:!p-0', className)} role="radiogroup" aria-label="Select win rate range">
+    <div className={cn('game-card p-3 sm:p-6 lg:!bg-transparent lg:!border-none lg:!shadow-none lg:!p-0', className)} role="radiogroup" aria-label={t.a11y.selectWinRateRange}>
       {/* Symbol Image - Desktop only (smaller for 5-choice) */}
       <div className="hidden lg:flex justify-center mb-2">
         <div className="relative w-20 h-20">
@@ -318,7 +318,7 @@ function NumberInput({
               onKeyDown={handleKeyDown}
               disabled={disabled}
               placeholder="0-100"
-              aria-label="Win probability"
+              aria-label={t.a11y.winProbability}
               aria-invalid={isInvalid}
               className={cn(
                 'w-full px-3 sm:px-4 py-3 sm:py-4 lg:py-3 text-center text-xl sm:text-2xl lg:text-xl font-bold',

@@ -26,6 +26,16 @@ export const ja: TranslationKeys = {
     no: "いいえ",
   },
 
+  a11y: {
+    exitGame: "ゲームを終了",
+    selectWinner: "勝者を選択",
+    selectWinRateRange: "勝率の範囲を選択",
+    winProbability: "勝率",
+    selectLanguage: "言語を選択",
+    muteSound: "音を消す",
+    unmuteSound: "音を出す",
+  },
+
   // Navigation
   nav: {
     home: "ホーム",
@@ -52,6 +62,8 @@ export const ja: TranslationKeys = {
     hotTables: "テーブルが熱い！",
     clickToStart: "どこかをクリックして開始",
     soundEnabled: "サウンドが有効になります",
+    masterStats: "累計記録:",
+    best: "最高",
   },
 
   // Practice Mode
@@ -80,11 +92,13 @@ export const ja: TranslationKeys = {
       bigBlind: "ビッグブラインド",
       vs: "VS",
       yourAnswer: "あなたの回答",
+      burn: "バーン",
     },
     opponents: {
       defeated: "相手を撃破！",
       nextOpponent: "次の相手",
       preparing: "次の相手を準備中...",
+      next: "次: {opponent}",
     },
     messages: {
       revealingCards: "カードを公開中...",
@@ -129,6 +143,7 @@ export const ja: TranslationKeys = {
       noChips: "ベットするチップがありません",
       chips: "チップ",
     },
+    timeRemaining: "残り時間",
   },
 
   // Results
@@ -154,6 +169,11 @@ export const ja: TranslationKeys = {
     addedCards: "追加カード",
     totalCombinations: "総組み合わせ",
     noOutcomes: "このカテゴリに結果なし",
+    detailedAnalysis: "詳細分析",
+    yourWins: "自分の勝ち",
+    dealerWins: "ディーラーの勝ち",
+    winProbabilityClash: "勝率対決",
+    winnerBadge: "勝者",
   },
 
   // Hand Ranks
@@ -292,6 +312,13 @@ export const ja: TranslationKeys = {
     resetData: "データをリセット",
     resetConfirm: "すべてのゲームデータが削除されます。続けますか？",
     language: "言語",
+    soundEffectsDesc: "ゲーム内のサウンドを再生します",
+    vibrationDesc: "モバイルの触覚フィードバック",
+    themeNote: "* テーマの変更は次回のページ読み込み時に適用されます。",
+    resetDataDesc: "すべてのゲーム記録・統計・実績が削除されます。",
+    information: "情報",
+    version: "バージョン",
+    developer: "開発",
   },
 
   // Stats
@@ -305,6 +332,52 @@ export const ja: TranslationKeys = {
     difficultyStats: "難易度別統計",
     played: "プレイ",
     cleared: "クリア",
+    losses: "敗北",
+    tabOverview: "概要",
+    tabTitles: "称号",
+    tabAchievements: "実績",
+    tabHistory: "履歴",
+    difficultyClears: "難易度別クリア",
+    achievementProgress: "実績の進捗",
+    percentComplete: "{percent}% 達成",
+    unlocked: "獲得: {unlocked}/{total}",
+    current: "現在",
+    noHistory: "まだプレイ履歴がありません。",
+    historyHint: "プレイしたゲームがここに表示されます。",
+    recentRecords: "直近 {count} 件の記録",
+    win: "勝利",
+    loss: "敗北",
+  },
+
+  comments: {
+    title: "殿堂",
+    godModeCleared: "ゴッドモードクリア!",
+    leaveMessage: "勝利メッセージを残しましょう",
+    nickname: "ニックネーム（任意）",
+    nicknamePlaceholder: "名もなき王者",
+    messageLabel: "勝利メッセージ",
+    messagePlaceholder: "クリアした感想を書いてください...",
+    submitMessage: "メッセージを送信",
+    submitting: "送信中...",
+    submitted: "メッセージを送信しました!",
+    listTitle: "勝利メッセージ ({count})",
+    noMessages: "まだメッセージがありません。",
+    beFirst: "最初の勝利メッセージを残しましょう!",
+  },
+
+  daily: {
+    title: "デイリーチャレンジ",
+    description: "今日のチャレンジ! 全プレイヤーが同じ問題に挑みます。",
+    clearAllLevels: "6つの難易度を順番にクリアしてください。",
+    oneAttempt: "挑戦は1日1回だけです!",
+    startChallenge: "今日のチャレンジを開始",
+    cleared: "チャレンジクリア!",
+    complete: "チャレンジ終了",
+    clearedMessage: "おめでとうございます! 今日のチャレンジをクリアしました。",
+    tryTomorrow: "明日また挑戦してください!",
+    reachedDifficulty: "到達した難易度",
+    backToMain: "メインに戻る",
+    failed: "デイリーチャレンジ失敗! 明日また挑戦してください。",
   },
 
   // Tutorial
@@ -327,6 +400,20 @@ export const ja: TranslationKeys = {
     },
     gotIt: "わかった！",
     letsPlay: "プレイしよう！",
+    roundsTitle: "4ラウンド",
+    communityCards: "コミュニティカード {count}枚",
+    answerAllRounds: "すべてのラウンドで正解すれば勝利です!",
+    timeOthers: "フロップ / ターン / リバー",
+    secondsValue: "{count}秒",
+    timeWarning: "注意: 時間内に答えられないとゲームオーバー!",
+    practiceNote: "練習モードには制限時間がありません。",
+    practiceHint: "初めてなら、まず練習モードで時間制限なしに試してみましょう!",
+    goal: "6つの難易度をすべてクリアして{title}になりましょう!",
+    prev: "戻る",
+    ready: {
+      title: "準備完了",
+      description: "もう始められます!",
+    },
   },
 
   // Hints

@@ -4,142 +4,147 @@ import { useState } from 'react';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/Dialog';
 import { Button } from '@/components/ui/Button';
 import { setTutorialSeen } from '@/lib/storage';
+import { useTranslation, TranslationKeys } from '@/lib/i18n';
+import { DIFFICULTY_CONFIG, PREFLOP_TIME_LIMIT } from '@/types';
 
 interface TutorialDialogProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const TUTORIAL_SLIDES = [
-  {
-    title: 'Welcome',
-    icon: 'P',
-    iconColor: 'from-[#ff4d94] to-[#ff0080]',
-    content: (
-      <div className="space-y-3 text-white/80">
-        <p>
-          <strong className="text-white">Hol'Damn It!</strong> is a game where you predict
-          Texas Hold'em win rates.
-        </p>
-        <p>
-          Compete 1v1 against the dealer. Predict the correct win rate each round
-          to advance to the next difficulty level.
-        </p>
-      </div>
-    ),
-  },
-  {
-    title: 'Game Flow',
-    icon: 'G',
-    iconColor: 'from-[#00d4ff] to-[#0066ff]',
-    content: (
-      <div className="space-y-3 text-white/80">
-        <div className="bg-[#1a1f35] rounded-xl p-4">
-          <div className="font-bold text-white mb-2">4 Rounds</div>
-          <ul className="space-y-1 text-sm">
-            <li>• <span className="text-[#00ff88]">Preflop</span>: 0 community cards</li>
-            <li>• <span className="text-[#00d4ff]">Flop</span>: 3 community cards</li>
-            <li>• <span className="text-[#ffd700]">Turn</span>: 4 community cards</li>
-            <li>• <span className="text-[#ff4d94]">River</span>: 5 community cards</li>
-          </ul>
-        </div>
-        <p className="text-sm">
-          Answer correctly in all rounds to win!
-        </p>
-      </div>
-    ),
-  },
-  {
-    title: 'Difficulty Levels',
-    icon: 'D',
-    iconColor: 'from-[#ffd700] to-[#ffb800]',
-    content: (
-      <div className="space-y-3 text-white/80">
-        <ul className="space-y-2 text-sm">
-          <li className="flex items-center gap-2">
-            <span className="bg-[#00ff88]/20 text-[#00ff88] px-2 py-0.5 rounded-full text-xs font-bold">EASY</span>
-            Choose who has the better hand
-          </li>
-          <li className="flex items-center gap-2">
-            <span className="bg-[#00d4ff]/20 text-[#00d4ff] px-2 py-0.5 rounded-full text-xs font-bold">NORMAL</span>
-            Select win rate range (5 options)
-          </li>
-          <li className="flex items-center gap-2">
-            <span className="bg-[#ffd700]/20 text-[#ffd700] px-2 py-0.5 rounded-full text-xs font-bold">HARD</span>
-            Enter exact value (±5%)
-          </li>
-          <li className="flex items-center gap-2">
-            <span className="bg-[#ff4d94]/20 text-[#ff4d94] px-2 py-0.5 rounded-full text-xs font-bold">EXPERT</span>
-            Enter exact value (±3%)
-          </li>
-          <li className="flex items-center gap-2">
-            <span className="bg-[#ff4444]/20 text-[#ff4444] px-2 py-0.5 rounded-full text-xs font-bold">GOD</span>
-            Enter exact value (±1%)
-          </li>
-        </ul>
-      </div>
-    ),
-  },
-  {
-    title: 'Time Limits',
-    icon: 'T',
-    iconColor: 'from-[#ff4444] to-[#cc0000]',
-    content: (
-      <div className="space-y-3 text-white/80">
-        <div className="bg-[#1a1f35] rounded-xl p-4">
-          <ul className="space-y-2 text-sm">
-            <li className="flex justify-between">
-              <span>Preflop</span>
-              <span className="text-[#00d4ff] font-bold">5 seconds</span>
-            </li>
-            <li className="flex justify-between">
-              <span>Flop / Turn / River</span>
-              <span className="text-[#00d4ff] font-bold">10 seconds</span>
-            </li>
-          </ul>
-        </div>
-        <p className="text-sm text-[#ff4444]">
-          Warning: Failure to answer in time = Game Over!
-        </p>
-        <p className="text-sm">
-          Practice mode has no time limits.
-        </p>
-      </div>
-    ),
-  },
-  {
-    title: 'Ready to Play',
-    icon: 'R',
-    iconColor: 'from-[#00ff88] to-[#00cc66]',
-    content: (
-      <div className="space-y-4 text-white/80">
-        <p>
-          You're ready to start playing!
-        </p>
-        <div className="bg-gradient-to-r from-[#00d4ff]/10 to-[#ff4d94]/10 rounded-xl p-4 border border-[#00d4ff]/30">
-          <div className="text-center">
-            <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-[#00d4ff]/20 flex items-center justify-center text-[#00d4ff] text-lg font-bold">
-              ?
-            </div>
-            <p className="text-sm">
-              If you're new, try <span className="text-[#00d4ff] font-bold">Practice Mode</span> first
-              to play without time limits!
-            </p>
-          </div>
-        </div>
-        <p className="text-sm text-center text-[#64748b]">
-          Clear all 5 difficulty levels to become the<br />
-          <span className="text-[#ffd700] font-bold">Poker God</span>!
-        </p>
-      </div>
-    ),
-  },
+const DIFFICULTY_STYLES: { key: 'easy' | 'normal' | 'hard' | 'expert' | 'king' | 'god'; badge: string }[] = [
+  { key: 'easy',   badge: 'bg-[#00ff88]/20 text-[#00ff88]' },
+  { key: 'normal', badge: 'bg-[#00d4ff]/20 text-[#00d4ff]' },
+  { key: 'hard',   badge: 'bg-[#ffd700]/20 text-[#ffd700]' },
+  { key: 'expert', badge: 'bg-[#ff4d94]/20 text-[#ff4d94]' },
+  { key: 'king',   badge: 'bg-[#ff8c00]/20 text-[#ff8c00]' },
+  { key: 'god',    badge: 'bg-[#ff4444]/20 text-[#ff4444]' },
 ];
 
+const ROUND_CARD_COUNTS: { key: 'preflop' | 'flop' | 'turn' | 'river'; count: number; color: string }[] = [
+  { key: 'preflop', count: 0, color: 'text-[#00ff88]' },
+  { key: 'flop',    count: 3, color: 'text-[#00d4ff]' },
+  { key: 'turn',    count: 4, color: 'text-[#ffd700]' },
+  { key: 'river',   count: 5, color: 'text-[#ff4d94]' },
+];
+
+/**
+ * 튜토리얼 슬라이드.
+ *
+ * 예전에는 문구가 전부 영어로 하드코딩돼 있었고, 내용도 실제 게임과 어긋나 있었다
+ * (제한시간 5초/10초, 난이도 5개, 보통=5지선다 등). 난이도 설명은 levelInfo,
+ * 제한시간은 PREFLOP_TIME_LIMIT / DIFFICULTY_CONFIG 의 실제 값을 쓴다.
+ */
+function buildSlides(t: TranslationKeys) {
+  return [
+    {
+      title: t.tutorial.welcome.title,
+      icon: 'P',
+      iconColor: 'from-[#ff4d94] to-[#ff0080]',
+      content: (
+        <div className="space-y-3 text-white/80">
+          <p>{t.tutorial.welcome.description}</p>
+        </div>
+      ),
+    },
+    {
+      title: t.tutorial.gameFlow.title,
+      icon: 'G',
+      iconColor: 'from-[#00d4ff] to-[#0066ff]',
+      content: (
+        <div className="space-y-3 text-white/80">
+          <div className="bg-[#1a1f35] rounded-xl p-4">
+            <div className="font-bold text-white mb-2">{t.tutorial.roundsTitle}</div>
+            <ul className="space-y-1 text-sm">
+              {ROUND_CARD_COUNTS.map(({ key, count, color }) => (
+                <li key={key}>
+                  • <span className={color}>{t.game.rounds[key]}</span>
+                  {': '}
+                  {t.tutorial.communityCards.replace('{count}', String(count))}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <p className="text-sm">{t.tutorial.answerAllRounds}</p>
+        </div>
+      ),
+    },
+    {
+      title: t.tutorial.difficulties.title,
+      icon: 'D',
+      iconColor: 'from-[#ffd700] to-[#ffb800]',
+      content: (
+        <div className="space-y-3 text-white/80">
+          <ul className="space-y-2 text-sm">
+            {DIFFICULTY_STYLES.map(({ key, badge }) => (
+              <li key={key} className="flex items-center gap-2">
+                <span className={`${badge} px-2 py-0.5 rounded-full text-xs font-bold whitespace-nowrap`}>
+                  {t.difficulty[key]}
+                </span>
+                {t.levelInfo[key]}
+              </li>
+            ))}
+          </ul>
+        </div>
+      ),
+    },
+    {
+      title: t.tutorial.timeLimits.title,
+      icon: 'T',
+      iconColor: 'from-[#ff4444] to-[#cc0000]',
+      content: (
+        <div className="space-y-3 text-white/80">
+          <div className="bg-[#1a1f35] rounded-xl p-4">
+            <ul className="space-y-2 text-sm">
+              <li className="flex justify-between">
+                <span>{t.game.rounds.preflop}</span>
+                <span className="text-[#00d4ff] font-bold">
+                  {t.tutorial.secondsValue.replace('{count}', String(PREFLOP_TIME_LIMIT))}
+                </span>
+              </li>
+              <li className="flex justify-between">
+                <span>{t.tutorial.timeOthers}</span>
+                <span className="text-[#00d4ff] font-bold">
+                  {t.tutorial.secondsValue.replace('{count}', String(DIFFICULTY_CONFIG.easy.timeLimit))}
+                </span>
+              </li>
+            </ul>
+          </div>
+          <p className="text-sm text-[#ff4444]">{t.tutorial.timeWarning}</p>
+          <p className="text-sm">{t.tutorial.practiceNote}</p>
+        </div>
+      ),
+    },
+    {
+      title: t.tutorial.ready.title,
+      icon: 'R',
+      iconColor: 'from-[#00ff88] to-[#00cc66]',
+      content: (
+        <div className="space-y-4 text-white/80">
+          <p>{t.tutorial.ready.description}</p>
+          <div className="bg-gradient-to-r from-[#00d4ff]/10 to-[#ff4d94]/10 rounded-xl p-4 border border-[#00d4ff]/30">
+            <div className="text-center">
+              <div className="w-12 h-12 mx-auto mb-2 rounded-full bg-[#00d4ff]/20 flex items-center justify-center text-[#00d4ff] text-lg font-bold">
+                ?
+              </div>
+              <p className="text-sm">{t.tutorial.practiceHint}</p>
+            </div>
+          </div>
+          <p className="text-sm text-center text-[#64748b]">
+            {t.tutorial.goal.replace('{title}', t.difficulty.god)}
+          </p>
+        </div>
+      ),
+    },
+  ];
+}
+
 export function TutorialDialog({ isOpen, onClose }: TutorialDialogProps) {
+  const { t } = useTranslation();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const isLastSlide = currentSlide === TUTORIAL_SLIDES.length - 1;
-  const slide = TUTORIAL_SLIDES[currentSlide];
+  const slides = buildSlides(t);
+  const isLastSlide = currentSlide === slides.length - 1;
+  const slide = slides[currentSlide];
 
   const handlePrev = () => {
     if (currentSlide > 0) {
@@ -180,7 +185,7 @@ export function TutorialDialog({ isOpen, onClose }: TutorialDialogProps) {
       <DialogFooter className="flex-col sm:flex-row gap-2">
         {/* 슬라이드 인디케이터 */}
         <div className="flex gap-1.5 flex-1 justify-center sm:justify-start">
-          {TUTORIAL_SLIDES.map((_, index) => (
+          {slides.map((_, index) => (
             <button
               key={index}
               onClick={() => setCurrentSlide(index)}
@@ -197,11 +202,11 @@ export function TutorialDialog({ isOpen, onClose }: TutorialDialogProps) {
         <div className="flex gap-2">
           {currentSlide > 0 && (
             <Button variant="secondary" onClick={handlePrev}>
-              Back
+              {t.tutorial.prev}
             </Button>
           )}
           <Button variant="primary" onClick={handleNext}>
-            {isLastSlide ? 'Start' : 'Next'}
+            {isLastSlide ? t.common.start : t.common.next}
           </Button>
         </div>
       </DialogFooter>

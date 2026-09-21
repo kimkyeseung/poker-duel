@@ -27,6 +27,7 @@ type TabType = 'overview' | 'titles' | 'achievements' | 'history';
 
 export default function StatsPage() {
   const router = useRouter();
+  const { t } = useTranslation();
   const [stats, setStats] = useState<GameStats>(initialGameStats);
   const [activeTab, setActiveTab] = useState<TabType>('overview');
 
@@ -40,10 +41,10 @@ export default function StatsPage() {
   const achievementProgress = getAchievementProgress(stats);
 
   const tabs: { id: TabType; label: string; icon: string }[] = [
-    { id: 'overview', label: 'Overview', icon: '1' },
-    { id: 'titles', label: 'Titles', icon: '2' },
-    { id: 'achievements', label: 'Achievements', icon: '3' },
-    { id: 'history', label: 'History', icon: '4' },
+    { id: 'overview', label: t.stats.tabOverview, icon: '1' },
+    { id: 'titles', label: t.stats.tabTitles, icon: '2' },
+    { id: 'achievements', label: t.stats.tabAchievements, icon: '3' },
+    { id: 'history', label: t.stats.tabHistory, icon: '4' },
   ];
 
   return (
@@ -58,9 +59,9 @@ export default function StatsPage() {
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-            <span>Back</span>
+            <span>{t.common.back}</span>
           </button>
-          <div className="text-[#00d4ff] font-bold text-lg">STATISTICS</div>
+          <div className="text-[#00d4ff] font-bold text-lg">{t.stats.title}</div>
           <div className="w-16" />
         </div>
       </header>
@@ -135,27 +136,27 @@ function OverviewTab({
 
       {/* 주요 통계 */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <StatCard label="Total Games" value={stats.totalGames} icon="G" />
-        <StatCard label="Wins" value={stats.totalWins} icon="W" color="text-[#00ff88]" />
-        <StatCard label="Losses" value={stats.totalLosses} icon="L" color="text-[#ff4444]" />
-        <StatCard label="Win Rate" value={`${winRate.toFixed(1)}%`} icon="%" color="text-[#00d4ff]" />
+        <StatCard label={t.stats.totalGames} value={stats.totalGames} icon="G" />
+        <StatCard label={t.home.wins} value={stats.totalWins} icon="W" color="text-[#00ff88]" />
+        <StatCard label={t.stats.losses} value={stats.totalLosses} icon="L" color="text-[#ff4444]" />
+        <StatCard label={t.stats.winRate} value={`${winRate.toFixed(1)}%`} icon="%" color="text-[#00d4ff]" />
       </div>
 
       {/* 연승 기록 */}
       <div className="grid grid-cols-2 gap-4">
         <div className="game-card p-4">
-          <div className="text-sm text-[#64748b] mb-1">Best Streak</div>
+          <div className="text-sm text-[#64748b] mb-1">{t.stats.maxStreak}</div>
           <div className="text-3xl font-bold text-[#ffd700]">{stats.maxStreak}</div>
         </div>
         <div className="game-card p-4">
-          <div className="text-sm text-[#64748b] mb-1">Current Streak</div>
+          <div className="text-sm text-[#64748b] mb-1">{t.stats.currentStreak}</div>
           <div className="text-3xl font-bold text-white">{stats.currentStreak}</div>
         </div>
       </div>
 
       {/* 난이도별 통계 */}
       <div className="game-card p-4">
-        <h3 className="text-sm text-[#64748b] mb-4">Difficulty Clears</h3>
+        <h3 className="text-sm text-[#64748b] mb-4">{t.stats.difficultyClears}</h3>
         <div className="space-y-3">
           {(Object.keys(stats.difficultyStats) as Difficulty[]).map((diff) => {
             const { played, cleared } = stats.difficultyStats[diff];
@@ -181,7 +182,7 @@ function OverviewTab({
       {/* 도전과제 진행률 */}
       <div className="game-card p-4">
         <div className="flex justify-between items-center mb-2">
-          <h3 className="text-sm text-[#64748b]">Achievement Progress</h3>
+          <h3 className="text-sm text-[#64748b]">{t.stats.achievementProgress}</h3>
           <span className="text-[#ffd700] font-bold">
             {achievementProgress.unlocked}/{achievementProgress.total}
           </span>
@@ -193,7 +194,7 @@ function OverviewTab({
           />
         </div>
         <div className="text-right text-xs text-[#64748b] mt-1">
-          {achievementProgress.percentage}% Complete
+          {t.stats.percentComplete.replace('{percent}', String(achievementProgress.percentage))}
         </div>
       </div>
     </div>
@@ -237,7 +238,7 @@ function TitlesTab({
   return (
     <div className="space-y-4">
       <p className="text-[#64748b] text-sm">
-        Unlocked: {unlockedTitles.length}/{TITLES.length}
+        {t.stats.unlocked.replace('{unlocked}', String(unlockedTitles.length)).replace('{total}', String(TITLES.length))}
       </p>
       <div className="grid gap-3">
         {TITLES.map((title) => {
@@ -265,7 +266,7 @@ function TitlesTab({
                     </span>
                     {isCurrent && (
                       <span className="text-xs bg-[#ffd700] text-[#0a0e1a] px-2 py-0.5 rounded-full font-bold">
-                        CURRENT
+                        {t.stats.current}
                       </span>
                     )}
                   </div>
@@ -299,7 +300,7 @@ function AchievementsTab({
   return (
     <div className="space-y-6">
       <p className="text-[#64748b] text-sm">
-        Unlocked: {unlockedAchievements.length}/{ACHIEVEMENTS.length}
+        {t.stats.unlocked.replace('{unlocked}', String(unlockedAchievements.length)).replace('{total}', String(ACHIEVEMENTS.length))}
       </p>
 
       {categories.map((category) => {
@@ -350,6 +351,7 @@ function AchievementsTab({
 
 // 히스토리 탭
 function HistoryTab({ stats }: { stats: GameStats }) {
+  const { t } = useTranslation();
   const history = stats.handHistory.slice().reverse(); // 최신순
 
   if (history.length === 0) {
@@ -358,15 +360,15 @@ function HistoryTab({ stats }: { stats: GameStats }) {
         <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/5 flex items-center justify-center text-2xl font-bold text-white/20">
           H
         </div>
-        <p>No play history yet.</p>
-        <p className="text-sm mt-1">Your games will appear here.</p>
+        <p>{t.stats.noHistory}</p>
+        <p className="text-sm mt-1">{t.stats.historyHint}</p>
       </div>
     );
   }
 
   return (
     <div className="space-y-4">
-      <p className="text-[#64748b] text-sm">Recent {history.length} records</p>
+      <p className="text-[#64748b] text-sm">{t.stats.recentRecords.replace('{count}', String(history.length))}</p>
       <div className="space-y-2">
         {history.slice(0, 20).map((record) => {
           const date = new Date(record.date);
@@ -390,11 +392,11 @@ function HistoryTab({ stats }: { stats: GameStats }) {
                     'text-sm font-medium',
                     record.isVictory ? 'text-[#00ff88]' : 'text-[#ff4444]'
                   )}>
-                    {record.isVictory ? 'WIN' : 'LOSS'}
+                    {record.isVictory ? t.stats.win : t.stats.loss}
                   </span>
                 </div>
                 <p className="text-xs text-[#64748b] mt-1">
-                  Win Rate: {record.winRateResult.playerWinRate.toFixed(1)}%
+                  {t.stats.winRate}: {record.winRateResult.playerWinRate.toFixed(1)}%
                 </p>
               </div>
               <div className="text-xs text-[#64748b]">{dateString}</div>

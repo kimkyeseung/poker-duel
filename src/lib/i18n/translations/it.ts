@@ -26,6 +26,16 @@ export const it: TranslationKeys = {
     no: "No",
   },
 
+  a11y: {
+    exitGame: "Esci dalla partita",
+    selectWinner: "Seleziona il vincitore",
+    selectWinRateRange: "Seleziona l'intervallo di probabilità",
+    winProbability: "Probabilità di vittoria",
+    selectLanguage: "Seleziona la lingua",
+    muteSound: "Disattiva audio",
+    unmuteSound: "Attiva audio",
+  },
+
   // Navigation
   nav: {
     home: "HOME",
@@ -52,6 +62,8 @@ export const it: TranslationKeys = {
     hotTables: "I tavoli sono caldi!",
     clickToStart: "Clicca ovunque per iniziare",
     soundEnabled: "Il suono verrà attivato",
+    masterStats: "STATISTICHE:",
+    best: "MIGLIORE",
   },
 
   // Practice Mode
@@ -80,11 +92,13 @@ export const it: TranslationKeys = {
       bigBlind: "Big Blind",
       vs: "VS",
       yourAnswer: "La tua risposta",
+      burn: "SCARTO",
     },
     opponents: {
       defeated: "Avversario Sconfitto!",
       nextOpponent: "Prossimo Avversario",
       preparing: "Preparazione prossimo avversario...",
+      next: "Prossimo: {opponent}",
     },
     messages: {
       revealingCards: "Rivelazione carte...",
@@ -129,6 +143,7 @@ export const it: TranslationKeys = {
       noChips: "Nessuna fiche da scommettere",
       chips: "Fiche",
     },
+    timeRemaining: "Tempo rimanente",
   },
 
   // Results
@@ -154,6 +169,11 @@ export const it: TranslationKeys = {
     addedCards: "Carte Aggiunte",
     totalCombinations: "Combinazioni Totali",
     noOutcomes: "Nessun risultato in questa categoria",
+    detailedAnalysis: "Analisi dettagliata",
+    yourWins: "Le tue vittorie",
+    dealerWins: "Vittorie del banco",
+    winProbabilityClash: "Scontro di probabilità",
+    winnerBadge: "VINCITORE",
   },
 
   // Hand Ranks
@@ -292,6 +312,13 @@ export const it: TranslationKeys = {
     resetData: "Reimposta Dati",
     resetConfirm: "Tutti i dati verranno eliminati. Continuare?",
     language: "Lingua",
+    soundEffectsDesc: "Riproduci i suoni di gioco",
+    vibrationDesc: "Feedback aptico su mobile",
+    themeNote: "* Le modifiche al tema si applicheranno al prossimo caricamento.",
+    resetDataDesc: "Tutti i record, le statistiche e gli obiettivi saranno eliminati.",
+    information: "Informazioni",
+    version: "Versione",
+    developer: "Sviluppatore",
   },
 
   // Stats
@@ -305,6 +332,52 @@ export const it: TranslationKeys = {
     difficultyStats: "Statistiche per Difficoltà",
     played: "Giocate",
     cleared: "Completate",
+    losses: "Sconfitte",
+    tabOverview: "Panoramica",
+    tabTitles: "Titoli",
+    tabAchievements: "Obiettivi",
+    tabHistory: "Cronologia",
+    difficultyClears: "Difficoltà completate",
+    achievementProgress: "Progressi obiettivi",
+    percentComplete: "{percent}% completato",
+    unlocked: "Sbloccati: {unlocked}/{total}",
+    current: "ATTUALE",
+    noHistory: "Nessuna cronologia di gioco.",
+    historyHint: "Le tue partite appariranno qui.",
+    recentRecords: "Ultime {count} partite",
+    win: "VITTORIA",
+    loss: "SCONFITTA",
+  },
+
+  comments: {
+    title: "ALBO D'ORO",
+    godModeCleared: "MODALITÀ DIO COMPLETATA!",
+    leaveMessage: "Lascia il tuo messaggio di vittoria",
+    nickname: "Nickname (facoltativo)",
+    nicknamePlaceholder: "Campione Anonimo",
+    messageLabel: "Messaggio di vittoria",
+    messagePlaceholder: "Racconta com'è stato completare il gioco...",
+    submitMessage: "Invia messaggio",
+    submitting: "Invio...",
+    submitted: "Il tuo messaggio è stato inviato!",
+    listTitle: "Messaggi di vittoria ({count})",
+    noMessages: "Nessun messaggio ancora.",
+    beFirst: "Sii il primo a lasciare un messaggio!",
+  },
+
+  daily: {
+    title: "SFIDA GIORNALIERA",
+    description: "La sfida di oggi! Lo stesso puzzle per tutti.",
+    clearAllLevels: "Completa le 6 difficoltà in ordine.",
+    oneAttempt: "Hai solo un tentativo al giorno!",
+    startChallenge: "INIZIA LA SFIDA DI OGGI",
+    cleared: "SFIDA COMPLETATA!",
+    complete: "SFIDA CONCLUSA",
+    clearedMessage: "Congratulazioni! Hai completato la sfida di oggi.",
+    tryTomorrow: "Riprova domani!",
+    reachedDifficulty: "Difficoltà raggiunta",
+    backToMain: "Torna al menu",
+    failed: "Sfida giornaliera fallita! Riprova domani.",
   },
 
   // Tutorial
@@ -327,6 +400,20 @@ export const it: TranslationKeys = {
     },
     gotIt: "Capito!",
     letsPlay: "Giochiamo!",
+    roundsTitle: "4 round",
+    communityCards: "{count} carte comuni",
+    answerAllRounds: "Rispondi correttamente a tutti i round per vincere!",
+    timeOthers: "Flop / Turn / River",
+    secondsValue: "{count} secondi",
+    timeWarning: "Attenzione: se non rispondi in tempo, hai perso!",
+    practiceNote: "La modalità pratica non ha limiti di tempo.",
+    practiceHint: "Sei nuovo? Prova prima la modalità pratica, senza tempo!",
+    goal: "Completa le 6 difficoltà per diventare {title}!",
+    prev: "Indietro",
+    ready: {
+      title: "Pronto a giocare",
+      description: "Sei pronto per giocare!",
+    },
   },
 
   // Hints

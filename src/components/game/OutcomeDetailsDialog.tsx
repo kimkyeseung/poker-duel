@@ -304,7 +304,7 @@ function MatchupDetailDialog({
           <button
             onClick={onClose}
             className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
-            aria-label="Close"
+            aria-label={t.common.close}
           >
             <svg
               className="w-5 h-5 text-white"
@@ -720,7 +720,7 @@ export function OutcomeDetailsDialog({
           <button
             onClick={onClose}
             className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center transition-colors"
-            aria-label="Close"
+            aria-label={t.common.close}
           >
             <svg
               className="w-5 h-5 text-white"
